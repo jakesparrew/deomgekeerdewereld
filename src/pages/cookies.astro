@@ -1,0 +1,384 @@
+---
+/**
+ * Cookiebeleid. Nederlandstalig, gedeeld door beide taalversies
+ * (route('cookies', lang) geeft /cookies/ voor zowel nl als en).
+ *
+ * De eerlijke versie: deze site zet geen cookies. Wat er wel in de browser
+ * blijft staan zijn twee localStorage-sleutels die de bezoeker zelf zet.
+ */
+import Base from '../layouts/Base.astro';
+import { site } from '../data/site';
+import { route } from '../lib/i18n';
+
+const lang = 'nl' as const;
+
+const updated = '10 september 2026';
+const updatedIso = '2026-09-10';
+
+const mailGeneral = site.email.general;
+const mailtoGeneral = `mailto:${mailGeneral}`;
+
+const toc = [
+  { id: 'geen', label: 'Kort: we zetten geen cookies' },
+  { id: 'browser', label: 'Wat er wel in uw browser blijft staan' },
+  { id: 'waarom-geen-banner', label: 'Waarom er geen cookiebanner is' },
+  { id: 'kaart', label: 'De kaart: pas na uw klik' },
+  { id: 'reserveren', label: 'Reserveren: ook pas na uw klik' },
+  { id: 'weg', label: 'Links die u van de site af brengen' },
+  { id: 'wissen', label: 'Hoe wist of weigert ge dit?' },
+  { id: 'meer', label: 'Meer lezen' },
+];
+
+const breadcrumbs = [
+  { name: 'Start', url: route('home', lang) },
+  { name: 'Cookies', url: route('cookies', lang) },
+];
+---
+
+<Base
+  title="Cookiebeleid"
+  description="Deze site zet geen cookies en heeft geen cookiebanner. Wat er wel in uw browser bewaard wordt, waarom, en hoe ge het wist."
+  lang={lang}
+  active="cookies"
+  noindex={false}
+  breadcrumbs={breadcrumbs}
+>
+  <section class="section">
+    <div class="wrap wrap--text prose">
+      <nav class="crumbs" aria-label="Kruimelpad">
+        <ol>
+          <li><a href={route('home', lang)}>Start</a></li>
+          <li aria-current="page">Cookies</li>
+        </ol>
+      </nav>
+
+      <p class="eyebrow">Het kleine lettertje</p>
+      <h1>Cookiebeleid</h1>
+
+      <p class="lead">
+        Geen banner, geen vakjes, geen "beheer mijn voorkeuren" in zeven schermen.
+        Deze site zet geen cookies. Hieronder staat wat er dan wél gebeurt, want dat
+        is de enige eerlijke manier om dit te schrijven.
+      </p>
+
+      <p class="note-en" lang="en">
+        <strong>In English?</strong> This page is in Dutch. An English version is available
+        on request — send a mail to <a href={mailtoGeneral}>{mailGeneral}</a> and we
+        will send it over.
+      </p>
+
+      <p class="updated">
+        Laatst bijgewerkt op <time datetime={updatedIso}>{updated}</time>.
+      </p>
+
+      <nav class="toc" aria-labelledby="toc-titel">
+        <h2 id="toc-titel" class="toc__title">Op deze pagina</h2>
+        <ol>
+          {
+            toc.map((item) => (
+              <li>
+                <a href={`#${item.id}`}>{item.label}</a>
+              </li>
+            ))
+          }
+        </ol>
+      </nav>
+
+      <h2 id="geen">Kort: we zetten geen cookies</h2>
+      <p>
+        Deze website plaatst geen enkele cookie van zichzelf. Geen cookies om u te
+        herkennen, geen cookies om u te tellen, geen cookies van adverteerders, geen
+        cookies van sociale media. Daarom ziet ge hier ook geen toestemmingsbanner:
+        er valt niets toe te staan of te weigeren.
+      </p>
+      <p>
+        De bezoekcijfers meten we met Plausible Analytics. Dat zegt van zichzelf dat
+        het zonder cookies werkt, geen persoonsgegevens opslaat en niemand over
+        verschillende websites heen volgt. De cijfers die wij zien zijn geteld en
+        opgeteld: hoeveel mensen op de agenda keken, niet wie. De servers staan in de
+        Europese Unie.
+      </p>
+
+      <h2 id="browser">Wat er wel in uw browser blijft staan</h2>
+      <p>
+        Twee kleine dingen, en enkel als ge er zelf op geklikt hebt. Ze staan in de
+        localStorage van uw browser — dat is een opslagplaats op uw eigen toestel. Ze
+        worden nooit naar een server gestuurd, ook niet naar de onze. Wij kunnen ze
+        dus niet lezen.
+      </p>
+
+      <div class="table-scroll">
+        <table>
+          <caption class="visually-hidden">
+            Wat deze site in uw browser bewaart, en waarvoor
+          </caption>
+          <thead>
+            <tr>
+              <th scope="col">Sleutel</th>
+              <th scope="col">Waarvoor</th>
+              <th scope="col">Wanneer</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th scope="row"><code>omw-theme</code></th>
+              <td>
+                Onthoudt of ge de site in dag of nacht wilt zien, zodat ge niet elke
+                keer opnieuw op de knop moet duwen.
+              </td>
+              <td>Pas nadat ge zelf op de dag-of-nachtknop duwt.</td>
+            </tr>
+            <tr>
+              <th scope="row"><code>omw-flip</code></th>
+              <td>
+                Onthoudt of ge de wereld op zijn kop gezet hebt. Ja, dat is de knipoog
+                van den Omgekeerde.
+              </td>
+              <td>Pas nadat ge zelf op die knop duwt.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p>
+        Meer staat er niet in. Geen bezoeknummer, geen tijdstip, geen adres, niks
+        waaraan iemand u zou kunnen herkennen. Raakt ge de knoppen niet aan, dan wordt
+        er ook niets bewaard.
+      </p>
+
+      <h2 id="waarom-geen-banner">Waarom er geen cookiebanner is</h2>
+      <p>
+        De regel die om toestemming vraagt — artikel 129 van de Belgische wet
+        elektronische communicatie, dat de Europese ePrivacy-richtlijn omzet — gaat
+        over het lezen van of schrijven in het toestel van de bezoeker. Er is één
+        uitzondering: opslag die strikt noodzakelijk is om te leveren wat de bezoeker
+        zelf uitdrukkelijk gevraagd heeft. Daar valt dit onder.
+      </p>
+      <p>
+        Om te beginnen zijn <code>omw-theme</code> en <code>omw-flip</code> technisch
+        gezien geen cookies: ze gaan nooit mee met een verzoek naar een server, wat een
+        cookie per definitie wel doet. Maar belangrijker is wat ze doen. Ze bewaren
+        enkel een weergavevoorkeur die ge zelf net hebt ingesteld door op een knop te
+        duwen. Zonder die opslag kunnen we simpelweg niet uitvoeren wat ge gevraagd
+        hebt, namelijk: hou het zo. Daarom is daar geen toestemmingsvenster voor nodig
+        — en krijgt ge er ook geen.
+      </p>
+      <p>
+        Wij vinden trouwens dat een banner zonder cookies erachter alleen maar
+        aanleert om overal blind op "akkoord" te duwen. Dus doen we het niet.
+      </p>
+
+      <h2 id="kaart">De kaart: pas na uw klik</h2>
+      <p>
+        Op de contactpagina staat een kaartje. Dat wordt niet geladen wanneer ge de
+        pagina opent. Ge ziet een stilstaand beeld met een knop erop. Duwt ge op die
+        knop, dan pas legt uw browser contact met OpenStreetMap om de kaarttegels op
+        te halen. Op dat moment ziet OpenStreetMap de gegevens die uw browser altijd
+        meestuurt, zoals uw IP-adres, en kan die zelf cookies zetten. Vanaf dan geldt
+        hun beleid, niet het onze.
+      </p>
+      <p>
+        Klikt ge niet, dan gebeurt er niets. Wilt ge de route zonder kaart, gebruik
+        dan de knop Route: die opent gewoon uw eigen kaartenapp.
+      </p>
+
+      <h2 id="reserveren">Reserveren: ook pas na uw klik</h2>
+      <p>
+        Op de reservatiepagina staat een knop om een tafel vast te leggen. Die werkt
+        net zoals het kaartje: zolang ge er niet op duwt, wordt er niets van
+        SuperHoreca opgehaald en weet die partij niet dat ge hier zijt. Klikt ge wel,
+        dan laadt hun script en opent hun boekingsvenster. SuperHoreca kan op dat
+        moment eigen cookies zetten, volgens hun eigen beleid.
+      </p>
+      <p>
+        Ge kunt altijd bellen in plaats van te klikken. Dan komt er geen enkele derde
+        partij aan te pas.
+      </p>
+
+      <h2 id="weg">Links die u van de site af brengen</h2>
+      <p>
+        Klikt ge door naar <strong>Instagram</strong>, <strong>Facebook</strong> of
+        <strong>OrderBilly</strong>, dan zijt ge weg van deze site en zit ge bij hen.
+        Die partijen zetten wél cookies en volgen wél wat ge doet, elk volgens hun
+        eigen beleid. Wij kunnen dat niet regelen en we krijgen van hen ook niets te
+        zien over u. Bekijk dus hun privacy- en cookiebeleid als ge daar meer over
+        wilt weten.
+      </p>
+      <p>
+        Wat we níet doen: er staat op deze site geen ingesloten Instagram-feed, geen
+        Facebook-knop die u meteen herkent en geen trackingpixel. Onze links zijn
+        gewone links.
+      </p>
+
+      <h2 id="wissen">Hoe wist of weigert ge dit?</h2>
+      <ul>
+        <li>
+          <strong>Met de knop zelf.</strong> Zet de dag-of-nachtknop terug zoals ge
+          hem gevonden hebt, of draai de wereld terug rechtop. Dan staat er weer de
+          standaardwaarde in.
+        </li>
+        <li>
+          <strong>Via uw browser.</strong> Kies "sitegegevens wissen" of "cookies en
+          websitegegevens verwijderen" voor deze site. Alles van ons is dan weg. In de
+          instellingen van uw browser kunt ge lokale opslag ook helemaal blokkeren.
+        </li>
+        <li>
+          <strong>Privémodus.</strong> Surft ge in een privévenster, dan verdwijnt
+          alles vanzelf zodra ge het venster sluit.
+        </li>
+      </ul>
+      <p>
+        Blokkeert ge lokale opslag helemaal, dan blijft de site gewoon werken. Ge
+        krijgt dan telkens het standaardthema, want er is niets om te onthouden. Werkt
+        er JavaScript niet, dan leest alles nog altijd: de tekst staat er ook zonder.
+      </p>
+
+      <h2 id="meer">Meer lezen</h2>
+      <p>
+        Wat we met een e-mailadres of een formulier doen, welke rechten ge hebt en hoe
+        ge klacht kunt indienen, staat in het
+        <a href={route('privacy', lang)}>privacybeleid</a>. Vragen die daar niet in
+        staan? Mail gerust naar <a href={mailtoGeneral}>{mailGeneral}</a>, of vraag het
+        aan de toog.
+      </p>
+
+      <p class="updated updated--foot">
+        Laatst bijgewerkt op <time datetime={updatedIso}>{updated}</time>.
+      </p>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .crumbs {
+    font-size: var(--step--1);
+    color: var(--ink-faint);
+    margin-block-end: var(--space-m);
+  }
+
+  .crumbs ol {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2xs);
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .crumbs li + li::before {
+    content: '/';
+    margin-inline-end: var(--space-2xs);
+    color: var(--line-strong);
+  }
+
+  .lead {
+    font-size: var(--step-1);
+    line-height: var(--leading-snug);
+    color: var(--ink-soft);
+    margin-block-start: var(--space-s);
+  }
+
+  .note-en {
+    margin-block-start: var(--space-m);
+    padding: var(--space-s);
+    border-inline-start: 3px solid var(--line-strong);
+    background: var(--bg-raised);
+    border-radius: var(--radius-s);
+    font-size: var(--step--1);
+    color: var(--ink-soft);
+  }
+
+  .updated {
+    margin-block-start: var(--space-m);
+    font-size: var(--step--1);
+    color: var(--ink-faint);
+  }
+
+  .updated--foot {
+    margin-block-start: var(--space-xl);
+    padding-block-start: var(--space-s);
+    border-block-start: var(--border-hairline) solid var(--line);
+  }
+
+  .toc {
+    margin-block-start: var(--space-l);
+    padding: var(--space-m);
+    background: var(--bg-raised);
+    border: var(--border-hairline) solid var(--line);
+    border-radius: var(--radius-m);
+  }
+
+  .toc__title {
+    font-size: var(--step-1);
+    margin: 0 0 var(--space-2xs);
+  }
+
+  .toc ol {
+    margin: 0;
+    padding-inline-start: var(--space-m);
+    font-size: var(--step--1);
+  }
+
+  .toc a {
+    display: inline-flex;
+    align-items: center;
+    min-height: var(--tap-min);
+    padding-block: var(--space-3xs);
+  }
+
+  code {
+    font-family: ui-monospace, 'SFMono-Regular', 'Consolas', monospace;
+    font-size: 0.9em;
+    padding: 0.1em var(--space-3xs);
+    background: var(--bg-inset);
+    border: var(--border-hairline) solid var(--line);
+    border-radius: var(--radius-xs);
+    color: var(--ink);
+    white-space: nowrap;
+  }
+
+  .table-scroll {
+    overflow-x: auto;
+    margin-block: var(--space-m);
+    border: var(--border-hairline) solid var(--line);
+    border-radius: var(--radius-m);
+  }
+
+  table {
+    width: 100%;
+    min-width: 32rem;
+    border-collapse: collapse;
+    font-size: var(--step--1);
+  }
+
+  th,
+  td {
+    padding: var(--space-2xs) var(--space-s);
+    border-block-end: var(--border-hairline) solid var(--line);
+    vertical-align: top;
+    text-align: start;
+  }
+
+  thead th {
+    background: var(--bg-inset);
+    font-size: var(--step--2);
+    font-weight: 600;
+    letter-spacing: var(--tracking-wide);
+    text-transform: uppercase;
+    color: var(--ink-soft);
+  }
+
+  tbody tr:last-child th,
+  tbody tr:last-child td {
+    border-block-end: 0;
+  }
+
+  tbody th {
+    font-weight: 600;
+    color: var(--ink);
+  }
+
+  tbody td {
+    color: var(--ink-soft);
+  }
+</style>

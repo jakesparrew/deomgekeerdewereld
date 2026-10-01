@@ -1,0 +1,350 @@
+---
+import SunLogo from './SunLogo.astro';
+import OpenStatus from './OpenStatus.astro';
+import ThemeToggle from './ThemeToggle.astro';
+import { site } from '../data/site';
+import { NAV, route, alternateUrl, strings, type Lang, type RouteKey } from '../lib/i18n';
+
+interface Props {
+  lang: Lang;
+  active?: RouteKey;
+}
+
+const { lang, active } = Astro.props;
+const T = strings(lang);
+
+const pathname = Astro.url.pathname.endsWith('/')
+  ? Astro.url.pathname
+  : `${Astro.url.pathname}/`;
+const otherLang: Lang = lang === 'nl' ? 'en' : 'nl';
+const otherUrl = alternateUrl(pathname, otherLang);
+---
+
+<header class="site-header" data-site-header>
+  <div class="wrap wrap--wide site-header__inner">
+    <a class="brand" href={route('home', lang)}>
+      <SunLogo size={44} />
+      <span class="visually-hidden">De Omgekeerde Wereld</span>
+    </a>
+
+    <button
+      class="nav-toggle"
+      type="button"
+      aria-expanded="false"
+      aria-controls="hoofdnavigatie"
+      data-nav-toggle
+    >
+      <span class="nav-toggle__bars" aria-hidden="true"><span></span><span></span></span>
+      <span class="nav-toggle__label" data-nav-toggle-label>{T.menuOpen}</span>
+    </button>
+
+    <nav id="hoofdnavigatie" class="nav" aria-label={T.nav} data-nav>
+      <ul class="nav__list">
+        {
+          NAV.map((item) => (
+            <li>
+              <a
+                href={route(item.key, lang)}
+                class:list={['nav__link', active === item.key && 'is-active']}
+                aria-current={active === item.key ? 'page' : undefined}
+              >
+                {lang === 'en' ? item.en : item.nl}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+
+      <div class="nav__aside">
+        <OpenStatus lang={lang} variant="pill" class="nav__status" />
+        <ThemeToggle lang={lang} />
+        <a class="nav__lang" href={otherUrl} hreflang={otherLang} lang={otherLang}>
+          {otherLang === 'en' ? 'EN' : 'NL'}
+        </a>
+        <a class="btn btn--primary nav__cta" href={`tel:${site.phoneHref}`}>
+          {T.call}
+        </a>
+      </div>
+    </nav>
+  </div>
+</header>
+
+<script>
+  const toggle = document.querySelector<HTMLButtonElement>('[data-nav-toggle]');
+  const nav = document.querySelector<HTMLElement>('[data-nav]');
+  const label = document.querySelector<HTMLElement>('[data-nav-toggle-label]');
+  const header = document.querySelector<HTMLElement>('[data-site-header]');
+
+  const openLabel = label?.textContent?.trim() ?? 'Menu';
+  const closeLabel = document.documentElement.lang.startsWith('en')
+    ? 'Close menu'
+    : 'Menu sluiten';
+
+  function setOpen(open: boolean) {
+    if (!toggle || !nav) return;
+    toggle.setAttribute('aria-expanded', String(open));
+    nav.dataset.open = open ? '1' : '0';
+    if (label) label.textContent = open ? closeLabel : openLabel;
+    document.documentElement.style.overflow = open ? 'hidden' : '';
+
+    // Staat het paneel open, dan ligt de rest van de pagina eronder. Met `inert`
+    // kan de tab-toets daar niet meer belanden en leest een schermlezer het ook
+    // niet voor. Zonder dit verdwijnt de focus achter een dichte laag.
+    for (const el of document.querySelectorAll('#inhoud, .site-footer, .dock')) {
+      el.toggleAttribute('inert', open);
+    }
+
+    if (open) nav.querySelector<HTMLAnchorElement>('.nav__link')?.focus();
+  }
+
+  toggle?.addEventListener('click', () => {
+    setOpen(toggle.getAttribute('aria-expanded') !== 'true');
+  });
+
+  document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape' && toggle?.getAttribute('aria-expanded') === 'true') {
+      setOpen(false);
+      toggle.focus();
+    }
+  });
+
+  // Sluit het paneel zodra het scherm breed genoeg is voor de gewone balk.
+  const wide = window.matchMedia('(min-width: 60em)');
+  wide.addEventListener('change', (e) => {
+    if (e.matches) setOpen(false);
+  });
+
+  // Schaduw zodra de pagina scrollt, zodat de balk loskomt van de inhoud.
+  const sentinel = () => {
+    header?.toggleAttribute('data-scrolled', window.scrollY > 8);
+  };
+  sentinel();
+  window.addEventListener('scroll', sentinel, { passive: true });
+</script>
+
+<style>
+  .site-header {
+    position: sticky;
+    font-family: var(--font-body);
+    top: 0;
+    z-index: 50;
+    background: color-mix(in srgb, var(--bg) 88%, transparent);
+    backdrop-filter: blur(10px);
+    border-block-end: var(--border-hairline) solid transparent;
+    transition: border-color var(--dur-base) var(--ease-out);
+  }
+
+  .site-header[data-scrolled] {
+    border-block-end-color: var(--line);
+  }
+
+  .site-header__inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-s);
+    min-height: 4.5rem;
+    /* Zonder JavaScript zakt de navigatie op een smal scherm gewoon
+       onder het merk in plaats van eruit te lopen. */
+    flex-wrap: wrap;
+  }
+
+  :global(:root[data-js]) .site-header__inner {
+    flex-wrap: nowrap;
+  }
+
+  /* ---- Merk ---- */
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2xs);
+    text-decoration: none;
+    color: var(--ink);
+    flex: none;
+  }
+
+  /* ---- Navigatie ---- */
+  /* nav-een-rij: links en knoppen naast elkaar, niet onder elkaar. */
+  @media (min-width: 60em) {
+    .nav {
+      display: flex;
+      align-items: center;
+      gap: var(--space-m);
+      flex-wrap: nowrap;
+    }
+  }
+
+  .nav__list {
+    display: flex;
+    align-items: center;
+    gap: var(--space-s);
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .nav__link {
+    display: inline-block;
+    padding: var(--space-3xs) var(--space-2xs);
+    font-family: var(--font-body);
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    text-decoration: none;
+    border-block-end: 1px solid transparent;
+  }
+
+  .nav__link:hover {
+    color: var(--ink);
+    border-block-end-color: var(--line-strong);
+  }
+
+  .nav__link.is-active {
+    color: var(--ink);
+    border-block-end-color: var(--accent-text);
+  }
+
+  .nav__aside {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2xs);
+  }
+
+  .nav__lang {
+    padding: var(--space-3xs) var(--space-2xs);
+    font-size: var(--step--2);
+    font-weight: 700;
+    letter-spacing: var(--tracking-wide);
+    color: var(--ink-soft);
+    text-decoration: none;
+    border: var(--border-hairline) solid var(--line-strong);
+    border-radius: var(--radius-s);
+    min-width: 2.5rem;
+    text-align: center;
+  }
+
+  .nav__lang:hover {
+    color: var(--ink);
+    border-color: var(--accent);
+  }
+
+  .nav__cta {
+    min-height: 2.4rem;
+    padding-inline: var(--space-m);
+    font-family: var(--font-body);
+    font-size: 0.72rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+  }
+
+  /* ---- Hamburger ----
+     Alleen zichtbaar als JavaScript draait. Zonder script is er niets om
+     open te klappen, dus dan hoort er ook geen knop te staan. */
+  .nav-toggle {
+    display: none;
+    align-items: center;
+    gap: var(--space-2xs);
+    min-height: var(--tap-min);
+    padding-inline: var(--space-2xs);
+    font-size: var(--step--1);
+    font-weight: 700;
+    color: var(--ink);
+  }
+
+  .nav-toggle__bars {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    width: 22px;
+  }
+
+  .nav-toggle__bars span {
+    display: block;
+    height: 2px;
+    background: currentColor;
+    transition: transform var(--dur-base) var(--ease-out);
+  }
+
+  [aria-expanded='true'] .nav-toggle__bars span:first-child {
+    transform: translateY(3.5px) rotate(45deg);
+  }
+
+  [aria-expanded='true'] .nav-toggle__bars span:last-child {
+    transform: translateY(-3.5px) rotate(-45deg);
+  }
+
+  /* ---- Klein scherm ---- */
+  @media (max-width: 59.99em) {
+    /* MET JavaScript: een knop die een paneel opent.
+       ZONDER JavaScript: de navigatie staat er gewoon, uitgeklapt.
+       Vandaar dat alles wat verbergt achter [data-js] hangt. */
+    :global(:root[data-js]) .nav-toggle {
+      display: inline-flex;
+    }
+
+    .nav {
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      gap: var(--space-l);
+      inline-size: 100%;
+      padding-block: var(--space-s) var(--space-m);
+    }
+
+    :global(:root[data-js]) .nav {
+      position: fixed;
+      inset: 4.5rem 0 0;
+      z-index: 40;
+      gap: var(--space-l);
+      padding: var(--space-l) var(--gutter) var(--space-3xl);
+      background: var(--bg);
+      overflow-y: auto;
+      transform: translateY(-100%);
+      visibility: hidden;
+      transition:
+        transform var(--dur-base) var(--ease-out),
+        visibility var(--dur-base);
+    }
+
+    :global(:root[data-js]) .nav[data-open='1'] {
+      transform: translateY(0);
+      visibility: visible;
+    }
+
+    .nav__list {
+      flex-direction: column;
+      align-items: stretch;
+      gap: 0;
+    }
+
+    .nav__list li + li {
+      border-block-start: var(--border-hairline) solid var(--line);
+    }
+
+    .nav__link {
+      display: block;
+      padding: var(--space-s) 0;
+      font-family: var(--font-display);
+      font-size: var(--step-2);
+      color: var(--ink);
+      border: none;
+    }
+
+    .nav__link.is-active {
+      color: var(--accent-text);
+      border: none;
+    }
+
+    .nav__aside {
+      flex-wrap: wrap;
+      gap: var(--space-xs);
+    }
+
+    .nav__cta {
+      flex: 1;
+      min-height: var(--tap-min);
+    }
+  }
+</style>

@@ -1,0 +1,203 @@
+---
+/**
+ * Eén stuk van de kaart als lijst: naam, een fijne lijn, prijs.
+ *
+ * De filters op /kaart draaien op de data-attributen hieronder, maar
+ * zonder JavaScript staat gewoon alles te lezen. Niets wordt verstopt.
+ */
+import { BEER_STYLE_LABELS, MENU_TAG_LABELS, type MenuItem } from '../data/types';
+import { euro, priceLabel } from '../lib/format';
+import { strings, type Lang } from '../lib/i18n';
+
+interface Props {
+  items: MenuItem[];
+  lang?: Lang;
+  /** id van de kop waar deze lijst bij hoort. */
+  labelledBy?: string;
+}
+
+const { items, lang = 'nl', labelledBy } = Astro.props;
+const T = strings(lang);
+
+type Dict = { nl: string; en: string };
+const styleDict = BEER_STYLE_LABELS as Record<string, Dict | undefined>;
+const tagDict = MENU_TAG_LABELS as Record<string, Dict | undefined>;
+
+/** Accenten eruit, alles klein: "Kwak" en "kwàk" moeten hetzelfde zoeken. */
+const plain = (value: string): string =>
+  value
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase();
+
+const styleLabel = (style?: string): string | undefined =>
+  style ? (styleDict[style]?.[lang] ?? style) : undefined;
+
+const tagLabel = (tag: string): string => tagDict[tag]?.[lang] ?? tag;
+
+/** 8 wordt "8%", 8.5 wordt "8,5%". */
+const abvLabel = (abv?: number): string | undefined =>
+  typeof abv === 'number' ? `${String(abv).replace('.', ',')}%` : undefined;
+
+function priceText(item: MenuItem): string {
+  if (item.priceLabel) return item.priceLabel;
+  if (typeof item.price === 'number' && item.price > 0) return euro(item.price);
+  return priceLabel(item.price, lang);
+}
+
+/** Waar de zoekbalk op zoekt: naam, brouwerij en stijl, in beide talen. */
+function searchKey(item: MenuItem): string {
+  const parts: (string | undefined)[] = [item.name, item.brewery, item.style];
+  const dict = item.style ? styleDict[item.style] : undefined;
+  if (dict) parts.push(dict.nl, dict.en);
+  return plain(parts.filter(Boolean).join(' '));
+}
+---
+
+<ul class="menu-list" aria-labelledby={labelledBy}>
+  {
+    items.map((item) => {
+      const meta = [styleLabel(item.style), item.brewery, abvLabel(item.abv)].filter(Boolean);
+      const note = lang === 'en' ? (item.noteEn ?? item.note) : item.note;
+      const soldOut = item.available === false;
+      const tags = item.tags ?? [];
+
+      return (
+        <li
+          class="menu-item"
+          data-menu-item
+          data-category={item.category}
+          data-style={item.style || undefined}
+          data-search={searchKey(item)}
+          data-sold={soldOut ? '' : undefined}
+        >
+          <p class="menu-item__row">
+            <span class="menu-item__name">{item.name}</span>
+            <span class="menu-item__leader" aria-hidden="true" />
+            <span class="menu-item__price">{priceText(item)}</span>
+          </p>
+
+          {meta.length > 0 && <p class="menu-item__meta">{meta.join(' · ')}</p>}
+          {note && <p class="menu-item__note">{note}</p>}
+
+          {(soldOut || tags.length > 0) && (
+            <p class="menu-item__tags">
+              {soldOut && <span class="pill pill--sold">{T.soldOut}</span>}
+              {tags.map((tag) => (
+                <span class="pill">{tagLabel(tag)}</span>
+              ))}
+            </p>
+          )}
+        </li>
+      );
+    })
+  }
+</ul>
+
+<style>
+  .menu-list {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-m) var(--space-2xl);
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  /* Twee kolommen zodra er plaats is, zoals een kaart aan de muur. */
+  @media (min-width: 48em) {
+    .menu-list {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  .menu-item {
+    min-width: 0;
+  }
+
+  /* De zoekbalk zet hidden; zonder JavaScript gebeurt dit nooit. */
+  .menu-item[hidden] {
+    display: none;
+  }
+
+  .menu-item__row {
+    display: flex;
+    align-items: baseline;
+    gap: var(--space-2xs);
+    margin: 0;
+  }
+
+  .menu-item__name {
+    min-width: 0;
+    font-family: var(--font-display);
+    font-size: var(--step-0);
+    font-weight: 600;
+    letter-spacing: var(--tracking-normal);
+    color: var(--ink);
+  }
+
+  /* Het puntjeslijntje tussen naam en prijs. */
+  .menu-item__leader {
+    flex: 1 1 var(--space-l);
+    min-width: var(--space-s);
+    border-block-end: var(--border-hairline) dotted var(--line-strong);
+    transform: translateY(0.1em);
+  }
+
+  .menu-item__price {
+    flex: none;
+    font-variant-numeric: tabular-nums;
+    font-feature-settings: 'tnum' 1;
+    font-weight: 600;
+    white-space: nowrap;
+    color: var(--ink);
+  }
+
+  .menu-item__meta {
+    margin-block-start: var(--space-3xs);
+    font-size: var(--step--1);
+    color: var(--ink-soft);
+  }
+
+  .menu-item__note {
+    max-width: var(--measure);
+    margin-block-start: var(--space-3xs);
+    font-size: var(--step--1);
+    color: var(--ink-faint);
+  }
+
+  .menu-item__tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3xs);
+    margin-block-start: var(--space-2xs);
+  }
+
+  .pill {
+    display: inline-block;
+    padding: var(--space-3xs) var(--space-2xs);
+    border: var(--border-hairline) solid var(--line);
+    border-radius: var(--radius-s);
+    font-size: var(--step--2);
+    font-weight: 600;
+    letter-spacing: var(--tracking-wide);
+    text-transform: uppercase;
+    line-height: var(--leading-snug);
+    color: var(--ink-soft);
+  }
+
+  .pill--sold {
+    color: var(--rose);
+    border-color: var(--rose);
+  }
+
+  /* Even op: blijft staan, maar gedempt. */
+  .menu-item[data-sold] .menu-item__name,
+  .menu-item[data-sold] .menu-item__price {
+    color: var(--ink-faint);
+  }
+
+  .menu-item[data-sold] .menu-item__price {
+    text-decoration: line-through;
+  }
+</style>

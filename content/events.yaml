@@ -1,0 +1,81 @@
+# ============================================================
+# AGENDA
+# ------------------------------------------------------------
+# Een event toevoegen: kopieer een blok hieronder, pas het aan,
+# en zet het bovenaan de lijst. Voorbije events verhuizen vanzelf
+# naar "Al geweest" — ge moet niets verwijderen.
+#
+# start: 2026-10-03T21:00   (jaar-maand-dag T uur:minuut, Gentse tijd)
+# type:  concert | dj | quiz | aperomer | feest | open-air | andere
+# price: laat weg of zet 0 voor gratis
+# ============================================================
+
+# ---- Terugkerende afspraken ----
+# Die berekent de site zelf. Ge moet ze dus nooit opnieuw invoeren.
+recurring:
+  - id: aperomer
+    title: "Aper'Omer"
+    titleEn: "Aper'Omer"
+    type: aperomer
+    rule: monthly-weekday
+    weekday: 5 # 0 = zondag, 5 = vrijdag
+    ordinal: 1 # de eerste vrijdag van elke maand
+    time: '17:00'
+    # Datums waarop het toch niet doorgaat, bv. omdat we later opengaan.
+    # 1 januari 2027 valt op een vrijdag, maar dan gaan we pas om 18u open.
+    skip:
+      - '2027-01-01'
+    price: 3.50
+    description: >-
+      Elke eerste vrijdag van de maand schenken we Omer aan aperoprijs.
+      Van vijf uur tot het vat leeg is.
+    descriptionEn: >-
+      Every first Friday of the month we pour Omer at aperitif price.
+      From five o'clock until the keg runs dry.
+
+# ---- Losse events ----
+events:
+  - id: soulnight-oktober
+    title: 'Soul Night met DJ Bompa'
+    titleEn: 'Soul Night with DJ Bompa'
+    start: '2026-10-17T21:00'
+    end: '2026-10-18T02:00'
+    type: dj
+    price: 0
+    description: >-
+      Northern soul, funk en een pak vinyl uit den ouwen doos.
+      Geen inkom, wel dansende voeten.
+    descriptionEn: >-
+      Northern soul, funk and a stack of vinyl from the good old days.
+      No cover charge, just dancing feet.
+    image: ''
+    imageAlt: ''
+
+  - id: kroegquiz-november
+    title: 'De Omgekeerde Kroegquiz'
+    titleEn: 'The Upside-Down Pub Quiz'
+    start: '2026-11-12T20:00'
+    end: '2026-11-12T23:30'
+    type: quiz
+    price: 5
+    description: >-
+      Ploegen van maximum vier. Inschrijven aan de toog of via mail.
+      De winnaar drinkt de rest van de avond op ons.
+    descriptionEn: >-
+      Teams of four at most. Sign up at the bar or by email.
+      The winners drink on us for the rest of the night.
+    link: ''
+
+  - id: keizerfest-2027
+    title: 'Keizerfest open air'
+    titleEn: 'Keizerfest open air'
+    start: '2027-05-14T14:00'
+    end: '2027-05-16T23:00'
+    type: open-air
+    price: 0
+    description: >-
+      Drie dagen live muziek op het Keizerpark, samen met de buren.
+      Gratis, zoals het hoort.
+    descriptionEn: >-
+      Three days of live music at Keizerpark, together with the neighbours.
+      Free, as it should be.

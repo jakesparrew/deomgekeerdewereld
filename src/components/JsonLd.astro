@@ -1,0 +1,122 @@
+---
+/**
+ * Gestructureerde data voor Google: het café zelf plus, waar van toepassing,
+ * de events. Dit is wat zorgt voor de uren en het bolleke in de zoekresultaten.
+ */
+import { site } from '../data/site';
+import { hours } from '../lib/content';
+import { toSchemaOpeningHours } from '../lib/hours';
+import { toIsoWithBrusselsOffset, euroMachine } from '../lib/format';
+import { route, type Lang } from '../lib/i18n';
+import type { ResolvedEvent } from '../lib/events';
+
+interface Props {
+  lang: Lang;
+  /** Events die op deze pagina staan. */
+  events?: ResolvedEvent[];
+  /** Kruimelpad: [{ name, url }] */
+  breadcrumbs?: { name: string; url: string }[];
+}
+
+const { lang, events = [], breadcrumbs } = Astro.props;
+
+const businessId = `${site.url}/#bar`;
+
+const business = {
+  '@type': ['BarOrPub', 'LocalBusiness'],
+  '@id': businessId,
+  name: site.name,
+  alternateName: site.shortName,
+  legalName: site.legalName,
+  foundingDate: String(site.founded),
+  url: site.url,
+  telephone: site.phone,
+  email: site.email.general,
+  priceRange: site.priceRange,
+  currenciesAccepted: 'EUR',
+  vatID: site.vat.replace(/\s/g, ''),
+  description:
+    lang === 'en'
+      ? 'An old-school brown cafe opposite VIERNULVIER in Ghent. More than 69 beers, free pool, table football and live music. Open every day from 2pm until late.'
+      : 'Een ouderwetse bruine kroeg rechtover VIERNULVIER in Gent. Meer dan 69 bierkes, gratis pool, kickeren en muziek uit den ouwen doos. Elke dag open van 14 uur tot laat.',
+  address: {
+    '@type': 'PostalAddress',
+    streetAddress: site.address.street,
+    postalCode: site.address.postalCode,
+    addressLocality: site.address.city,
+    addressRegion: site.address.region,
+    addressCountry: site.address.country,
+  },
+  geo: {
+    '@type': 'GeoCoordinates',
+    latitude: site.geo.lat,
+    longitude: site.geo.lon,
+  },
+  hasMap: site.maps.osm,
+  openingHoursSpecification: toSchemaOpeningHours(hours),
+  hasMenu: `${site.url}${route('menu', lang)}`,
+  servesCuisine: lang === 'en' ? 'Belgian beer' : 'Belgische bieren',
+  publicAccess: true,
+  isAccessibleForFree: true,
+  smokingAllowed: false,
+  amenityFeature: [
+    { '@type': 'LocationFeatureSpecification', name: 'Pool', value: true },
+    { '@type': 'LocationFeatureSpecification', name: 'Table football', value: true },
+    { '@type': 'LocationFeatureSpecification', name: 'Chess', value: true },
+    { '@type': 'LocationFeatureSpecification', name: 'Terrace', value: true },
+    { '@type': 'LocationFeatureSpecification', name: 'Free WiFi', value: true },
+    { '@type': 'LocationFeatureSpecification', name: 'Live music', value: true },
+  ],
+  sameAs: [site.social.instagram, site.social.facebook, site.social.untappd],
+};
+
+const eventNodes = events.slice(0, 25).map((event) => ({
+  '@type': 'Event',
+  name: lang === 'en' && event.titleEn ? event.titleEn : event.title,
+  startDate: toIsoWithBrusselsOffset(event.start),
+  ...(event.end ? { endDate: toIsoWithBrusselsOffset(event.end) } : {}),
+  eventStatus: 'https://schema.org/EventScheduled',
+  eventAttendanceMode: 'https://schema.org/OfflineEventAttendanceMode',
+  description:
+    (lang === 'en' && event.descriptionEn ? event.descriptionEn : event.description) ||
+    undefined,
+  ...(event.link ? { url: event.link } : {}),
+  location: {
+    '@type': 'Place',
+    name: site.name,
+    address: {
+      '@type': 'PostalAddress',
+      streetAddress: site.address.street,
+      postalCode: site.address.postalCode,
+      addressLocality: site.address.city,
+      addressCountry: site.address.country,
+    },
+  },
+  organizer: { '@id': businessId },
+  offers: {
+    '@type': 'Offer',
+    price: euroMachine(event.price ?? 0),
+    priceCurrency: 'EUR',
+    availability: 'https://schema.org/InStock',
+    url: event.link || `${site.url}${route('agenda', lang)}`,
+  },
+}));
+
+const breadcrumbNode = breadcrumbs?.length
+  ? {
+      '@type': 'BreadcrumbList',
+      itemListElement: breadcrumbs.map((crumb, i) => ({
+        '@type': 'ListItem',
+        position: i + 1,
+        name: crumb.name,
+        item: `${site.url}${crumb.url}`,
+      })),
+    }
+  : null;
+
+const graph = [business, ...eventNodes, ...(breadcrumbNode ? [breadcrumbNode] : [])];
+
+const payload = JSON.stringify({ '@context': 'https://schema.org', '@graph': graph });
+---
+
+<script type="application/ld+json" is:inline set:html={payload}></script>

@@ -1,0 +1,5 @@
+# De Omgekeerde Wereld — iedereen mag binnen, ook de robotten.
+User-agent: *
+Allow: /
+
+Sitemap: https://deomgekeerdewereld.be/sitemap-index.xml

@@ -1,0 +1,29 @@
+{
+  "name": "De Omgekeerde Wereld",
+  "short_name": "Den Omgekeerde",
+  "description": "Bruine kroeg in de Sint-Pietersnieuwstraat in Gent, recht tegenover VIERNULVIER. Elke dag open van 14 uur tot laat: 69+ bierkes, gratis poolke, kickeren en plezante events.",
+  "lang": "nl-BE",
+  "dir": "ltr",
+  "id": "/",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#0d0a07",
+  "theme_color": "#0d0a07",
+  "categories": ["food", "lifestyle", "entertainment"],
+  "icons": [
+    {
+      "src": "/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ]
+}

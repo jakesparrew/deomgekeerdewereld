@@ -1,0 +1,164 @@
+---
+/**
+ * "Nu open" / "Opent om 14:00".
+ *
+ * Wordt op de server al ingevuld zodat er meteen iets staat, en daarna in de
+ * browser bijgewerkt met de echte klok van Gent. Zonder JavaScript blijft de
+ * tekst van het bouwmoment staan, wat nog altijd bruikbaar is.
+ */
+import { hours } from '../lib/content';
+import { getStatus } from '../lib/hours';
+import type { Lang } from '../lib/i18n';
+
+interface Props {
+  lang?: Lang;
+  /** "dot" = klein bolleke met tekst, "pill" = omkaderd, "line" = enkel tekst */
+  variant?: 'dot' | 'pill' | 'line';
+  class?: string;
+}
+
+const { lang = 'nl', variant = 'pill', class: className = '' } = Astro.props;
+
+const status = getStatus(hours, new Date(), lang);
+---
+
+<span
+  class:list={['status', `status--${variant}`, className]}
+  data-open-status
+  data-lang={lang}
+  data-open={status.isOpen ? '1' : '0'}
+>
+  <span class="status__dot" aria-hidden="true"></span>
+  <span class="status__label" data-open-status-label>{status.label}</span>
+</span>
+
+<!-- De uren zelf staan één keer in de layout, als <script type="application/json" data-hours-config>. -->
+
+<script>
+  import { brusselsNow, getStatus, type HoursConfig } from '../lib/hours';
+
+  function readConfig(): HoursConfig | null {
+    const node = document.querySelector('[data-hours-config]');
+    if (!node?.textContent) return null;
+    try {
+      return JSON.parse(node.textContent) as HoursConfig;
+    } catch {
+      return null;
+    }
+  }
+
+  function refresh() {
+    const config = readConfig();
+    if (!config) return;
+
+    for (const el of document.querySelectorAll<HTMLElement>('[data-open-status]')) {
+      const lang = el.dataset.lang === 'en' ? 'en' : 'nl';
+      const status = getStatus(config, new Date(), lang);
+      el.dataset.open = status.isOpen ? '1' : '0';
+      el.dataset.soon = status.closingSoon ? '1' : '0';
+      const label = el.querySelector('[data-open-status-label]');
+      if (label) label.textContent = status.label;
+    }
+
+    /**
+     * De urentabellen: welke rij "vandaag" is, hangt af van de dag waarop
+     * iemand kijkt, niet van de dag waarop de site gebouwd werd.
+     */
+    const dayKeys = [
+      'sunday',
+      'monday',
+      'tuesday',
+      'wednesday',
+      'thursday',
+      'friday',
+      'saturday',
+    ];
+    const rows = document.querySelectorAll<HTMLElement>('[data-day]');
+    if (rows.length) {
+      const vandaag = dayKeys[brusselsNow(new Date()).weekday];
+      for (const row of rows) {
+        const isToday = row.dataset.day === vandaag;
+        row.classList.toggle('is-today', isToday);
+        const tag = row.querySelector<HTMLElement>('[data-today-tag]');
+        if (tag) tag.hidden = !isToday;
+      }
+    }
+
+    /**
+     * "Vandaag van 14:00 tot 03:00" hoort ook te kloppen. Een statische site
+     * wordt maar af en toe gebouwd, dus die zin zou anders op vrijdag nog de
+     * uren van donderdag tonen. De sjablonen komen uit data-attributen, zodat
+     * dit script geen vertalingen hoeft te kennen.
+     */
+    for (const el of document.querySelectorAll<HTMLElement>('[data-today-hours]')) {
+      const lang = el.dataset.lang === 'en' ? 'en' : 'nl';
+      const { today } = getStatus(config, new Date(), lang);
+      if (today.closed) {
+        el.textContent = el.dataset.closedText ?? el.textContent;
+      } else {
+        el.textContent = (el.dataset.tpl ?? '')
+          .replace('{open}', today.open ?? '')
+          .replace('{close}', today.close ?? '');
+      }
+    }
+  }
+
+  refresh();
+  // Elke minuut opnieuw, zodat het bolleke klopt als iemand de pagina open laat staan.
+  setInterval(refresh, 60_000);
+  document.addEventListener('visibilitychange', () => {
+    if (!document.hidden) refresh();
+  });
+</script>
+
+<style>
+  .status {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2xs);
+    font-family: var(--font-body);
+    font-size: var(--step--1);
+    font-weight: 600;
+    line-height: 1.2;
+    color: var(--ink-soft);
+  }
+
+  .status__dot {
+    width: 0.6em;
+    height: 0.6em;
+    border-radius: var(--radius-pill);
+    background: var(--closed-dot);
+    flex: none;
+  }
+
+  .status[data-open='1'] .status__dot {
+    background: var(--open-dot);
+    box-shadow: 0 0 0 0.25em color-mix(in srgb, var(--open-dot) 22%, transparent);
+  }
+
+  .status[data-open='1'] .status__label {
+    color: var(--ink);
+  }
+
+  .status[data-soon='1'] .status__dot {
+    background: var(--amber);
+    box-shadow: 0 0 0 0.25em color-mix(in srgb, var(--amber) 22%, transparent);
+  }
+
+  .status--pill {
+    padding: var(--space-3xs) var(--space-xs);
+    border: var(--border-hairline) solid var(--line-strong);
+    border-radius: var(--radius-pill);
+    background: color-mix(in srgb, var(--bg) 70%, transparent);
+    backdrop-filter: blur(6px);
+  }
+
+  .status--line {
+    font-size: inherit;
+  }
+
+  .status--line .status__dot {
+    width: 0.5em;
+    height: 0.5em;
+  }
+</style>

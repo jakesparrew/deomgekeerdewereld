@@ -1,0 +1,29 @@
+# build
+dist/
+.astro/
+
+# afhankelijkheden
+node_modules/
+
+# omgeving
+.env
+.env.production
+.env.local
+
+# hosting
+.netlify/
+.vercel/
+
+# rommel van het besturingssysteem
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# editors
+.vscode/*
+!.vscode/extensions.json
+.idea/
+
+# logs
+*.log
+npm-debug.log*

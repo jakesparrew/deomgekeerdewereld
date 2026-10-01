@@ -1,0 +1,380 @@
+---
+import SunLogo from './SunLogo.astro';
+import OpenStatus from './OpenStatus.astro';
+import NewsletterForm from './NewsletterForm.astro';
+import { site, addressLine } from '../data/site';
+import { hours } from '../lib/content';
+import { getWeekRows } from '../lib/hours';
+import { NAV, route, strings, type Lang } from '../lib/i18n';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const T = strings(lang);
+
+const week = getWeekRows(hours, new Date(), lang);
+const year = 2026;
+---
+
+<footer class="site-footer">
+  <div class="wrap wrap--wide">
+    <div class="site-footer__grid">
+      <!-- Merk + nieuwsbrief -->
+      <div class="site-footer__brand">
+        <SunLogo size={56} spin={false} />
+        <p class="site-footer__name">De Omgekeerde Wereld</p>
+        <p class="site-footer__tagline">
+          {
+            lang === 'en'
+              ? 'A place where young and old feel at home. Since 2014, opposite VIERNULVIER.'
+              : 'Een plek waar jong en oud zich thuis voelt. Sinds 2014, rechtover VIERNULVIER.'
+          }
+        </p>
+
+        <div class="site-footer__newsletter">
+          <h2 class="site-footer__heading">{T.newsletterTitle}</h2>
+          <p class="site-footer__note">{T.newsletterLead}</p>
+          <NewsletterForm lang={lang} compact />
+        </div>
+      </div>
+
+      <!-- Uren -->
+      <div>
+        <h2 class="site-footer__heading">{T.whenOpen}</h2>
+        <OpenStatus lang={lang} variant="line" class="site-footer__status" />
+        <ul class="hours-list">
+          {
+            week.map((row) => (
+              <li class:list={['hours-list__row', row.isToday && 'is-today']} data-day={row.dayKey}>
+                <span class="hours-list__day">{row.label}</span>
+                <span class="hours-list__time">
+                  {row.closed ? T.closed : `${row.open} – ${row.close}`}
+                </span>
+              </li>
+            ))
+          }
+        </ul>
+        <p class="site-footer__note">{T.hoursNote}</p>
+      </div>
+
+      <!-- Vinden en bellen -->
+      <div>
+        <h2 class="site-footer__heading">{T.whereToFind}</h2>
+        <address class="site-footer__address">
+          {site.address.street}<br />
+          {site.address.postalCode}{' '}{site.address.city}<br />
+          {lang === 'en' ? 'Belgium' : 'België'}
+        </address>
+        <ul class="link-list">
+          <li><a href={site.maps.google} rel="noopener">{T.route}</a></li>
+          <li><a href={`tel:${site.phoneHref}`}>{site.phone}</a></li>
+          <li><a href={`mailto:${site.email.general}`}>{site.email.general}</a></li>
+          <li>
+            <a href={`mailto:${site.email.events}`}>
+              {lang === 'en' ? 'Events & bookings' : 'Events & reservaties'}
+            </a>
+          </li>
+          <li>
+            <a href={`mailto:${site.email.partnerships}`}>
+              {lang === 'en' ? 'Partnerships' : 'Samenwerkingen'}
+            </a>
+          </li>
+        </ul>
+
+        {
+          site.wifi.showPublicly && (
+            <p class="site-footer__wifi">
+              <span class="site-footer__wifi-label">{T.wifiLabel}</span>
+              <span class="site-footer__wifi-value">
+                {site.wifi.ssid} · {site.wifi.password}
+              </span>
+            </p>
+          )
+        }
+      </div>
+
+      <!-- Navigatie en sociale kanalen -->
+      <div>
+        <h2 class="site-footer__heading">{lang === 'en' ? 'Wander around' : 'Rondkijken'}</h2>
+        <ul class="link-list">
+          <li><a href={route('home', lang)}>{lang === 'en' ? 'Home' : 'Home'}</a></li>
+          {
+            NAV.map((item) => (
+              <li>
+                <a href={route(item.key, lang)}>{lang === 'en' ? item.en : item.nl}</a>
+              </li>
+            ))
+          }
+        </ul>
+
+        <h2 class="site-footer__heading site-footer__heading--spaced">{T.followUs}</h2>
+        <ul class="link-list">
+          <li><a href={site.social.instagram} rel="me noopener">Instagram</a></li>
+          <li><a href={site.social.facebook} rel="me noopener">Facebook</a></li>
+          <li><a href={site.social.untappd} rel="me noopener">Untappd</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="site-footer__bottom">
+      <p class="site-footer__legal">
+        © {year} {site.legalName} · {lang === 'en' ? 'VAT' : 'Btw'} {site.vat} ·{' '}
+        {addressLine}
+      </p>
+      <ul class="site-footer__legal-links">
+        <li><a href={route('privacy', lang)}>{T.privacyPolicy}</a></li>
+        <li><a href={route('cookies', lang)}>{T.cookiePolicy}</a></li>
+      </ul>
+      <button class="flip" type="button" data-flip-toggle>
+        <span data-flip-label>{T.flipToggle}</span>
+      </button>
+    </div>
+  </div>
+</footer>
+
+<script>
+  const KEY = 'omw-flip';
+  const root = document.documentElement;
+  const en = root.lang.startsWith('en');
+  const LABEL_ON = en ? 'Turn it back' : 'Draai hem terug';
+  const LABEL_OFF = en ? 'Turn the world upside down' : 'Zet de wereld op zijn kop';
+
+  function sync(flipped: boolean) {
+    root.toggleAttribute('data-flip', flipped);
+    if (flipped) root.setAttribute('data-flip', '1');
+    for (const label of document.querySelectorAll<HTMLElement>('[data-flip-label]')) {
+      label.textContent = flipped ? LABEL_ON : LABEL_OFF;
+    }
+    for (const button of document.querySelectorAll<HTMLButtonElement>('[data-flip-toggle]')) {
+      button.setAttribute('aria-pressed', String(flipped));
+    }
+  }
+
+  sync(root.getAttribute('data-flip') === '1');
+
+  for (const button of document.querySelectorAll<HTMLButtonElement>('[data-flip-toggle]')) {
+    button.addEventListener('click', () => {
+      const next = root.getAttribute('data-flip') !== '1';
+      if (next) {
+        root.setAttribute('data-flip', '1');
+      } else {
+        root.removeAttribute('data-flip');
+      }
+      sync(next);
+      try {
+        localStorage.setItem(KEY, next ? '1' : '0');
+      } catch {
+        /* geen opslag beschikbaar, geen probleem */
+      }
+    });
+  }
+</script>
+
+<style>
+  .site-footer {
+    margin-block-start: var(--space-xl);
+    padding-block: var(--space-2xl) var(--space-l);
+    background: var(--bg-sunk);
+    border-block-start: var(--border-hairline) solid var(--line);
+    position: relative;
+    z-index: 2;
+  }
+
+  .site-footer__grid {
+    display: grid;
+    gap: var(--space-xl);
+    grid-template-columns: 1fr;
+  }
+
+  @media (min-width: 40em) {
+    .site-footer__grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (min-width: 64em) {
+    .site-footer__grid {
+      grid-template-columns: 1.6fr 1fr 1fr 1fr;
+      gap: var(--space-l);
+    }
+  }
+
+  .site-footer__brand {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2xs);
+  }
+
+  .site-footer__name {
+    font-family: var(--font-display);
+    font-size: var(--step-2);
+    font-weight: 800;
+    line-height: 1.1;
+  }
+
+  .site-footer__tagline {
+    color: var(--ink-soft);
+    max-width: 34ch;
+  }
+
+  .site-footer__newsletter {
+    margin-block-start: var(--space-m);
+    max-width: 30rem;
+  }
+
+  .site-footer__heading {
+    font-family: var(--font-body);
+    font-size: var(--step--1);
+    font-weight: 700;
+    letter-spacing: var(--tracking-wider);
+    text-transform: uppercase;
+    color: var(--accent-text);
+    margin-block-end: var(--space-2xs);
+  }
+
+  .site-footer__heading--spaced {
+    margin-block-start: var(--space-m);
+  }
+
+  .site-footer__note {
+    font-size: var(--step--1);
+    color: var(--ink-faint);
+    margin-block-start: var(--space-2xs);
+    max-width: 34ch;
+  }
+
+  .site-footer__status {
+    margin-block-end: var(--space-2xs);
+  }
+
+  .hours-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    font-size: var(--step--1);
+  }
+
+  .hours-list__row {
+    display: flex;
+    justify-content: space-between;
+    gap: var(--space-s);
+    padding-block: 2px;
+    color: var(--ink-soft);
+  }
+
+  .hours-list__row.is-today {
+    color: var(--ink);
+    font-weight: 700;
+  }
+
+  .hours-list__time {
+    font-variant-numeric: tabular-nums;
+  }
+
+  .site-footer__address {
+    font-style: normal;
+    color: var(--ink-soft);
+    line-height: var(--leading-snug);
+    margin-block-end: var(--space-2xs);
+  }
+
+  .link-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    font-size: var(--step--1);
+  }
+
+  .link-list li {
+    padding-block: 3px;
+  }
+
+  .link-list a {
+    color: var(--ink-soft);
+    text-decoration: none;
+  }
+
+  .link-list a:hover {
+    color: var(--accent-text);
+    text-decoration: underline;
+  }
+
+  .site-footer__wifi {
+    margin-block-start: var(--space-m);
+    padding: var(--space-2xs) var(--space-xs);
+    border: 1px dashed var(--line-strong);
+    border-radius: var(--radius-s);
+    font-size: var(--step--2);
+    line-height: var(--leading-snug);
+  }
+
+  .site-footer__wifi-label {
+    display: block;
+    letter-spacing: var(--tracking-wide);
+    text-transform: uppercase;
+    color: var(--ink-faint);
+  }
+
+  .site-footer__wifi-value {
+    color: var(--ink-soft);
+    font-family: var(--font-body);
+  }
+
+  .site-footer__bottom {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-s);
+    margin-block-start: var(--space-2xl);
+    padding-block-start: var(--space-s);
+    border-block-start: var(--border-hairline) solid var(--line);
+    font-size: var(--step--2);
+    color: var(--ink-faint);
+  }
+
+  .site-footer__legal-links {
+    display: flex;
+    gap: var(--space-s);
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .site-footer__legal-links a {
+    color: var(--ink-faint);
+    text-decoration: none;
+  }
+
+  .site-footer__legal-links a:hover {
+    color: var(--accent-text);
+    text-decoration: underline;
+  }
+
+  /* Doet niets zonder JavaScript, dus dan laten we hem weg. */
+  .flip {
+    display: none;
+    font-size: var(--step--2);
+    font-weight: 700;
+    letter-spacing: var(--tracking-wide);
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    padding: var(--space-3xs) var(--space-2xs);
+    border: 1px dashed var(--line-strong);
+    border-radius: var(--radius-s);
+    min-height: 2.25rem;
+  }
+
+  :global(:root[data-js]) .flip {
+    display: inline-flex;
+    align-items: center;
+  }
+
+  .flip:hover {
+    color: var(--accent-text);
+    border-color: var(--accent);
+    border-style: solid;
+  }
+</style>

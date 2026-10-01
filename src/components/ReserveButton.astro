@@ -1,0 +1,178 @@
+---
+/**
+ * Reserveerknop van SuperHoreca.
+ *
+ * Bewust ANDERS ingebouwd dan het knip-en-plakvoorbeeld van de leverancier.
+ * Dat voorbeeld zet <script async> in de pagina, waardoor elke bezoeker meteen
+ * contact legt met SuperHoreca — ook wie enkel de kaart komt bekijken. Deze
+ * site heeft geen cookiebanner net omdát er niks van buitenaf meelaadt, en dat
+ * willen we zo houden.
+ *
+ * Dus: het script wordt pas opgehaald wanneer iemand op de knop duwt. Voor de
+ * bezoeker is dat exact dezelfde ene klik; het venster komt gewoon op.
+ *
+ * Werkt het script niet (verkeerde URL, SuperHoreca plat), dan valt de knop
+ * terug op bellen. Nooit een knop die niets doet.
+ */
+import Icon from './Icon.astro';
+import { site, reservationsReady } from '../data/site';
+import type { Lang } from '../lib/i18n';
+
+interface Props {
+  lang: Lang;
+  /** "primary" = de gele knop, "ghost" = omkaderd */
+  variant?: 'primary' | 'ghost';
+  label?: string;
+  class?: string;
+}
+
+const { lang, variant = 'primary', label, class: className = '' } = Astro.props;
+const en = lang === 'en';
+
+const ready = reservationsReady();
+const text = label ?? (en ? 'Book a table' : 'Reserveer een tafel');
+---
+
+{
+  ready ? (
+    <span class:list={['reserve', className]}>
+      <button
+        type="button"
+        class:list={['btn', variant === 'primary' ? 'btn--primary' : 'btn--ghost']}
+        data-supershift-book
+        data-embed={site.reservations.embed}
+        data-fallback={`tel:${site.phoneHref}`}
+        data-busy-label={en ? 'One moment…' : 'Momentje…'}
+      >
+        <Icon name="clock" size={18} />
+        <span data-reserve-label>{text}</span>
+      </button>
+      <span class="reserve__note">
+        {
+          en
+            ? 'Opens a booking window from SuperHoreca. Nothing is loaded until you click.'
+            : 'Opent een boekingsvenster van SuperHoreca. Er wordt niks geladen tot ge klikt.'
+        }
+      </span>
+    </span>
+  ) : (
+    <span class:list={['reserve', className]}>
+      <a
+        class:list={['btn', variant === 'primary' ? 'btn--primary' : 'btn--ghost']}
+        href={`tel:${site.phoneHref}`}
+      >
+        <Icon name="phone" size={18} />
+        {en ? 'Call to book' : 'Bel om te reserveren'}
+      </a>
+      <span class="reserve__note">
+        {
+          en
+            ? 'Online booking is not switched on yet. Ring us and we will sort it out.'
+            : 'Online reserveren staat nog niet aan. Bel ons, we regelen het.'
+        }
+      </span>
+    </span>
+  )
+}
+
+<script>
+  /**
+   * Haalt het SuperHoreca-script pas op bij de eerste klik en opent daarna het
+   * venster. Bij een tweede klik is het script er al en gaat het meteen open.
+   */
+  interface SuperHorecaApi {
+    open: () => void;
+    close: () => void;
+  }
+
+  declare global {
+    interface Window {
+      SuperHoreca?: SuperHorecaApi;
+    }
+  }
+
+  let loading: Promise<SuperHorecaApi> | null = null;
+
+  function loadEmbed(src: string): Promise<SuperHorecaApi> {
+    if (window.SuperHoreca) return Promise.resolve(window.SuperHoreca);
+    if (loading) return loading;
+
+    loading = new Promise((resolve, reject) => {
+      const script = document.createElement('script');
+      script.src = src;
+      script.async = true;
+
+      // Blijft het hangen, dan wachten we niet eindeloos: dan bellen ze maar.
+      const timer = window.setTimeout(() => {
+        reject(new Error('SuperHoreca reageert niet'));
+      }, 8000);
+
+      script.addEventListener('load', () => {
+        window.clearTimeout(timer);
+        if (window.SuperHoreca) resolve(window.SuperHoreca);
+        else reject(new Error('SuperHoreca heeft zich niet aangemeld'));
+      });
+
+      script.addEventListener('error', () => {
+        window.clearTimeout(timer);
+        reject(new Error('SuperHoreca is niet bereikbaar'));
+      });
+
+      document.head.appendChild(script);
+    });
+
+    return loading;
+  }
+
+  for (const button of document.querySelectorAll<HTMLButtonElement>(
+    'button[data-supershift-book]',
+  )) {
+    button.addEventListener('click', async () => {
+      const src = button.dataset.embed;
+      if (!src) return;
+
+      const labelEl = button.querySelector<HTMLElement>('[data-reserve-label]');
+      const original = labelEl?.textContent ?? '';
+      const busy = button.dataset.busyLabel ?? '…';
+
+      button.disabled = true;
+      if (labelEl) labelEl.textContent = busy;
+
+      try {
+        const api = await loadEmbed(src);
+        api.open();
+      } catch (error) {
+        // Niet stilvallen: stuur ze naar de telefoon.
+        console.warn('[reserveren]', (error as Error).message);
+        const fallback = button.dataset.fallback;
+        if (fallback) window.location.href = fallback;
+      } finally {
+        button.disabled = false;
+        if (labelEl) labelEl.textContent = original;
+      }
+    });
+  }
+</script>
+
+<style>
+  .reserve {
+    display: inline-flex;
+    flex-direction: column;
+    gap: var(--space-3xs);
+    align-items: flex-start;
+  }
+
+  .reserve__note {
+    max-width: 34ch;
+    font-size: var(--step--2);
+    line-height: var(--leading-snug);
+    color: var(--ink-faint);
+  }
+
+  /* Het venster van SuperHoreca komt uit hun eigen script. Wij zetten er enkel
+     een fatsoenlijke focusring op, want die halen ze weg. */
+  :global(.ss-close:focus-visible) {
+    outline: var(--focus-ring-width) solid var(--focus-ring);
+    outline-offset: 2px;
+  }
+</style>

@@ -1,0 +1,444 @@
+---
+/**
+ * Eén event op de agenda.
+ *
+ * variant:
+ *   featured  — de eerstvolgende, groot bovenaan
+ *   default   — de rest van "wat komt er aan"
+ *   past      — compact regeltje onder "al geweest"
+ *
+ * De agendaknop gaat naar Google Agenda in een nieuw venster; zo moet
+ * niemand een .ics-bestand downloaden (dat wordt in sommige browsers
+ * toch tegengehouden).
+ */
+import Icon from './Icon.astro';
+import Photo from './Photo.astro';
+
+import { site, addressLine } from '../data/site';
+import { EVENT_TYPE_LABELS } from '../data/types';
+import type { ResolvedEvent } from '../lib/events';
+import {
+  formatDate,
+  formatDayBadge,
+  formatTime,
+  parseLocalDateTime,
+  priceLabel,
+  toIsoWithBrusselsOffset,
+} from '../lib/format';
+import { route, strings, type Lang } from '../lib/i18n';
+
+interface Props {
+  event: ResolvedEvent;
+  lang?: Lang;
+  variant?: 'featured' | 'default' | 'past';
+  /** Zodat de koppenrij op elke pagina blijft kloppen. */
+  headingLevel?: 'h2' | 'h3' | 'h4';
+  /** Staat het vandaag op het programma? */
+  isToday?: boolean;
+}
+
+const {
+  event,
+  lang = 'nl',
+  variant = 'default',
+  headingLevel = 'h3',
+  isToday = false,
+} = Astro.props;
+
+const T = strings(lang);
+const Heading = headingLevel;
+
+const title = lang === 'en' && event.titleEn ? event.titleEn : event.title;
+const description =
+  (lang === 'en' && event.descriptionEn ? event.descriptionEn : event.description) ?? '';
+
+const badge = formatDayBadge(event.start, lang);
+const iso = toIsoWithBrusselsOffset(event.start);
+
+const startDate = parseLocalDateTime(event.start);
+const endDate = event.end ? parseLocalDateTime(event.end) : undefined;
+/** Een avond die na middernacht eindigt is nog altijd één avond. */
+const spansDays = Boolean(
+  endDate && endDate.getTime() - startDate.getTime() > 14 * 3600 * 1000,
+);
+
+const showYear = startDate.getUTCFullYear() !== new Date().getFullYear();
+const dateText = formatDate(event.start, lang, showYear);
+const timeText =
+  event.end && !spansDays
+    ? `${formatTime(event.start)}–${formatTime(event.end)}`
+    : formatTime(event.start);
+const untilText =
+  spansDays && event.end
+    ? `${lang === 'en' ? 'until' : 't.e.m.'} ${formatDate(event.end, lang, showYear)}`
+    : '';
+
+const typeLabel = EVENT_TYPE_LABELS[event.type]?.[lang] ?? EVENT_TYPE_LABELS.andere[lang];
+const price = priceLabel(event.price, lang);
+const isFree = !event.price;
+
+const startHour = Number.parseInt(formatTime(event.start).slice(0, 2), 10);
+const todayLabel = startHour >= 17 ? T.tonight : T.todayLabel;
+
+const link = event.link?.trim() ? event.link.trim() : '';
+const hasImage = Boolean(event.image?.trim());
+const showPhoto = variant === 'featured' || (variant === 'default' && hasImage);
+
+const photoAlt =
+  event.imageAlt?.trim() ||
+  (lang === 'en'
+    ? `${title} at De Omgekeerde Wereld`
+    : `${title} in De Omgekeerde Wereld`);
+const photoBrief =
+  lang === 'en'
+    ? `Photo for "${title}": the room during the night itself — the crowd, the lamps, a table full of glasses. Landscape.`
+    : `Foto voor "${title}": de zaal tijdens den avond zelf — het volk, de lampen, een tafel vol glazen. Liggend beeld.`;
+
+/* ---- Google Agenda ---- */
+const gcalStart = new Date(iso);
+const gcalEnd = event.end
+  ? new Date(toIsoWithBrusselsOffset(event.end))
+  : new Date(gcalStart.getTime() + 3 * 3600 * 1000);
+const stamp = (d: Date) => d.toISOString().replace(/[-:]|\.\d{3}/g, '');
+const gcalDetails = [description, link, `${site.url}${route('agenda', lang)}`]
+  .filter(Boolean)
+  .join('\n\n');
+const calendarUrl =
+  'https://calendar.google.com/calendar/render?action=TEMPLATE' +
+  `&text=${encodeURIComponent(title)}` +
+  `&dates=${stamp(gcalStart)}/${stamp(gcalEnd)}` +
+  `&details=${encodeURIComponent(gcalDetails)}` +
+  `&location=${encodeURIComponent(`${site.name}, ${addressLine}`)}` +
+  '&ctz=Europe/Brussels';
+
+const newWindowNote =
+  lang === 'en' ? '(opens in a new window)' : '(opent in een nieuw venster)';
+---
+
+<article class:list={['ec', `ec--${variant}`]}>
+  <p class="ec__badge" aria-hidden="true">
+    <span class="ec__badge-day">{badge.day}</span>
+    <span class="ec__badge-month">{badge.month}</span>
+  </p>
+
+  <div class="ec__body">
+    {
+      variant === 'featured' && (
+        <p class="ec__flag">
+          {isToday ? todayLabel : lang === 'en' ? 'Up next' : 'Eerstvolgende'}
+        </p>
+      )
+    }
+
+    <Heading class="ec__title">{title}</Heading>
+
+    <p class="ec__when">
+      <time datetime={iso}>{dateText}</time>
+      <span class="ec__dot" aria-hidden="true">·</span>
+      <span class="ec__time">
+        <Icon name="clock" size={16} />
+        {timeText}
+      </span>
+      {untilText && <span class="ec__until">{untilText}</span>}
+    </p>
+
+    <p class="ec__tags">
+      <span class="ec__pill">{typeLabel}</span>
+      <span class:list={['ec__pill', 'ec__pill--price', isFree && 'ec__pill--free']}>
+        {price}
+      </span>
+      {
+        isToday && variant !== 'featured' && (
+          <span class="ec__pill ec__pill--now">{todayLabel}</span>
+        )
+      }
+    </p>
+
+    {description && <p class="ec__text">{description}</p>}
+
+    {
+      showPhoto && (
+        <Photo
+          src={event.image}
+          alt={photoAlt}
+          brief={photoBrief}
+          ratio={variant === 'featured' ? '16 / 9' : '3 / 2'}
+          loading="lazy"
+        />
+      )
+    }
+
+    {
+      variant !== 'past' && (
+        <p class="ec__actions">
+          {link && (
+            <a class="ec__link" href={link} target="_blank" rel="noopener">
+              {T.moreInfo}
+              <span class="visually-hidden">
+                {` — ${title} ${newWindowNote}`}
+              </span>
+              <Icon name="arrow" size={16} />
+            </a>
+          )}
+
+          <a class="ec__link ec__link--cal" href={calendarUrl} target="_blank" rel="noopener">
+            {T.addToCalendar}
+            <span class="visually-hidden">
+              {` — ${title}, ${
+                lang === 'en' ? 'via Google Calendar' : 'via Google Agenda'
+              } ${newWindowNote}`}
+            </span>
+          </a>
+        </p>
+      )
+    }
+  </div>
+</article>
+
+<style>
+  .ec {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: var(--space-s) var(--space-m);
+    align-items: start;
+    height: 100%;
+    padding: var(--space-m);
+    background: var(--bg-raised);
+    border: var(--border-hairline) solid var(--line);
+    border-radius: var(--radius-m);
+  }
+
+  /* ---- Het datumblokje ---- */
+  .ec__badge {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-width: 3.75rem;
+    padding: var(--space-2xs) var(--space-xs);
+    line-height: 1;
+    background: var(--bg-inset);
+    border: var(--border-hairline) solid var(--line-strong);
+    border-radius: var(--radius-s);
+  }
+
+  .ec__badge-day {
+    font-family: var(--font-display);
+    font-size: var(--step-2);
+    font-weight: 800;
+    letter-spacing: var(--tracking-tight);
+    color: var(--ink);
+  }
+
+  .ec__badge-month {
+    margin-block-start: var(--space-3xs);
+    font-size: var(--step--2);
+    font-weight: 700;
+    letter-spacing: var(--tracking-wide);
+    text-transform: uppercase;
+    color: var(--ink-faint);
+  }
+
+  /* ---- Inhoud ---- */
+  .ec__body {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2xs);
+    min-width: 0;
+  }
+
+  .ec__flag {
+    font-size: var(--step--1);
+    font-weight: 700;
+    letter-spacing: var(--tracking-wider);
+    text-transform: uppercase;
+    color: var(--accent-text);
+  }
+
+  .ec__title {
+    font-size: var(--step-2);
+  }
+
+  .ec__when {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-3xs) var(--space-2xs);
+    font-size: var(--step--1);
+    color: var(--ink-soft);
+  }
+
+  .ec__time {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-3xs);
+  }
+
+  .ec__dot,
+  .ec__until {
+    color: var(--ink-faint);
+  }
+
+  .ec__time :global(.icon) {
+    color: var(--ink-faint);
+  }
+
+  .ec__tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3xs) var(--space-2xs);
+    margin-block-start: var(--space-3xs);
+  }
+
+  .ec__pill {
+    display: inline-block;
+    padding: 0.15rem var(--space-2xs);
+    font-size: var(--step--2);
+    font-weight: 700;
+    letter-spacing: var(--tracking-wide);
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    background: var(--bg-inset);
+    border: var(--border-hairline) solid var(--line-strong);
+    border-radius: var(--radius-pill);
+  }
+
+  .ec__pill--price {
+    color: var(--ink);
+  }
+
+  .ec__pill--free {
+    color: var(--accent-text);
+    background: color-mix(in srgb, var(--accent) 10%, transparent);
+    border-color: var(--accent-text);
+  }
+
+  .ec__pill--now {
+    color: var(--amber-ink);
+    background: var(--amber);
+    border-color: var(--amber);
+  }
+
+  .ec__text {
+    max-width: var(--measure);
+    margin-block-start: var(--space-3xs);
+    color: var(--ink-soft);
+  }
+
+  /* Photo rendert zijn eigen <figure>; vandaar :global. */
+  .ec__body :global(.photo) {
+    margin-block-start: var(--space-2xs);
+  }
+
+  /* ---- Knoppen onderaan ---- */
+  .ec__actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-2xs) var(--space-m);
+    margin-block-start: auto;
+    padding-block-start: var(--space-2xs);
+  }
+
+  .ec__link {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-3xs);
+    min-height: var(--tap-min);
+    font-size: var(--step--1);
+    font-weight: 700;
+    color: var(--accent-text);
+  }
+
+  .ec__link--cal {
+    color: var(--ink-soft);
+  }
+
+  .ec__link--cal:hover {
+    color: var(--accent-text);
+  }
+
+  .ec__link :global(.icon) {
+    transition: transform var(--dur-fast) var(--ease-out);
+  }
+
+  .ec__link:hover :global(.icon) {
+    transform: translateX(2px);
+  }
+
+  /* ---- De eerstvolgende ---- */
+  .ec--featured {
+    padding: var(--space-l);
+    background:
+      linear-gradient(
+        180deg,
+        color-mix(in srgb, var(--accent) 6%, transparent),
+        transparent 40%
+      ),
+      var(--bg-raised);
+    border-color: var(--line-strong);
+    box-shadow: var(--shadow-m);
+  }
+
+  .ec--featured .ec__badge {
+    min-width: 4.75rem;
+    background: var(--accent);
+    border-color: var(--accent);
+  }
+
+  .ec--featured .ec__badge-day {
+    font-size: var(--step-4);
+    color: var(--accent-ink);
+  }
+
+  .ec--featured .ec__badge-month {
+    color: var(--accent-ink);
+  }
+
+  .ec--featured .ec__title {
+    font-size: var(--step-3);
+  }
+
+  .ec--featured .ec__text {
+    font-size: var(--step-0);
+    color: var(--ink);
+  }
+
+  @media (min-width: 56em) {
+    .ec--featured .ec__body :global(.photo) {
+      max-width: 34rem;
+    }
+  }
+
+  /* ---- Al geweest ---- */
+  .ec--past {
+    gap: var(--space-s);
+    padding: var(--space-xs) var(--space-2xs);
+    background: transparent;
+    border-color: transparent;
+    border-block-end: var(--border-hairline) solid var(--line);
+    border-radius: 0;
+  }
+
+  .ec--past .ec__badge {
+    min-width: 3rem;
+    background: transparent;
+    border-color: var(--line);
+  }
+
+  .ec--past .ec__badge-day {
+    font-size: var(--step-0);
+    color: var(--ink-faint);
+  }
+
+  .ec--past .ec__title {
+    font-size: var(--step-0);
+    font-weight: 700;
+    color: var(--ink-soft);
+  }
+
+  .ec--past .ec__when,
+  .ec--past .ec__tags {
+    font-size: var(--step--2);
+  }
+</style>

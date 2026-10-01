@@ -1,0 +1,551 @@
+---
+/**
+ * Aanvraagformulier voor groepen, verjaardagen, studentenclubs,
+ * concerten en samenwerkingen. GEEN tafelreservaties: den Omgekeerde
+ * is een inloopcafé.
+ *
+ * Werkt out of the box met Netlify Forms. Wil je een andere endpoint
+ * (Formspree, een eigen function)? Zet ze in src/data/site.ts onder
+ * forms.reservationEndpoint. Er is altijd een honeypot; Turnstile komt
+ * erbij zodra je een sleutel invult.
+ *
+ * Afhandeling: het veld `type` is wat telt. Het hulpveld `naar` bevat
+ * het mailadres waar de vraag heen moet, zodat een handler meteen kan
+ * doorsturen. Zonder JavaScript blijft `naar` op het algemene adres
+ * staan — daarom staat bij elke keuze óók gewoon het adres, als link.
+ */
+import { site } from '../data/site';
+import { route, strings, type Lang } from '../lib/i18n';
+
+interface Props {
+  lang: Lang;
+  /** Vink meteen een soort aan, bv. 'bovenzaal' vanaf /bovenzaal/. */
+  preselect?: string;
+}
+
+const { lang, preselect } = Astro.props;
+const T = strings(lang);
+const isEN = lang === 'en';
+
+const action = site.forms.reservationEndpoint || undefined;
+const useNetlify = !action;
+
+const subjectPrefix = isEN ? 'Request via the site' : 'Vraag via de site';
+
+const requestTypes = [
+  {
+    id: 'bovenzaal',
+    label: isEN ? 'Renting the upstairs' : 'De bovenzaal huren',
+    to: site.email.events,
+    who: 'Tristan',
+  },
+  {
+    id: 'groep',
+    label: isEN ? 'Group or birthday' : 'Groep of verjaardag',
+    to: site.email.events,
+    who: 'Tristan',
+  },
+  {
+    id: 'studentenclub',
+    label: isEN ? 'Student club or initiation' : 'Studentenclub of doop',
+    to: site.email.events,
+    who: 'Tristan',
+  },
+  {
+    id: 'concert',
+    label: isEN ? 'Concert or DJ set' : 'Concert of DJ-set',
+    to: site.email.events,
+    who: 'Tristan',
+  },
+  {
+    id: 'samenwerking',
+    label: isEN ? 'Collaboration or partnership' : 'Samenwerking of partnership',
+    to: site.email.partnerships,
+    who: 'Ran',
+  },
+  {
+    id: 'anders',
+    label: isEN ? 'Something else' : 'Iets anders',
+    to: site.email.general,
+    who: isEN ? 'the bar' : 'de toog',
+  },
+];
+
+const routeTemplate = isEN
+  ? 'This one reaches {who} — {mail}.'
+  : 'Dit komt bij {who} terecht — {mail}.';
+
+const routeNoteDefault = isEN
+  ? 'Pick what it is about and you will see who reads it.'
+  : 'Kies waarover het gaat, dan ziet ge bij wie het terechtkomt.';
+
+const req = `(${T.required})`;
+const opt = `(${T.optional})`;
+---
+
+<form
+  class="rf"
+  data-reservation-form
+  name="reservatie"
+  method="POST"
+  action={action}
+  data-netlify={useNetlify ? 'true' : undefined}
+  netlify-honeypot={useNetlify ? 'bedankt-bot' : undefined}
+>
+  {useNetlify && <input type="hidden" name="form-name" value="reservatie" />}
+
+  <!-- Hulpveld voor de afhandeling. JavaScript zet hier het juiste adres in;
+       zonder JavaScript blijft het algemene adres staan. -->
+  <input
+    type="hidden"
+    name="naar"
+    value={requestTypes.find((t) => t.id === preselect)?.to ?? site.email.general}
+    data-route-target
+  />
+
+  <p class="rf__honey" aria-hidden="true">
+    <label>
+      {isEN ? 'Leave this field empty' : 'Laat dit veld leeg'}
+      <input type="text" name="bedankt-bot" tabindex="-1" autocomplete="off" />
+    </label>
+  </p>
+
+  <div class="rf__grid">
+    <div class="rf__field">
+      <label class="rf__label" for="res-naam">
+        {T.name} <span class="rf__mark">{req}</span>
+      </label>
+      <input
+        class="rf__input"
+        id="res-naam"
+        type="text"
+        name="naam"
+        required
+        autocomplete="name"
+        placeholder={isEN ? 'Jane Vermeersch' : 'Jef Vermeersch'}
+      />
+    </div>
+
+    <div class="rf__field">
+      <label class="rf__label" for="res-email">
+        {T.email} <span class="rf__mark">{req}</span>
+      </label>
+      <input
+        class="rf__input"
+        id="res-email"
+        type="email"
+        name="email"
+        required
+        autocomplete="email"
+        inputmode="email"
+        aria-describedby="res-email-hint"
+        placeholder={isEN ? 'yourname@example.com' : 'uwnaam@voorbeeld.be'}
+      />
+      <p class="rf__hint" id="res-email-hint">
+        {isEN ? 'This is where our answer lands.' : 'Daar sturen we ons antwoord naartoe.'}
+      </p>
+    </div>
+
+    <div class="rf__field">
+      <label class="rf__label" for="res-telefoon">
+        {T.phone} <span class="rf__mark">{opt}</span>
+      </label>
+      <input
+        class="rf__input"
+        id="res-telefoon"
+        type="tel"
+        name="telefoon"
+        autocomplete="tel"
+        inputmode="tel"
+        placeholder="+32 4.."
+      />
+    </div>
+
+    <div class="rf__field">
+      <label class="rf__label" for="res-datum">
+        {T.date} <span class="rf__mark">{opt}</span>
+      </label>
+      <input class="rf__input" id="res-datum" type="date" name="datum" />
+    </div>
+
+    <div class="rf__field">
+      <label class="rf__label" for="res-aantal">
+        {T.groupSize} <span class="rf__mark">{opt}</span>
+      </label>
+      <input
+        class="rf__input rf__input--short"
+        id="res-aantal"
+        type="number"
+        name="aantal"
+        min="1"
+        step="1"
+        inputmode="numeric"
+        placeholder="12"
+      />
+    </div>
+  </div>
+
+  <fieldset class="rf__fieldset">
+    <legend class="rf__legend">
+      {T.requestType} <span class="rf__mark">{req}</span>
+    </legend>
+
+    <div class="rf__options">
+      {
+        requestTypes.map((type) => (
+          <div class="rf-option">
+            <input
+              class="rf-option__input"
+              type="radio"
+              id={`res-type-${type.id}`}
+              name="type"
+              value={type.label}
+              data-to={type.to}
+              data-who={type.who}
+              checked={preselect === type.id}
+              required
+            />
+            <label class="rf-option__label" for={`res-type-${type.id}`}>
+              <span class="rf-option__name">{type.label}</span>
+              <span class="rf-option__who">
+                {isEN ? `Reaches ${type.who}` : `Komt bij ${type.who} terecht`}
+              </span>
+            </label>
+            <a
+              class="rf-option__mail"
+              href={`mailto:${type.to}?subject=${encodeURIComponent(
+                `${subjectPrefix}: ${type.label}`,
+              )}`}
+            >
+              {type.to}
+            </a>
+          </div>
+        ))
+      }
+    </div>
+
+    <p
+      class="rf__route"
+      data-route-note
+      data-template={routeTemplate}
+      aria-live="polite"
+    >
+      {routeNoteDefault}
+    </p>
+  </fieldset>
+
+  <div class="rf__field">
+    <label class="rf__label" for="res-bericht">
+      {T.message} <span class="rf__mark">{req}</span>
+    </label>
+    <textarea
+      class="rf__input rf__textarea"
+      id="res-bericht"
+      name="bericht"
+      rows="6"
+      required
+      aria-describedby="res-bericht-hint"
+      placeholder={isEN
+        ? 'With how many, roughly when, and what you have in mind.'
+        : 'Met hoeveel, wanneer ongeveer, en wat ge in uw hoofd hebt.'}></textarea>
+    <p class="rf__hint" id="res-bericht-hint">
+      {
+        isEN
+          ? 'Day, time and rough number of people help most. Music wishes are welcome.'
+          : 'Dag, uur en ongeveer hoeveel volk: daar hebben we het meeste aan. Muziekwensen mogen erbij.'
+      }
+    </p>
+  </div>
+
+  <label class="rf__consent">
+    <input type="checkbox" name="toestemming" required />
+    <span>
+      {
+        isEN
+          ? 'Yes, use my details to answer this request.'
+          : 'Ja, den Omgekeerde mag mijn gegevens gebruiken om deze vraag te beantwoorden.'
+      }{' '}
+      <a href={route('privacy', lang)}>{T.privacyPolicy}</a>. <span class="rf__mark">{req}</span>
+    </span>
+  </label>
+
+  {
+    site.forms.turnstileSiteKey && (
+      <>
+        <div class="cf-turnstile" data-sitekey={site.forms.turnstileSiteKey} />
+        <script is:inline defer src="https://challenges.cloudflare.com/turnstile/v0/api.js" />
+      </>
+    )
+  }
+
+  <div class="rf__submit">
+    <button class="btn btn--primary" type="submit">{T.send}</button>
+    <p class="rf__hint">
+      {
+        isEN
+          ? 'Fields marked required are the ones we really need.'
+          : 'De velden met (verplicht) hebben we echt nodig, de rest is meegenomen.'
+      }
+    </p>
+  </div>
+</form>
+
+<script>
+  /**
+   * Twee kleine hulpjes, allebei optioneel:
+   *  1. het juiste mailadres in het verborgen veld `naar` zetten;
+   *  2. een fout veld markeren met aria-invalid zodra de browser klaagt.
+   * De ingebouwde validatie van de browser blijft gewoon werken.
+   */
+  const forms = document.querySelectorAll<HTMLFormElement>('[data-reservation-form]');
+
+  forms.forEach((form) => {
+    try {
+      const target = form.querySelector<HTMLInputElement>('[data-route-target]');
+      const note = form.querySelector<HTMLElement>('[data-route-note]');
+      const template = note?.dataset.template ?? '';
+      const radios = form.querySelectorAll<HTMLInputElement>('input[name="type"]');
+
+      const sync = () => {
+        const picked = form.querySelector<HTMLInputElement>('input[name="type"]:checked');
+        if (!picked) return;
+        const to = picked.dataset.to ?? '';
+        const who = picked.dataset.who ?? '';
+        if (target && to) target.value = to;
+        if (note && template && to && who) {
+          note.textContent = template.replace('{who}', who).replace('{mail}', to);
+        }
+      };
+
+      radios.forEach((radio) => radio.addEventListener('change', sync));
+      sync();
+
+      form.addEventListener(
+        'invalid',
+        (event) => {
+          const field = event.target as HTMLElement | null;
+          field?.setAttribute('aria-invalid', 'true');
+        },
+        true,
+      );
+
+      const clear = (event: Event) => {
+        const field = event.target as HTMLElement | null;
+        field?.removeAttribute('aria-invalid');
+      };
+
+      form.addEventListener('input', clear);
+      form.addEventListener('change', clear);
+    } catch {
+      /* Zonder deze extraatjes werkt het formulier ook gewoon. */
+    }
+  });
+</script>
+
+<style>
+  .rf {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-l);
+  }
+
+  .rf__honey {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
+  .rf__grid {
+    display: grid;
+    gap: var(--space-m);
+  }
+
+  @media (min-width: 34em) {
+    .rf__grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  .rf__field {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3xs);
+    min-width: 0;
+  }
+
+  .rf__label,
+  .rf__legend {
+    font-family: var(--font-body);
+    font-size: var(--step--2);
+    font-weight: 600;
+    letter-spacing: var(--tracking-wide);
+    text-transform: uppercase;
+    color: var(--ink-soft);
+  }
+
+  .rf__mark {
+    font-weight: 500;
+    letter-spacing: var(--tracking-normal);
+    text-transform: none;
+    color: var(--ink-faint);
+  }
+
+  .rf__input {
+    width: 100%;
+    min-height: var(--tap-min);
+    padding: var(--space-2xs) var(--space-xs);
+    background: var(--bg-inset);
+    color: var(--ink);
+    border: var(--border-hairline) solid var(--line-strong);
+    border-radius: var(--radius-s);
+  }
+
+  .rf__input::placeholder {
+    color: var(--ink-faint);
+  }
+
+  .rf__input:focus-visible {
+    border-color: var(--accent);
+  }
+
+  .rf__input[aria-invalid='true'] {
+    border-color: var(--rose);
+    border-width: 2px;
+  }
+
+  .rf__input--short {
+    max-width: 9rem;
+  }
+
+  .rf__textarea {
+    line-height: var(--leading-normal);
+    resize: vertical;
+  }
+
+  .rf__hint {
+    font-size: var(--step--1);
+    line-height: var(--leading-snug);
+    color: var(--ink-faint);
+  }
+
+  /* ---- Waarover gaat het ---- */
+  .rf__fieldset {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xs);
+  }
+
+  .rf__legend {
+    padding: 0;
+    margin-block-end: var(--space-3xs);
+  }
+
+  .rf__options {
+    display: grid;
+    gap: var(--space-2xs);
+  }
+
+  @media (min-width: 48em) {
+    .rf__options {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  .rf-option {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    align-items: start;
+    column-gap: var(--space-xs);
+    row-gap: var(--space-3xs);
+    padding: var(--space-xs);
+    background: var(--bg-raised);
+    border: var(--border-hairline) solid var(--line);
+    border-radius: var(--radius-s);
+    transition: border-color var(--dur-fast) var(--ease-out);
+  }
+
+  .rf-option:has(.rf-option__input:checked) {
+    border-color: var(--accent);
+    background: var(--bg-inset);
+  }
+
+  .rf-option__input {
+    /* In rem, zodat het doelwit niet krimpt met de tekstgrootte. */
+    inline-size: 1.25rem;
+    block-size: 1.25rem;
+    margin: 0;
+    margin-block-start: 0.1rem;
+    accent-color: var(--accent);
+    flex: none;
+  }
+
+  .rf-option__label {
+    display: flex;
+    flex-direction: column;
+    gap: 0.1em;
+    min-height: calc(var(--tap-min) - var(--space-xs) * 2);
+    cursor: pointer;
+  }
+
+  .rf-option__name {
+    font-weight: 600;
+    line-height: var(--leading-snug);
+  }
+
+  .rf-option__who {
+    font-size: var(--step--1);
+    color: var(--ink-faint);
+  }
+
+  .rf-option__mail {
+    grid-column: 2;
+    font-size: var(--step--2);
+    word-break: break-word;
+  }
+
+  .rf__route {
+    font-size: var(--step--1);
+    line-height: var(--leading-snug);
+    color: var(--ink-soft);
+    border-inline-start: 2px solid var(--line-strong);
+    padding-inline-start: var(--space-2xs);
+  }
+
+  /* ---- Toestemming en verzenden ---- */
+  .rf__consent {
+    display: flex;
+    gap: var(--space-2xs);
+    align-items: flex-start;
+    font-size: var(--step--1);
+    line-height: var(--leading-snug);
+    color: var(--ink-soft);
+  }
+
+  .rf__consent input {
+    /* In rem, niet in em: op de kleinere tekst werd dit anders 15 bij 15 pixels. */
+    margin-block-start: 0.1rem;
+    inline-size: 1.25rem;
+    block-size: 1.25rem;
+    accent-color: var(--accent);
+    flex: none;
+  }
+
+  .rf__submit {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-s);
+    padding-block-start: var(--space-2xs);
+    border-block-start: var(--border-hairline) solid var(--line);
+  }
+
+  .rf__submit .rf__hint {
+    flex: 1 1 16rem;
+  }
+</style>

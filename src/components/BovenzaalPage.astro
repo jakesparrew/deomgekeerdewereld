@@ -1,0 +1,495 @@
+---
+/**
+ * De bovenverdieping, bij ons "de bibliotheek". Eén component voor beide talen;
+ * /bovenzaal/ en /en/upstairs/ zijn twee regels die hier binnenkomen.
+ *
+ * Cijfers en prijzen komen uit content/bovenzaal.yaml. Staat daar niets, dan
+ * zegt de pagina "in overleg" in plaats van er iets bij te verzinnen.
+ */
+import Base from '../layouts/Base.astro';
+import Icon from './Icon.astro';
+import Photo from './Photo.astro';
+import ReservationForm from './ReservationForm.astro';
+
+import { site } from '../data/site';
+import { bovenzaal } from '../lib/content';
+import { euro } from '../lib/format';
+import { route, type Lang } from '../lib/i18n';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const en = lang === 'en';
+const pick = (item: { nl: string; en: string }) => (en ? item.en : item.nl);
+
+const { capaciteit, prijs, inbegrepen, waarvoor, praktisch } = bovenzaal;
+
+const breadcrumbs = [
+  { name: en ? 'Home' : 'Home', url: route('home', lang) },
+  { name: en ? 'The upstairs' : 'De bovenzaal', url: route('upstairs', lang) },
+];
+
+/** Alleen tonen wat echt ingevuld is. */
+const cijfers = [
+  capaciteit.zittend && {
+    value: String(capaciteit.zittend),
+    label: en ? 'seated' : 'zittend',
+  },
+  capaciteit.staand && {
+    value: String(capaciteit.staand),
+    label: en ? 'standing' : 'staand',
+  },
+  capaciteit.oppervlakte && {
+    value: `${capaciteit.oppervlakte} m²`,
+    label: en ? 'floor space' : 'vloeroppervlak',
+  },
+].filter(Boolean) as { value: string; label: string }[];
+
+const toonPrijs = prijs.toon && typeof prijs.vanaf === 'number';
+---
+
+<Base
+  title={en ? 'The upstairs' : 'De bovenzaal'}
+  description={en
+    ? 'Rent the upstairs floor at De Omgekeerde Wereld in Ghent: our library, with a free pool table, table football and its own corner. For birthdays, club nights, small concerts, meetings and workshops.'
+    : 'Huur de bovenverdieping van De Omgekeerde Wereld in Gent: onze bibliotheek, met gratis pooltafel, kicker en een eigen zithoek. Voor verjaardagen, clubavonden, kleine concerten, vergaderingen en workshops.'}
+  lang={lang}
+  active="upstairs"
+  image="/images/bovenzaal-kicker.jpg"
+  breadcrumbs={breadcrumbs}
+>
+  <!-- ============================================================
+       KOP
+       ============================================================ -->
+  <section class="section">
+    <div class="wrap">
+      <p class="eyebrow">{en ? 'The upstairs' : 'De bovenzaal'}</p>
+      <h1>
+        {en ? 'The upstairs, to rent' : 'De bovenzaal, te huur'}
+      </h1>
+
+      <div class="intro">
+        <div class="prose stack">
+          <p class="lead">
+            {
+              en
+                ? 'Our second floor is the library: world maps on the walls, sofas, low tables, the pool table and a table football. You can have it to yourselves for an evening.'
+                : 'Ons tweede verdiep is de bibliotheek: wereldkaarten aan de muur, zetels, lage tafels, de pooltafel en een kicker. Ge kunt ze een avond voor u alleen hebben.'
+            }
+          </p>
+
+          {
+            cijfers.length > 0 && (
+              <ul class="cijfers" role="list">
+                {cijfers.map((c) => (
+                  <li class="cijfer">
+                    <span class="cijfer__value">{c.value}</span>
+                    <span class="cijfer__label">{c.label}</span>
+                  </li>
+                ))}
+              </ul>
+            )
+          }
+
+          <p class="cta-row">
+            <a class="btn btn--primary" href="#aanvraag">
+              {en ? 'Ask about a date' : 'Vraag een datum aan'}
+              <Icon name="arrow" size={18} />
+            </a>
+            <a class="btn btn--ghost" href={`tel:${site.phoneHref}`}>
+              <Icon name="phone" size={18} />
+              {site.phone}
+            </a>
+          </p>
+        </div>
+
+        <Photo
+          class="intro__photo"
+          src="/images/bovenzaal-kicker.jpg"
+          alt={en
+            ? 'The upstairs room at De Omgekeerde Wereld: antique world maps on the walls, a table football, red lamps and candles on the tables.'
+            : 'De bovenverdieping van De Omgekeerde Wereld: oude wereldkaarten aan de muur, een kicker, rode lampen en kaarsen op de tafels.'}
+          brief=""
+          ratio="3 / 2"
+          loading="eager"
+          caption={en
+            ? 'The library, on a quiet afternoon.'
+            : 'De bibliotheek, op een rustige namiddag.'}
+        />
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       WAARVOOR
+       ============================================================ -->
+  <section class="section section--tight">
+    <div class="wrap">
+      <p class="eyebrow">{en ? 'Uses' : 'Gebruik'}</p>
+      <h2>{en ? 'What people use it for' : 'Waarvoor mensen ze huren'}</h2>
+
+      <ul class="waarvoor" role="list">
+        {
+          waarvoor.map((item) => (
+            <li class="card waarvoor__item">
+              <span class="waarvoor__icon" aria-hidden="true">
+                <Icon name={item.icon} size={22} />
+              </span>
+              <span class="waarvoor__text">{pick(item)}</span>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       WAT ZIT ERBIJ + PRIJS
+       ============================================================ -->
+  <section class="section section--tight">
+    <div class="wrap">
+      <div class="erbij">
+        <div>
+          <p class="eyebrow">{en ? 'What you get' : 'Wat ge krijgt'}</p>
+          <h2>{en ? 'The whole floor' : 'Heel de verdieping'}</h2>
+
+          <ul class="inbegrepen" role="list">
+            {
+              inbegrepen.map((item) => (
+                <li class="inbegrepen__item">
+                  <Icon name="check" size={18} />
+                  <span>{pick(item)}</span>
+                </li>
+              ))
+            }
+          </ul>
+        </div>
+
+        <aside class="prijskaart" aria-labelledby="prijs-titel">
+          <h3 class="prijskaart__title" id="prijs-titel">
+            {en ? 'What does it cost?' : 'Wat kost het?'}
+          </h3>
+
+          {
+            toonPrijs ? (
+              <p class="prijskaart__bedrag">
+                <span class="prijskaart__vanaf">{en ? 'from' : 'vanaf'}</span>
+                <span class="prijskaart__euro">{euro(prijs.vanaf as number)}</span>
+                <span class="prijskaart__eenheid">
+                  {en ? 'per evening' : `per ${prijs.eenheid}`}
+                </span>
+              </p>
+            ) : (
+              <p class="prijskaart__bedrag prijskaart__bedrag--open">
+                {en ? 'By arrangement' : 'In overleg'}
+              </p>
+            )
+          }
+
+          <p class="prijskaart__note">{en ? prijs.noteEn : prijs.note}</p>
+
+          <a class="btn btn--primary prijskaart__cta" href="#aanvraag">
+            {en ? 'Ask what it would cost' : 'Vraag wat het zou kosten'}
+          </a>
+        </aside>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       SFEER
+       ============================================================ -->
+  <section class="section section--tight">
+    <div class="wrap wrap--wide">
+      <div class="sfeer">
+        <Photo
+          src="/images/bovenzaal-zithoek.jpg"
+          alt={en
+            ? 'A corner of the upstairs room with a leather sofa, a red lamp and wooden tables against a wall of old maps.'
+            : 'Een hoek van de bovenverdieping met een leren zetel, een rode lamp en houten tafels tegen een muur vol oude kaarten.'}
+          brief=""
+          ratio="3 / 2"
+        />
+        <Photo
+          src="/images/poolke.jpg"
+          alt={en
+            ? 'Two people playing pool on the red-felt table at De Omgekeerde Wereld.'
+            : 'Twee mensen spelen pool op de tafel met rood laken in De Omgekeerde Wereld.'}
+          brief=""
+          ratio="3 / 2"
+        />
+      </div>
+
+      <ul class="praktisch" role="list">
+        {praktisch.map((item) => <li>{pick(item)}</li>)}
+      </ul>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       AANVRAAG
+       ============================================================ -->
+  <section class="section section--tight" id="aanvraag">
+    <div class="wrap">
+      <p class="eyebrow">{en ? 'Ask away' : 'Vraag maar'}</p>
+      <h2>{en ? 'Which date?' : 'Welke datum?'}</h2>
+      <p class="aanvraag__lead">
+        {
+          en
+            ? 'This goes straight to Tristan. Say which date, roughly how many of you, and what you have in mind.'
+            : 'Dit gaat rechtstreeks naar Tristan. Zeg welke datum, ongeveer met hoeveel ge zijt, en wat ge van plan zijt.'
+        }
+      </p>
+
+      <div class="aanvraag">
+        <ReservationForm lang={lang} preselect="bovenzaal" />
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .intro {
+    display: grid;
+    gap: var(--space-l);
+    margin-block-start: var(--space-m);
+  }
+
+  @media (min-width: 56em) {
+    .intro {
+      grid-template-columns: 1.15fr 1fr;
+      align-items: start;
+      gap: var(--space-xl);
+    }
+  }
+
+  .lead {
+    font-size: var(--step-1);
+    line-height: var(--leading-snug);
+    color: var(--ink);
+  }
+
+  .cta-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2xs);
+    margin-block-start: var(--space-m);
+  }
+
+  /* ---- Cijfers ---- */
+  .cijfers {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-l);
+    list-style: none;
+    margin: var(--space-m) 0 0;
+    padding: 0;
+  }
+
+  .cijfer {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .cijfer__value {
+    font-family: var(--font-display);
+    font-size: var(--step-3);
+    font-weight: 800;
+    line-height: 1;
+    color: var(--accent-text);
+  }
+
+  .cijfer__label {
+    font-size: var(--step--1);
+    color: var(--ink-faint);
+    letter-spacing: var(--tracking-wide);
+    text-transform: uppercase;
+  }
+
+  /* ---- Waarvoor ---- */
+  .waarvoor {
+    display: grid;
+    gap: var(--space-2xs);
+    grid-template-columns: 1fr;
+    list-style: none;
+    margin: var(--space-m) 0 0;
+    padding: 0;
+  }
+
+  @media (min-width: 40em) {
+    .waarvoor {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (min-width: 64em) {
+    .waarvoor {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  .waarvoor__item {
+    display: flex;
+    align-items: center;
+    gap: var(--space-xs);
+    padding: var(--space-s);
+  }
+
+  .waarvoor__icon {
+    display: inline-flex;
+    color: var(--accent-text);
+    flex: none;
+  }
+
+  .waarvoor__text {
+    line-height: var(--leading-snug);
+  }
+
+  /* ---- Wat zit erbij ---- */
+  .erbij {
+    display: grid;
+    gap: var(--space-l);
+    margin-block-start: var(--space-m);
+  }
+
+  @media (min-width: 56em) {
+    .erbij {
+      grid-template-columns: 1.3fr 1fr;
+      gap: var(--space-xl);
+      align-items: start;
+    }
+  }
+
+  .inbegrepen {
+    list-style: none;
+    margin: var(--space-m) 0 0;
+    padding: 0;
+  }
+
+  .inbegrepen__item {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-2xs);
+    padding-block: var(--space-2xs);
+    border-block-end: var(--border-hairline) solid var(--line);
+    line-height: var(--leading-snug);
+  }
+
+  .inbegrepen__item :global(svg) {
+    color: var(--accent-text);
+    flex: none;
+    margin-block-start: 0.15em;
+  }
+
+  /* ---- Prijskaart ---- */
+  .prijskaart {
+    background: var(--bg-raised);
+    border: var(--border-hairline) solid var(--line-strong);
+    border-radius: var(--radius-m);
+    padding: var(--space-m);
+    position: sticky;
+    top: 6rem;
+  }
+
+  .prijskaart__title {
+    font-size: var(--step-1);
+    margin-block-end: var(--space-2xs);
+  }
+
+  .prijskaart__bedrag {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: var(--space-3xs);
+  }
+
+  .prijskaart__vanaf {
+    font-size: var(--step--1);
+    color: var(--ink-faint);
+  }
+
+  .prijskaart__euro {
+    font-family: var(--font-display);
+    font-size: var(--step-3);
+    font-weight: 800;
+    color: var(--accent-text);
+    line-height: 1;
+  }
+
+  .prijskaart__eenheid {
+    font-size: var(--step--1);
+    color: var(--ink-faint);
+  }
+
+  .prijskaart__bedrag--open {
+    font-family: var(--font-display);
+    font-size: var(--step-2);
+    font-weight: 700;
+    color: var(--accent-text);
+  }
+
+  .prijskaart__note {
+    font-size: var(--step--1);
+    color: var(--ink-soft);
+    line-height: var(--leading-normal);
+    margin-block-start: var(--space-2xs);
+  }
+
+  .prijskaart__cta {
+    width: 100%;
+    margin-block-start: var(--space-s);
+  }
+
+  /* ---- Sfeer ---- */
+  .sfeer {
+    display: grid;
+    gap: var(--space-s);
+  }
+
+  @media (min-width: 48em) {
+    .sfeer {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  .praktisch {
+    margin: var(--space-l) 0 0;
+    padding: 0;
+    list-style: none;
+    display: grid;
+    gap: var(--space-2xs);
+    max-width: 62ch;
+  }
+
+  .praktisch li {
+    position: relative;
+    padding-inline-start: var(--space-s);
+    color: var(--ink-soft);
+    line-height: var(--leading-snug);
+  }
+
+  .praktisch li::before {
+    content: '';
+    position: absolute;
+    inset-inline-start: 0;
+    inset-block-start: 0.6em;
+    width: 6px;
+    height: 6px;
+    border-radius: var(--radius-pill);
+    background: var(--accent);
+  }
+
+  /* ---- Aanvraag ---- */
+  .aanvraag__lead {
+    max-width: 62ch;
+    color: var(--ink-soft);
+    margin-block-start: var(--space-2xs);
+  }
+
+  .aanvraag {
+    margin-block-start: var(--space-m);
+    max-width: 44rem;
+  }
+</style>

@@ -1,0 +1,210 @@
+---
+/**
+ * De pagina die niemand zoekt en iedereen ooit tegenkomt.
+ * Statisch gebouwd naar 404.html — de host serveert die bij een miskleun.
+ */
+import Base from '../layouts/Base.astro';
+import SunLogo from '../components/SunLogo.astro';
+import Icon from '../components/Icon.astro';
+import { strings, route, type Lang } from '../lib/i18n';
+import { site } from '../data/site';
+
+const lang: Lang = 'nl';
+const T = strings(lang);
+
+const ways = [
+  {
+    href: route('menu', lang),
+    icon: 'beer',
+    title: 'Toon keer de kaart',
+    note: 'Meer dan 69 bierkes, cocktails en koffie à volonté.',
+  },
+  {
+    href: route('agenda', lang),
+    icon: 'music',
+    title: "Wa is't er te doen?",
+    note: 'Concerten, feestjes en elke eerste vrijdag den Aper’Omer.',
+  },
+  {
+    href: route('contact', lang),
+    icon: 'pin',
+    title: 'Hier kunde ons vinden',
+    note: `${site.address.street}, recht tegenover VIERNULVIER.`,
+  },
+  {
+    href: `tel:${site.phoneHref}`,
+    icon: 'phone',
+    title: 'Of belt gewoon',
+    note: site.phone,
+  },
+];
+---
+
+<Base
+  title={`404 · ${site.name}`}
+  description={T.notFoundLead}
+  lang={lang}
+  rawTitle
+  noindex
+>
+  <section class="section notfound">
+    <div class="wrap wrap--text">
+      <div class="notfound__mark">
+        <SunLogo size={92} />
+      </div>
+
+      <p class="eyebrow">Foutje 404</p>
+      <h1>{T.notFound}</h1>
+
+      <div class="notfound__intro">
+        <p class="notfound__lead">{T.notFoundLead}</p>
+        <p>
+          Ge zijt ergens verkeerd gelopen. Ofwel is die link verhuisd, ofwel is
+          er onderweg een letter uit gevallen. Kan gebeuren: 't is hier tenslotte
+          de omgekeerde wereld, zelfs 't zonneke hangt hier op zijn kop.
+        </p>
+      </div>
+
+      <h2 class="notfound__next">Waar wilde naartoe?</h2>
+
+      <ul class="ways" role="list">
+        {
+          ways.map((way) => (
+            <li>
+              <a class="way" href={way.href}>
+                <span class="way__icon">
+                  <Icon name={way.icon} size={22} />
+                </span>
+                <span class="way__text">
+                  <span class="way__title">{way.title}</span>
+                  <span class="way__note">{way.note}</span>
+                </span>
+                <span class="way__arrow">
+                  <Icon name="arrow" size={18} />
+                </span>
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+
+      <p class="notfound__foot">
+        En anders komde gewoon af. Elke dag van 14 uur tot laat, den toog staat
+        er toch.
+      </p>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .notfound {
+    padding-block: var(--space-3xl) var(--space-2xl);
+  }
+
+  /* Het zonneke staat op zijn kop. Hover draait de wereld terug recht. */
+  .notfound__mark {
+    display: inline-flex;
+    transform: rotate(180deg);
+    margin-block-end: var(--space-m);
+  }
+
+  .notfound h1 {
+    margin-block: var(--space-2xs) var(--space-m);
+  }
+
+  .notfound__intro {
+    max-width: var(--measure);
+    color: var(--ink-soft);
+  }
+
+  .notfound__intro p + p {
+    margin-block-start: var(--space-s);
+  }
+
+  .notfound__lead {
+    font-size: var(--step-1);
+    line-height: var(--leading-snug);
+    color: var(--ink);
+  }
+
+  .notfound__next {
+    font-size: var(--step-2);
+    margin-block: var(--space-2xl) var(--space-s);
+  }
+
+  .ways {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: var(--space-2xs);
+  }
+
+  .way {
+    display: flex;
+    align-items: center;
+    gap: var(--space-s);
+    min-height: var(--tap-min);
+    padding: var(--space-s) var(--space-m);
+    background: var(--bg-raised);
+    border: var(--border-hairline) solid var(--line);
+    border-radius: var(--radius-s);
+    color: var(--ink);
+    text-decoration: none;
+    transition:
+      border-color var(--dur-fast) var(--ease-out),
+      background-color var(--dur-fast) var(--ease-out);
+  }
+
+  .way:hover {
+    border-color: var(--accent);
+    background: color-mix(in srgb, var(--accent) 8%, var(--bg-raised));
+  }
+
+  .way__icon {
+    display: flex;
+    flex: none;
+    color: var(--accent-text);
+  }
+
+  .way__text {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    gap: var(--space-3xs);
+    min-width: 0;
+  }
+
+  .way__title {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: var(--step-0);
+    letter-spacing: var(--tracking-tight);
+  }
+
+  .way:hover .way__title {
+    color: var(--accent-text);
+  }
+
+  .way__note {
+    font-size: var(--step--1);
+    color: var(--ink-faint);
+    line-height: var(--leading-snug);
+  }
+
+  .way__arrow {
+    display: flex;
+    flex: none;
+    color: var(--ink-faint);
+  }
+
+  .way:hover .way__arrow {
+    color: var(--accent-text);
+  }
+
+  .notfound__foot {
+    margin-block-start: var(--space-l);
+    font-size: var(--step--1);
+    color: var(--ink-faint);
+  }
+</style>

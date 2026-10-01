@@ -1,0 +1,746 @@
+---
+/**
+ * Our story — English twin of /over/.
+ * How three friends turned an empty building opposite the Vooruit
+ * into den Omgekeerde.
+ */
+import Base from '../../layouts/Base.astro';
+import Photo from '../../components/Photo.astro';
+import Icon from '../../components/Icon.astro';
+import OpenStatus from '../../components/OpenStatus.astro';
+import SunLogo from '../../components/SunLogo.astro';
+
+import { site } from '../../data/site';
+import { hours } from '../../lib/content';
+import { getWeekRows } from '../../lib/hours';
+import { euro } from '../../lib/format';
+import { route, strings, type Lang } from '../../lib/i18n';
+
+const lang: Lang = 'en';
+const T = strings(lang);
+
+/* ---- Hours summarised: days with the same hours share one line ---- */
+interface HourGroup {
+  from: string;
+  to: string;
+  closed: boolean;
+  open?: string;
+  close?: string;
+}
+
+const groups: HourGroup[] = [];
+for (const row of getWeekRows(hours, new Date(), lang)) {
+  const last = groups[groups.length - 1];
+  if (last && last.closed === row.closed && last.open === row.open && last.close === row.close) {
+    last.to = row.label;
+  } else {
+    groups.push({
+      from: row.label,
+      to: row.label,
+      closed: row.closed,
+      open: row.open,
+      close: row.close,
+    });
+  }
+}
+
+const groupLabel = (g: HourGroup) => (g.from === g.to ? g.from : `${g.from} to ${g.to}`);
+
+const groupValue = (g: HourGroup) => (g.closed ? T.closed : `${g.open} – ${g.close}`);
+
+const facts = [
+  { value: String(site.founded), label: 'when we got the keys' },
+  { value: '69+', label: 'beers on the list' },
+  { value: euro(2.7), label: 'for a pils' },
+  { value: '7/7', label: 'open from 2pm until late' },
+];
+
+const pairs: [string, string][] = [
+  ['Young', 'old'],
+  ['Day', 'night'],
+  ['Old school', 'right now'],
+  ['Customer', 'barman'],
+  ['Student', 'neighbour'],
+];
+
+const doings = [
+  {
+    icon: 'pool',
+    title: 'A game of pool',
+    price: 'Free',
+    text: 'Always free, no coins needed. You only have to wait until the table comes free.',
+  },
+  {
+    icon: 'foosball',
+    title: 'Table football',
+    price: euro(0.5),
+    text: 'Fifty cents a match. Bring some change, or ask at the bar.',
+  },
+  {
+    icon: 'chess',
+    title: 'A game of chess',
+    price: 'Free',
+    text: 'The board lives behind the bar. Just ask for it, even if you are sitting on your own.',
+  },
+  {
+    icon: 'music',
+    title: 'Concerts and parties',
+    price: 'Free entry',
+    text: 'Gigs and parties, always free. What is on and when goes up on Instagram.',
+  },
+];
+
+const description =
+  'The story of De Omgekeerde Wereld: a brown cafe and student bar in Ghent since 2014, opposite VIERNULVIER. 69+ beers, free pool, music for young and old.';
+
+const breadcrumbs = [
+  { name: 'Home', url: route('home', lang) },
+  { name: 'Our story', url: route('about', lang) },
+];
+---
+
+<Base
+  title="Our story"
+  description={description}
+  lang={lang}
+  active="about"
+  breadcrumbs={breadcrumbs}
+>
+  <!-- ============================================================
+       Intro
+       ============================================================ -->
+  <section class="section hero">
+    <div class="wrap">
+      <div class="hero__grid">
+        <div>
+          <p class="eyebrow">Our story</p>
+          <h1>Three friends, an empty building, opposite the Vooruit</h1>
+          <p class="hero__lead">
+            It started in 2014 with a key, an empty building and far too much enthusiasm.
+            There was no more of a plan than that.
+          </p>
+        </div>
+
+        <div class="hero__media">
+          <Photo src="/images/gevel-familie.jpg"
+            alt="The facade of De Omgekeerde Wereld with a balloon arch, the golden sun above the door and three people in the doorway."
+            brief=""
+            ratio="4 / 3"
+            loading="eager"
+            fetchpriority="high"
+          />
+        </div>
+      </div>
+
+      <ul class="facts">
+        {
+          facts.map((fact) => (
+            <li class="fact">
+              <p class="fact__value">{fact.value}</p>
+              <p class="fact__label">{fact.label}</p>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       How it started
+       ============================================================ -->
+  <section class="section band">
+    <div class="wrap">
+      <p class="eyebrow">How it started</p>
+      <h2>A place like the old days</h2>
+
+      <div class="split">
+        <div class="prose split__text">
+          <p>
+            Three enterprising friends rented an empty building opposite the Vooruit on
+            Sint-Pietersnieuwstraat in Ghent. The name came straight out of what we were
+            after: a place where young and old both feel at home. A place like the old days,
+            where customer and barman are one and the same. A place with prices anyone can
+            afford. A place with fantastic music, often from the good old days. A place that
+            forgets the outside world for a while.
+          </p>
+          <p>
+            The Vooruit is called VIERNULVIER these days. We are still here, every day
+            from two in the afternoon.
+          </p>
+        </div>
+
+        <div class="split__media">
+          <Photo src="/images/toog-lachen.jpg"
+            alt="Two friends laughing with drinks in their hands at the bar."
+            brief=""
+            ratio="3 / 2"
+            caption="The bar, somewhere between the first round and the second."
+          />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       The name
+       ============================================================ -->
+  <section class="section">
+    <div class="wrap">
+      <p class="eyebrow">The name</p>
+      <h2>Why ‘De Omgekeerde Wereld’?</h2>
+
+      <div class="split split--reverse">
+        <div class="name__text">
+          <div class="prose">
+            <p>
+              Things the rest of the world keeps apart end up at the same table here.
+            </p>
+          </div>
+
+          <ul class="flips">
+            {
+              pairs.map(([a, b]) => (
+                <li>
+                  <span class="flip__a">{a}</span>
+                  <span class="flip__x" aria-hidden="true">&#8644;</span>
+                  <span class="visually-hidden"> and </span>
+                  <span class="flip__b">{b}</span>
+                </li>
+              ))
+            }
+          </ul>
+
+          <p class="name__wink">
+            <span class="name__sun"><SunLogo size={40} /></span>
+            <span>
+              Found a button somewhere on this site that turns the whole world upside down?
+              That is not a mistake. Go on, press it — it turns back too.
+            </span>
+          </p>
+        </div>
+
+        <div class="split__media">
+          <Photo src="/images/lange-tafel.jpg"
+            alt="A long table full of people laughing and toasting, glasses and bottles in front of them."
+            brief=""
+            ratio="3 / 2"
+            caption="The same room, eight hours later in the day."
+          />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  
+
+  <!-- ============================================================
+       The family
+       ============================================================ -->
+  <section class="section familie">
+    <div class="wrap wrap--wide familie__grid">
+      <div class="familie__text prose stack">
+        <p class="eyebrow">The family</p>
+        <h2>You are not a customer here</h2>
+
+        <p class="lead">
+          From football teams to quiz teams, from student clubs to the staff and the
+          familiar faces: den Omgekeerde runs on its people.
+        </p>
+
+        <p>
+          So we turn a few of the usual hospitality rules around. Pool is free. You
+          may bring a sandwich in from outside. The coffee comes from the pot.
+          Concerts and parties have no door charge.
+        </p>
+
+        <p>
+          And when someone turns up with an idea, we back it. From early until late.
+        </p>
+      </div>
+
+      <div class="familie__fotos">
+        <Photo
+          src="/images/familie-toost.jpg"
+          alt="A group of friends with their arms around each other, raising a toast at a barrel table in De Omgekeerde Wereld."
+          brief=""
+          ratio="4 / 5"
+        />
+        <Photo
+          src="/images/broodjes.jpg"
+          alt="Four people eating food they brought with them at a table in the cafe, under the racks of glasses."
+          brief=""
+          ratio="3 / 2"
+          caption="Food from outside? No problem. It has always been that way here."
+        />
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       Things to do
+       ============================================================ -->
+  <section class="section">
+    <div class="wrap">
+      <p class="eyebrow">Things to do</p>
+      <h2>What is there to do here?</h2>
+
+      <div class="prose">
+        <p>
+          Besides drinking beer and listening, we mean. You do not have to order anything to
+          join in, and you do not have to be any good at it either.
+        </p>
+      </div>
+
+      <ul class="does">
+        {
+          doings.map((item) => (
+            <li class="card">
+              <span class="does__icon">
+                <Icon name={item.icon} size={28} />
+              </span>
+              <h3>{item.title}</h3>
+              <p class="does__price">{item.price}</p>
+              <p>{item.text}</p>
+            </li>
+          ))
+        }
+      </ul>
+
+      <p class="note">
+        Students with the Guido Gids get 1+1 here. And whatever is on this week, Tristan puts
+        on
+        <a href={site.social.instagram} rel="noopener" target="_blank">
+          Instagram {site.social.instagramHandle}
+          <span class="visually-hidden">(opens in a new window)</span>
+        </a>.
+      </p>
+
+      <div class="does__media">
+        <Photo
+          src="/images/poolke.jpg"
+          alt="Someone breaking on the red-felt pool table while a second player looks on."
+          brief=""
+          ratio="3 / 2"
+          caption="The pool table is free. Do rack the balls back up yourself."
+        />
+      </div>
+    </div>
+  </section>
+
+  
+
+  <!-- ============================================================
+       Closing: hours + signposts
+       ============================================================ -->
+  <section class="section closing">
+    <div class="wrap">
+      <div class="closing__grid">
+        <div>
+          <p class="eyebrow">{T.whenOpen}</p>
+          <h2>Every day. Really every day.</h2>
+          <p class="closing__lead">
+            {T.openEveryDay}. On Thursday, Friday and Saturday we stay open a good bit
+            longer.
+          </p>
+          <p class="closing__status"><OpenStatus lang={lang} variant="pill" /></p>
+        </div>
+
+        <div>
+          <dl class="hours">
+            {
+              groups.map((g) => (
+                <div class="hours__row">
+                  <dt>{groupLabel(g)}</dt>
+                  <dd>{groupValue(g)}</dd>
+                </div>
+              ))
+            }
+          </dl>
+
+          {
+            hours.note && (
+              <p class="note note--tight">
+                {T.hoursNote} Follow Instagram for the latest.
+              </p>
+            )
+          }
+
+          <div class="actions">
+            <a class="btn btn--primary" href={route('menu', lang)}>Have a look at the menu</a>
+            <a class="btn btn--ghost" href={route('agenda', lang)}>{T.agendaTitle}</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  /* ---- Intro ---- */
+  .hero {
+    padding-block-end: var(--space-xl);
+  }
+
+  .hero__grid {
+    display: grid;
+    gap: var(--space-l);
+  }
+
+  .hero h1 {
+    margin-block-start: var(--space-xs);
+  }
+
+  .hero__lead {
+    margin-block-start: var(--space-m);
+    max-width: 34ch;
+    font-size: var(--step-1);
+    line-height: var(--leading-snug);
+    color: var(--ink-soft);
+  }
+
+  @media (min-width: 56em) {
+    .hero__grid {
+      grid-template-columns: 1.05fr 0.95fr;
+      align-items: center;
+      gap: var(--space-xl);
+    }
+  }
+
+  .facts {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--space-m);
+    margin-block-start: var(--space-xl);
+    padding-block-start: var(--space-m);
+    padding-inline-start: 0;
+    list-style: none;
+    border-block-start: var(--border-hairline) solid var(--line);
+  }
+
+  @media (min-width: 44em) {
+    .facts {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+  }
+
+  .fact__value {
+    font-family: var(--font-display);
+    font-size: var(--step-3);
+    font-weight: 700;
+    line-height: var(--leading-tight);
+    letter-spacing: var(--tracking-tight);
+    color: var(--accent-text);
+  }
+
+  .fact__label {
+    margin-block-start: var(--space-3xs);
+    font-size: var(--step--1);
+    line-height: var(--leading-snug);
+    color: var(--ink-soft);
+  }
+
+  /* ---- Alternating band, so the sections come apart ---- */
+  .band {
+    background: var(--bg-raised);
+    border-block: var(--border-hairline) solid var(--line);
+  }
+
+  /* ---- Text beside image ---- */
+  .split {
+    display: grid;
+    gap: var(--space-l);
+    margin-block-start: var(--space-l);
+  }
+
+  @media (min-width: 56em) {
+    .split {
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-xl);
+      align-items: start;
+    }
+
+    .split--reverse .split__media {
+      order: -1;
+    }
+  }
+
+  /* ---- The name ---- */
+  .flips {
+    display: grid;
+    gap: 0;
+    margin-block-start: var(--space-l);
+    padding-inline-start: 0;
+    list-style: none;
+  }
+
+  .flips li {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: var(--space-2xs);
+    padding-block: var(--space-2xs);
+    font-family: var(--font-display);
+    font-size: var(--step-2);
+    font-weight: 700;
+    line-height: var(--leading-snug);
+    letter-spacing: var(--tracking-tight);
+    border-block-end: var(--border-hairline) solid var(--line);
+  }
+
+  .flip__x {
+    font-family: var(--font-body);
+    font-size: var(--step-0);
+    font-weight: 400;
+    color: var(--ink-faint);
+  }
+
+  .flip__b {
+    color: var(--accent-text);
+  }
+
+  .name__wink {
+    display: flex;
+    align-items: center;
+    gap: var(--space-s);
+    margin-block-start: var(--space-l);
+    padding: var(--space-s);
+    font-size: var(--step--1);
+    line-height: var(--leading-normal);
+    color: var(--ink-soft);
+    background: var(--bg-inset);
+    border: var(--border-hairline) solid var(--line);
+    border-radius: var(--radius-m);
+  }
+
+  .name__sun {
+    display: flex;
+    flex: none;
+    color: var(--amber);
+  }
+
+  /* ---- Music ---- */
+  .sets {
+    display: grid;
+    gap: var(--space-m);
+    margin-block-start: var(--space-l);
+    padding-inline-start: 0;
+    list-style: none;
+  }
+
+  @media (min-width: 48em) {
+    .sets {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: var(--space-l);
+    }
+  }
+
+  .set {
+    padding-inline-start: var(--space-s);
+    border-inline-start: 2px solid var(--line-strong);
+  }
+
+  .set h3 {
+    font-size: var(--step-1);
+  }
+
+  .set p {
+    margin-block-start: var(--space-2xs);
+    font-size: var(--step--1);
+    color: var(--ink-soft);
+  }
+
+  /* ---- Things to do ---- */
+  .does {
+    display: grid;
+    gap: var(--space-m);
+    margin-block-start: var(--space-l);
+    padding-inline-start: 0;
+    list-style: none;
+  }
+
+  @media (min-width: 40em) {
+    .does {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (min-width: 64em) {
+    .does {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+  }
+
+  .does .card {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3xs);
+    height: 100%;
+  }
+
+  .does__icon {
+    display: flex;
+    margin-block-end: var(--space-2xs);
+    color: var(--accent-text);
+  }
+
+  .does h3 {
+    font-size: var(--step-1);
+  }
+
+  /* --amber does not reach 4.5:1 for small text on the light card background,
+     --accent-text does. That is why the price sits in the accent colour. */
+  .does__price {
+    font-size: var(--step--1);
+    font-weight: 700;
+    letter-spacing: var(--tracking-wide);
+    text-transform: uppercase;
+    color: var(--accent-text);
+  }
+
+  .does .card p:last-child {
+    margin-block-start: var(--space-3xs);
+    font-size: var(--step--1);
+    color: var(--ink-soft);
+  }
+
+  .does__media {
+    margin-block-start: var(--space-l);
+  }
+
+  /* ---- Loose note under a block ---- */
+  .note {
+    max-width: var(--measure);
+    margin-block-start: var(--space-l);
+    font-size: var(--step--1);
+    color: var(--ink-faint);
+  }
+
+  .note--tight {
+    margin-block-start: var(--space-s);
+  }
+
+  /* ---- Press ---- */
+  .quotes {
+    display: grid;
+    gap: var(--space-m);
+    margin-block-start: var(--space-l);
+  }
+
+  @media (min-width: 52em) {
+    .quotes {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: var(--space-l);
+    }
+  }
+
+  .quote {
+    margin: 0;
+    padding: var(--space-m);
+    background: var(--bg);
+    border: var(--border-hairline) solid var(--line);
+    border-inline-start: 3px solid var(--amber);
+    border-radius: var(--radius-m);
+  }
+
+  .quote__body p {
+    font-family: var(--font-display);
+    font-size: var(--step-2);
+    font-weight: 700;
+    line-height: var(--leading-snug);
+    letter-spacing: var(--tracking-tight);
+  }
+
+  .quote__by {
+    margin-block-start: var(--space-s);
+    font-size: var(--step--1);
+    color: var(--ink-soft);
+  }
+
+  .quote__gloss {
+    margin-block-start: var(--space-2xs);
+    font-size: var(--step--1);
+    color: var(--ink-faint);
+  }
+
+  /* ---- Closing ---- */
+  .closing__grid {
+    display: grid;
+    gap: var(--space-l);
+  }
+
+  @media (min-width: 52em) {
+    .closing__grid {
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-xl);
+    }
+  }
+
+  .closing h2 {
+    margin-block-start: var(--space-xs);
+  }
+
+  .closing__lead {
+    max-width: 34ch;
+    margin-block-start: var(--space-s);
+    color: var(--ink-soft);
+  }
+
+  .closing__status {
+    margin-block-start: var(--space-m);
+  }
+
+  .hours {
+    margin: 0;
+  }
+
+  .hours__row {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: var(--space-s);
+    padding-block: var(--space-2xs);
+    border-block-end: var(--border-hairline) solid var(--line);
+  }
+
+  .hours dt {
+    color: var(--ink-soft);
+  }
+
+  .hours dd {
+    margin: 0;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-s);
+    margin-block-start: var(--space-l);
+  }
+
+  /* ---- De familie ---- */
+  .familie {
+    background: var(--bg-raised);
+    border-block: var(--border-hairline) solid var(--line);
+  }
+
+  .familie__grid {
+    display: grid;
+    gap: var(--space-l);
+  }
+
+  @media (min-width: 56em) {
+    .familie__grid {
+      grid-template-columns: 1.25fr 1fr;
+      gap: var(--space-xl);
+      align-items: start;
+    }
+  }
+
+  .familie__fotos {
+    display: grid;
+    gap: var(--space-s);
+  }
+
+</style>

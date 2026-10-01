@@ -1,0 +1,112 @@
+---
+/**
+ * Dag of nacht. Standaard volgt de site het systeem, met de nacht als
+ * vertrekpunt. Klikt de bezoeker, dan onthouden we die keuze.
+ */
+import { strings, type Lang } from '../lib/i18n';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const T = strings(lang);
+---
+
+<button
+  class="theme-toggle"
+  type="button"
+  data-theme-toggle
+  aria-label={T.themeToggle}
+  title={T.themeToggle}
+>
+  <svg class="theme-toggle__icon theme-toggle__icon--sun" viewBox="0 0 24 24" aria-hidden="true">
+    <circle cx="12" cy="12" r="4.5" fill="currentColor"></circle>
+    <g stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+      <path d="M12 2v2.5M12 19.5V22M2 12h2.5M19.5 12H22M4.9 4.9l1.8 1.8M17.3 17.3l1.8 1.8M19.1 4.9l-1.8 1.8M6.7 17.3l-1.8 1.8"></path>
+    </g>
+  </svg>
+  <svg class="theme-toggle__icon theme-toggle__icon--moon" viewBox="0 0 24 24" aria-hidden="true">
+    <path
+      d="M20 14.2A8.2 8.2 0 0 1 9.8 4a8.2 8.2 0 1 0 10.2 10.2Z"
+      fill="currentColor"
+    ></path>
+  </svg>
+</button>
+
+<script>
+  const KEY = 'omw-theme';
+  const root = document.documentElement;
+
+  function current(): 'dag' | 'nacht' {
+    const set = root.getAttribute('data-theme');
+    if (set === 'dag' || set === 'nacht') return set;
+    return 'nacht';
+  }
+
+  for (const button of document.querySelectorAll<HTMLButtonElement>('[data-theme-toggle]')) {
+    button.addEventListener('click', () => {
+      const next = current() === 'nacht' ? 'dag' : 'nacht';
+      root.setAttribute('data-theme', next);
+      try {
+        localStorage.setItem(KEY, next);
+      } catch {
+        /* privémodus: keuze geldt enkel voor deze pagina */
+      }
+    });
+  }
+</script>
+
+<style>
+  /* Zonder JavaScript doet deze knop niks, dus dan tonen we hem niet.
+     De bezoeker krijgt dan het thema van zijn eigen toestel. */
+  .theme-toggle {
+    display: none;
+    align-items: center;
+    justify-content: center;
+    width: 2.5rem;
+    height: 2.5rem;
+    color: var(--ink-soft);
+    border: var(--border-hairline) solid var(--line-strong);
+    border-radius: var(--radius-s);
+    transition:
+      color var(--dur-fast) var(--ease-out),
+      border-color var(--dur-fast) var(--ease-out);
+  }
+
+  :global(:root[data-js]) .theme-toggle {
+    display: inline-flex;
+  }
+
+  .theme-toggle:hover {
+    color: var(--accent-text);
+    border-color: var(--accent);
+  }
+
+  .theme-toggle__icon {
+    width: 1.15rem;
+    height: 1.15rem;
+  }
+
+  /* 's Nachts bieden we de zon aan, overdag de maan. */
+  .theme-toggle__icon--sun {
+    display: block;
+  }
+  .theme-toggle__icon--moon {
+    display: none;
+  }
+
+  :global(:root[data-theme='dag']) .theme-toggle__icon--sun {
+    display: none;
+  }
+  :global(:root[data-theme='dag']) .theme-toggle__icon--moon {
+    display: block;
+  }
+
+  @media (min-width: 60em) {
+    .theme-toggle {
+      width: 2.25rem;
+      height: 2.25rem;
+    }
+  }
+</style>

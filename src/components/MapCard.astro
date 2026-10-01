@@ -1,0 +1,368 @@
+---
+/**
+ * De kaart, zonder dat er iets van buitenaf meelift.
+ *
+ * Bij het laden van de pagina wordt er NIETS opgehaald bij een derde partij:
+ * je ziet een getekend plannetje. Pas als de bezoeker op "Toon de kaart"
+ * duwt, wordt de iframe van OpenStreetMap toegevoegd. Zo staat er geen
+ * externe cookie of verzoek op de pagina zolang niemand daarom vraagt.
+ *
+ * De knop verschijnt enkel als er JavaScript is — anders zou hij niets doen.
+ * De routelinks eronder staan er altijd, ook zonder JavaScript.
+ */
+import Icon from './Icon.astro';
+import { site, addressLine } from '../data/site';
+import type { Lang } from '../lib/i18n';
+
+interface Props {
+  lang?: Lang;
+  class?: string;
+}
+
+const { lang = 'nl', class: className = '' } = Astro.props;
+
+const { lat, lon } = site.geo;
+
+/* Een kadertje van ongeveer 600 op 400 meter rond de deur. */
+const dLat = 0.0018;
+const dLon = 0.0042;
+const bbox = [lon - dLon, lat - dLat, lon + dLon, lat + dLat]
+  .map((n) => n.toFixed(6))
+  .join(',');
+
+const embedSrc = `https://www.openstreetmap.org/export/embed.html?bbox=${encodeURIComponent(
+  bbox,
+)}&layer=mapnik&marker=${encodeURIComponent(`${lat},${lon}`)}`;
+
+const mapTitle =
+  lang === 'en'
+    ? `Map from OpenStreetMap showing ${site.name} at ${addressLine}`
+    : `Kaart van OpenStreetMap met ${site.name} aan ${addressLine}`;
+
+const sketchAlt =
+  lang === 'en'
+    ? 'Sketch map: De Omgekeerde Wereld sits on Sint-Pietersnieuwstraat, directly opposite VIERNULVIER, between Sint-Pietersplein and the city centre.'
+    : 'Schetskaart: De Omgekeerde Wereld ligt in de Sint-Pietersnieuwstraat, recht tegenover VIERNULVIER, tussen het Sint-Pietersplein en het centrum.';
+---
+
+<div
+  class:list={['map-card', className]}
+  data-map-card
+  data-map-src={embedSrc}
+  data-map-title={mapTitle}
+>
+  <p class="map-card__where">
+    <Icon name="pin" size={18} />
+    <span>
+      {addressLine}
+      <span class="map-card__opposite">
+        {lang === 'en' ? 'opposite VIERNULVIER' : 'rechtover VIERNULVIER'}
+      </span>
+    </span>
+  </p>
+
+  <div class="map-card__frame" data-map-frame tabindex="-1">
+    <svg
+      class="map-sketch"
+      viewBox="0 0 800 440"
+      role="img"
+      aria-label={sketchAlt}
+      preserveAspectRatio="xMidYMid slice"
+    >
+      <rect class="map-sketch__ground" x="0" y="0" width="800" height="440" />
+
+      <!-- Bouwblokken -->
+      <g class="map-sketch__blocks">
+        <rect x="66" y="248" width="150" height="72" rx="4" />
+        <rect x="500" y="60" width="150" height="118" rx="4" />
+        <rect x="676" y="60" width="110" height="118" rx="4" />
+        <rect x="596" y="286" width="190" height="126" rx="4" />
+      </g>
+
+      <!-- Straten -->
+      <path class="map-sketch__road" d="M 214 476 L 332 250 L 436 -36" />
+      <path class="map-sketch__road map-sketch__road--side" d="M 332 250 L 812 208" />
+      <path class="map-sketch__road map-sketch__road--side" d="M 258 372 L -12 336" />
+
+      <!-- Rechtover: VIERNULVIER -->
+      <rect class="map-sketch__landmark" x="56" y="88" width="204" height="146" rx="4" />
+      <text class="map-sketch__label" x="158" y="158" text-anchor="middle">VIERNULVIER</text>
+      <text class="map-sketch__sub" x="158" y="188" text-anchor="middle">
+        {lang === 'en' ? '(the old Vooruit)' : '(het oude Vooruit)'}
+      </text>
+
+      <!-- Hier zitten wij -->
+      <rect class="map-sketch__here-block" x="380" y="248" width="216" height="132" rx="4" />
+      <g class="map-sketch__pin" transform="translate(450 192) scale(2.4)">
+        <path d="M12 21s7-6.4 7-11a7 7 0 1 0-14 0c0 4.6 7 11 7 11Z" />
+        <circle class="map-sketch__pin-dot" cx="12" cy="10" r="2.6" />
+      </g>
+      <text class="map-sketch__here" x="488" y="312" text-anchor="middle">
+        {lang === 'en' ? 'We are here' : 'Hier zitte wij'}
+      </text>
+      <text class="map-sketch__sub" x="488" y="344" text-anchor="middle">nr. 116</text>
+
+      <!-- Straatnamen en richting -->
+      <text class="map-sketch__street" x="250" y="410" transform="rotate(-62 250 410)">
+        Sint-Pietersnieuwstraat
+      </text>
+      <text class="map-sketch__sub" x="418" y="58" text-anchor="middle">
+        {lang === 'en' ? 'to the centre' : 'naar het centrum'}
+      </text>
+      <path class="map-sketch__arrow" d="M 418 76 L 418 116 M 405 89 L 418 76 L 431 89" />
+      <text class="map-sketch__sub" x="140" y="428" text-anchor="middle">Sint-Pietersplein</text>
+    </svg>
+  </div>
+
+  <div class="map-card__bar">
+    <button type="button" class="btn btn--ghost map-card__load" data-map-load>
+      {lang === 'en' ? 'Show the map' : 'Toon de kaart'}
+    </button>
+    <p class="map-card__note">
+      {
+        lang === 'en'
+          ? 'Clicking loads a map from openstreetmap.org. Until then, nothing leaves this page.'
+          : 'Klikken laadt een kaart van openstreetmap.org. Tot dan vertrekt er niks van deze pagina.'
+      }
+    </p>
+  </div>
+
+  <ul class="map-card__links">
+    <li>
+      <a href={site.maps.google} rel="noopener">
+        {lang === 'en' ? 'Directions on Google Maps' : 'Route via Google Maps'}
+      </a>
+    </li>
+    <li>
+      <a href={site.maps.osm} rel="noopener">
+        {lang === 'en' ? 'Open on OpenStreetMap' : 'Bekijk op OpenStreetMap'}
+      </a>
+    </li>
+    <li>
+      <a href={site.maps.appleMaps} rel="noopener">
+        {lang === 'en' ? 'Open in Apple Maps' : 'Open in Apple Maps'}
+      </a>
+    </li>
+  </ul>
+</div>
+
+<script>
+  const cards = document.querySelectorAll<HTMLElement>('[data-map-card]');
+
+  for (const card of cards) {
+    const button = card.querySelector<HTMLButtonElement>('[data-map-load]');
+    const frame = card.querySelector<HTMLElement>('[data-map-frame]');
+    const src = card.dataset.mapSrc;
+    if (!button || !frame || !src) continue;
+
+    // Nu pas tonen: zonder JavaScript zou de knop niets uitrichten.
+    card.dataset.js = '1';
+
+    button.addEventListener(
+      'click',
+      () => {
+        const iframe = document.createElement('iframe');
+        iframe.src = src;
+        iframe.title = card.dataset.mapTitle || 'OpenStreetMap';
+        iframe.loading = 'lazy';
+        iframe.referrerPolicy = 'no-referrer';
+        iframe.setAttribute('allowfullscreen', '');
+        frame.replaceChildren(iframe);
+        card.dataset.loaded = '1';
+        // De knop verdwijnt, dus de focus krijgt een nieuw thuis.
+        frame.focus();
+      },
+      { once: true },
+    );
+  }
+</script>
+
+<style>
+  .map-card {
+    background: var(--bg-raised);
+    border: var(--border-hairline) solid var(--line);
+    border-radius: var(--radius-m);
+    overflow: hidden;
+  }
+
+  .map-card__where {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-2xs);
+    padding: var(--space-xs) var(--space-s);
+    border-block-end: var(--border-hairline) solid var(--line);
+    font-size: var(--step--1);
+    line-height: var(--leading-snug);
+    color: var(--ink-soft);
+  }
+
+  .map-card__where :global(.icon) {
+    color: var(--accent-text);
+    margin-block-start: 0.1em;
+  }
+
+  .map-card__opposite {
+    display: block;
+    color: var(--ink-faint);
+  }
+
+  .map-card__frame {
+    position: relative;
+    aspect-ratio: 5 / 3;
+    background: var(--bg-inset);
+  }
+
+  .map-card__frame:focus-visible {
+    outline: var(--focus-ring-width) solid var(--focus-ring);
+    outline-offset: calc(var(--focus-ring-width) * -1);
+  }
+
+  .map-card__frame :global(iframe) {
+    display: block;
+    width: 100%;
+    height: 100%;
+    border: 0;
+  }
+
+  .map-sketch {
+    width: 100%;
+    height: 100%;
+  }
+
+  .map-sketch__ground {
+    fill: var(--bg-inset);
+  }
+
+  .map-sketch__blocks rect {
+    fill: var(--bg-raised);
+    stroke: var(--line);
+    stroke-width: 1.5;
+  }
+
+  .map-sketch__road {
+    fill: none;
+    stroke: var(--wood-soft);
+    stroke-width: 58;
+    stroke-linecap: square;
+    stroke-linejoin: round;
+  }
+
+  .map-sketch__road--side {
+    stroke-width: 34;
+  }
+
+  .map-sketch__landmark {
+    fill: color-mix(in srgb, var(--wood) 22%, var(--bg-raised));
+    stroke: var(--line-strong);
+    stroke-width: 1.5;
+  }
+
+  .map-sketch__here-block {
+    fill: color-mix(in srgb, var(--accent) 16%, var(--bg-raised));
+    stroke: var(--accent-text);
+    stroke-width: 2;
+  }
+
+  .map-sketch__pin {
+    fill: none;
+    stroke: var(--accent-text);
+    stroke-width: 1.8;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .map-sketch__pin-dot {
+    fill: var(--accent-text);
+    stroke: none;
+  }
+
+  /*
+    De maten hieronder staan in gebruikerseenheden van de viewBox (800 x 440),
+    net als de x- en y-waarden van de tekening zelf. Dit is geen tekst van de
+    interface maar geometrie: de type-schaal uit tokens.css hoort hier niet,
+    die zou binnen een viewBox alle verhoudingen breken.
+  */
+  .map-sketch__label,
+  .map-sketch__here,
+  .map-sketch__street,
+  .map-sketch__sub {
+    font-family: var(--font-body);
+    font-size: 24px;
+    font-weight: 600;
+    letter-spacing: var(--tracking-wide);
+    fill: var(--ink-soft);
+  }
+
+  .map-sketch__street {
+    font-size: 22px;
+    font-weight: 500;
+    letter-spacing: var(--tracking-normal);
+    fill: var(--ink-soft);
+  }
+
+  .map-sketch__here {
+    font-family: var(--font-display);
+    font-size: 30px;
+    font-weight: 700;
+    letter-spacing: var(--tracking-tight);
+    fill: var(--accent-text);
+  }
+
+  .map-sketch__sub {
+    font-size: 20px;
+    font-weight: 500;
+    letter-spacing: var(--tracking-normal);
+    fill: var(--ink-faint);
+  }
+
+  .map-sketch__arrow {
+    fill: none;
+    stroke: var(--ink-faint);
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .map-card__bar {
+    display: none;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-2xs) var(--space-s);
+    padding: var(--space-s);
+    border-block-start: var(--border-hairline) solid var(--line);
+  }
+
+  .map-card[data-js='1'] .map-card__bar {
+    display: flex;
+  }
+
+  /* Kaart geladen: het plannetje en de knop hebben hun werk gedaan. */
+  .map-card[data-loaded='1'] .map-card__bar {
+    display: none;
+  }
+
+  .map-card__note {
+    flex: 1 1 16rem;
+    font-size: var(--step--2);
+    line-height: var(--leading-snug);
+    color: var(--ink-faint);
+  }
+
+  .map-card__links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0 var(--space-m);
+    margin: 0;
+    padding: var(--space-3xs) var(--space-s);
+    list-style: none;
+    border-block-start: var(--border-hairline) solid var(--line);
+    background: var(--bg-sunk);
+    font-size: var(--step--1);
+  }
+
+  .map-card__links a {
+    display: inline-flex;
+    align-items: center;
+    min-height: var(--tap-min);
+  }
+</style>

@@ -1,0 +1,52 @@
+# ============================================================
+# De Omgekeerde Wereld — omleidingen
+# ------------------------------------------------------------
+# LET OP 1 — dit bestand is Netlify-specifiek.
+#   Netlify leest public/_redirects en zet het om in echte 301's.
+#   Draait de site ergens anders? Dan doet dit bestand NIETS:
+#     * Vercel            -> vercel.json, sleutel "redirects"
+#                            (en domeinen onder Settings > Domains)
+#     * Cloudflare Pages  -> leest ook _redirects, maar NEGEERT regels
+#                            met een hostnaam erin. Domeinomleidingen
+#                            zet je daar met Rules > Redirect Rules
+#                            (of Bulk Redirects) in het dashboard.
+#     * Apache / nginx    -> .htaccess of een server-block.
+#
+# LET OP 2 — de domeinomleidingen hieronder horen OOK bij de host
+#   en de DNS thuis. Zet www.deomgekeerdewereld.be en het oude
+#   deomgekeerdewereldgent.be als alias/domein bij de hoster, met
+#   deomgekeerdewereld.be als primair domein. Dan wordt er al op
+#   hostniveau omgeleid en is dit bestand enkel het vangnet.
+#   Zonder DNS-records die naar de host wijzen, gebeurt er hier niks.
+#
+# Format:  van   naar   status
+#   :splat  = alles wat achter de * stond
+#   301     = permanent verhuisd
+#   301!    = forceer, ook als er toevallig een echt bestand op dat pad staat
+# ============================================================
+
+
+# ---- www -> kaal domein -------------------------------------
+http://www.deomgekeerdewereld.be/*    https://deomgekeerdewereld.be/:splat    301!
+https://www.deomgekeerdewereld.be/*   https://deomgekeerdewereld.be/:splat    301!
+
+
+# ---- het oude tweede domein ---------------------------------
+# deomgekeerdewereldgent.be werd jaren naast het hoofddomein gebruikt.
+# Alles daarvan komt op de nieuwe site terecht, met of zonder www.
+http://deomgekeerdewereldgent.be/*        https://deomgekeerdewereld.be/:splat    301!
+https://deomgekeerdewereldgent.be/*       https://deomgekeerdewereld.be/:splat    301!
+http://www.deomgekeerdewereldgent.be/*    https://deomgekeerdewereld.be/:splat    301!
+https://www.deomgekeerdewereldgent.be/*   https://deomgekeerdewereld.be/:splat    301!
+
+
+# ---- oude WordPress-paden -----------------------------------
+# Deze adressen staan nog in Google, op Facebook en op papieren
+# affiches. Ze mogen niet in een 404 eindigen.
+/privacy-policy/    /privacy/    301
+/menukaart/         /kaart/      301
+/menu/              /kaart/      301
+/events/            /agenda/     301
+
+# Losse oude eventpagina's (/events/iets-van-2019/) gaan naar de agenda.
+/events/*           /agenda/     301

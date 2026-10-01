@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64" role="img">
+  <title>De Omgekeerde Wereld</title>
+
+  <!--
+    Het zonneke van den Omgekeerde, uitgekleed voor 16 x 16 px.
+    Acht stralen in plaats van zestien, en een gezicht van drie vormen:
+    meer overleeft een favicon niet. De volle tekening staat in
+    src/components/SunLogo.astro.
+  -->
+
+  <rect width="64" height="64" rx="10" fill="#0d0a07"/>
+
+  <g fill="#f8f812">
+    <path d="M32 4 37 20 27 20Z"/>
+    <path d="M32 4 37 20 27 20Z" transform="rotate(45 32 32)"/>
+    <path d="M32 4 37 20 27 20Z" transform="rotate(90 32 32)"/>
+    <path d="M32 4 37 20 27 20Z" transform="rotate(135 32 32)"/>
+    <path d="M32 4 37 20 27 20Z" transform="rotate(180 32 32)"/>
+    <path d="M32 4 37 20 27 20Z" transform="rotate(225 32 32)"/>
+    <path d="M32 4 37 20 27 20Z" transform="rotate(270 32 32)"/>
+    <path d="M32 4 37 20 27 20Z" transform="rotate(315 32 32)"/>
+    <circle cx="32" cy="32" r="17.5"/>
+  </g>
+
+  <g fill="#0d0a07">
+    <circle cx="25.6" cy="27" r="3.2"/>
+    <circle cx="38.4" cy="27" r="3.2"/>
+    <path d="M23.5 36C26 44 38 44 40.5 36Z"/>
+  </g>
+</svg>

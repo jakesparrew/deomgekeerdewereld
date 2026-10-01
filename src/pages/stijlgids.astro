@@ -1,0 +1,447 @@
+---
+/**
+ * De stijlgids: één pagina met alle kleuren, letters, afstanden en knoppen.
+ * Staat op noindex — ze is bedoeld voor wie aan de site werkt, niet voor bezoekers.
+ * Wissel bovenaan tussen dag en nacht om te controleren of alles in beide klopt.
+ */
+import Base from '../layouts/Base.astro';
+import Icon from '../components/Icon.astro';
+import SunLogo from '../components/SunLogo.astro';
+import OpenStatus from '../components/OpenStatus.astro';
+import Photo from '../components/Photo.astro';
+
+const colours = [
+  { token: '--bg', use: 'De ondergrond van de pagina' },
+  { token: '--bg-raised', use: 'Kaarten, de "Vandaag" strook, tegels' },
+  { token: '--bg-sunk', use: 'De voettekst' },
+  { token: '--bg-inset', use: 'Invulvelden' },
+  { token: '--ink', use: 'Gewone tekst en titels' },
+  { token: '--ink-soft', use: 'Inleidingen en bijtekst' },
+  { token: '--ink-faint', use: 'Bijschriften en labels' },
+  { token: '--accent', use: 'Het geel als vlak: knoppen, het zonnetje' },
+  { token: '--accent-text', use: 'Het geel als tekst — in het dagthema donkergoud' },
+  { token: '--amber', use: 'Kaarslicht, waarschuwing "bijna sluitingstijd"' },
+  { token: '--rose', use: 'Spaarzaam accent' },
+  { token: '--line', use: 'Haarlijnen' },
+  { token: '--line-strong', use: 'Randen van knoppen en velden' },
+  { token: '--open-dot', use: 'Het bolleke als het open is' },
+  { token: '--closed-dot', use: 'Het bolleke als het toe is' },
+];
+
+const steps = [
+  { token: '--step-6', label: 'Titel homepagina' },
+  { token: '--step-5', label: 'h1' },
+  { token: '--step-4', label: 'h2' },
+  { token: '--step-3', label: 'Groot getal in een tegel' },
+  { token: '--step-2', label: 'h3' },
+  { token: '--step-1', label: 'h4, inleiding' },
+  { token: '--step-0', label: 'Gewone tekst' },
+  { token: '--step--1', label: 'Bijtekst, labels' },
+  { token: '--step--2', label: 'Voettekst, het kleine lettertje' },
+];
+
+const spaces = [
+  '--space-3xs',
+  '--space-2xs',
+  '--space-xs',
+  '--space-s',
+  '--space-m',
+  '--space-l',
+  '--space-xl',
+  '--space-2xl',
+  '--space-3xl',
+];
+
+const icons = [
+  'beer',
+  'pils',
+  'pool',
+  'foosball',
+  'music',
+  'coffee',
+  'chess',
+  'terrace',
+  'cocktail',
+  'pin',
+  'phone',
+  'clock',
+  'mail',
+  'wifi',
+  'arrow',
+];
+---
+
+<Base
+  title="Stijlgids"
+  description="Kleuren, letters, afstanden en bouwblokken van de site van De Omgekeerde Wereld."
+  lang="nl"
+  noindex
+>
+  <section class="section">
+    <div class="wrap">
+      <p class="eyebrow">Voor wie aan de site werkt</p>
+      <h1>Stijlgids</h1>
+      <p class="lead">
+        Alles wat hieronder staat komt uit <code>src/styles/tokens.css</code>. Schrijf nooit
+        een kleurcode of een lettergrootte rechtstreeks in een component: dan breekt het
+        dagthema. Gebruik altijd de variabele.
+      </p>
+      <p class="lead">
+        Wissel rechtsboven tussen dag en nacht en loop deze pagina in beide door. Wat in
+        één van de twee onleesbaar wordt, is een fout.
+      </p>
+    </div>
+  </section>
+
+  <!-- KLEUREN -->
+  <section class="section">
+    <div class="wrap">
+      <h2>Kleuren</h2>
+      <p class="note">
+        Contrast is gecontroleerd op WCAG AA: minstens 4,5:1 voor gewone tekst en 3:1 voor
+        grote tekst en randen. <code>--accent</code> is het geel als vlák;
+        <code>--accent-text</code> is de tekstveilige variant, die in het dagthema
+        donkergoud wordt omdat geel op crème niet leesbaar is.
+      </p>
+      <ul class="swatches">
+        {
+          colours.map((colour) => (
+            <li class="swatch">
+              <span class="swatch__chip" style={`background: var(${colour.token})`} />
+              <span class="swatch__body">
+                <code class="swatch__token">{colour.token}</code>
+                <span class="swatch__use">{colour.use}</span>
+              </span>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <!-- TYPOGRAFIE -->
+  <section class="section">
+    <div class="wrap">
+      <h2>Letters</h2>
+      <p class="note">
+        Twee families, meer niet. <strong>Fraunces</strong> voor titels: een serif met
+        karakter, die de oude caféletters op de gevel oproept.
+        <strong>Inter</strong> voor alles wat gelezen moet worden. De schaal is vloeiend,
+        dus tussen 320 en 1240 pixels schuift alles mee.
+      </p>
+
+      <div class="type-samples">
+        {
+          steps.map((step) => (
+            <div class="type-sample">
+              <p class="type-sample__meta">
+                <code>{step.token}</code> · {step.label}
+              </p>
+              <p class="type-sample__demo" style={`font-size: var(${step.token})`}>
+                Een plek zoals vroeger
+              </p>
+            </div>
+          ))
+        }
+      </div>
+
+      <h3>Het label boven een titel</h3>
+      <p class="eyebrow">Zo ziet een eyebrow eruit</p>
+      <p class="note">
+        Klasse <code>.eyebrow</code>. Altijd in kleine letters in de code, in hoofdletters
+        op het scherm, met een streepje ervoor.
+      </p>
+    </div>
+  </section>
+
+  <!-- RUIMTE -->
+  <section class="section">
+    <div class="wrap">
+      <h2>Afstanden</h2>
+      <p class="note">Alles is een veelvoud van 4 pixels.</p>
+      <ul class="spaces">
+        {
+          spaces.map((token) => (
+            <li class="space">
+              <code>{token}</code>
+              <span class="space__bar" style={`width: var(${token})`} />
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <!-- KNOPPEN -->
+  <section class="section">
+    <div class="wrap">
+      <h2>Knoppen</h2>
+      <p class="note">
+        Minstens 44 pixels hoog, want de meeste bezoekers staan buiten met een gsm in hun
+        hand. Het focuskader wordt nooit weggehaald.
+      </p>
+      <div class="row">
+        <a class="btn btn--primary" href="#top">Toon keer de kaart</a>
+        <a class="btn btn--ghost" href="#top">Wa is't er te doen?</a>
+        <a class="btn btn--solid" href="#top">Route</a>
+      </div>
+      <p class="note">
+        <code>.btn--primary</code> is de belangrijkste actie op een pagina, en er is er
+        maar één. <code>.btn--ghost</code> is alles daarnaast.
+        <code>.btn--solid</code> gebruikt ge op een gekleurd vlak.
+      </p>
+    </div>
+  </section>
+
+  <!-- BOUWBLOKKEN -->
+  <section class="section">
+    <div class="wrap">
+      <h2>Bouwblokken</h2>
+
+      <h3>Het zonnetje</h3>
+      <div class="row row--center">
+        <SunLogo size={72} />
+        <p class="note">
+          Draait een halve slag als ge erover gaat. Dat is de knipoog naar de naam.
+          Zet <code>spin={false}</code> waar hij enkel decoratief staat.
+        </p>
+      </div>
+
+      <h3>Open of toe</h3>
+      <div class="row row--center">
+        <OpenStatus lang="nl" variant="pill" />
+        <OpenStatus lang="nl" variant="line" />
+      </div>
+      <p class="note">
+        Wordt op de server ingevuld en daarna elke minuut bijgewerkt met de klok van Gent.
+        Zonder JavaScript blijft de tekst van het bouwmoment staan, wat nog altijd klopt
+        voor de meeste bezoekers.
+      </p>
+
+      <h3>Een foto die er nog niet is</h3>
+      <Photo
+        src=""
+        alt="Voorbeeld van een plaatshouder."
+        brief="Zo ziet een lege plek eruit: gestreept, met de opdracht voor de fotograaf erin. Nooit een kapot fotokader."
+        ratio="16 / 9"
+      />
+
+      <h3>Tekeningetjes</h3>
+      <ul class="icons">
+        {
+          icons.map((name) => (
+            <li class="icon-cell">
+              <Icon name={name} size={26} />
+              <code>{name}</code>
+            </li>
+          ))
+        }
+      </ul>
+
+      <h3>Een kaart</h3>
+      <div class="card">
+        <h4>Klasse <code>.card</code></h4>
+        <p class="note">Verhoogde ondergrond, haarlijn errond, ronding <code>--radius-m</code>.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- REGELS -->
+  <section class="section">
+    <div class="wrap">
+      <h2>De regels</h2>
+      <ol class="rules">
+        <li>Nooit een kleurcode, lettergrootte of afstand rechtstreeks opschrijven. Altijd een variabele.</li>
+        <li>Elke pagina heeft precies één <code>h1</code> en slaat geen niveau over.</li>
+        <li>Alles moet leesbaar zijn zonder JavaScript. Verberg nooit inhoud tot een script draait.</li>
+        <li>Een klikbaar ding is een <code>&lt;a&gt;</code> of een <code>&lt;button&gt;</code>, nooit een <code>&lt;div&gt;</code>.</li>
+        <li>Elk invulveld heeft een echt <code>&lt;label for&gt;</code>.</li>
+        <li>Elke foto heeft een <code>alt</code> die beschrijft wat er te zien is. Decoratieve tekeningen krijgen <code>aria-hidden</code>.</li>
+        <li>Beweging blijft klein en verdwijnt bij <code>prefers-reduced-motion</code>.</li>
+        <li>Prijzen met een komma: <code>€ 2,70</code>. De functie <code>euro()</code> doet dat voor u.</li>
+      </ol>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .lead {
+    max-width: var(--measure);
+    color: var(--ink-soft);
+    margin-block-start: var(--space-s);
+  }
+
+  .note {
+    max-width: var(--measure);
+    font-size: var(--step--1);
+    color: var(--ink-faint);
+    margin-block: var(--space-2xs) var(--space-m);
+  }
+
+  code {
+    font-family: ui-monospace, 'SF Mono', 'Cascadia Mono', Menlo, monospace;
+    font-size: 0.9em;
+    background: var(--bg-inset);
+    padding: 0.1em 0.35em;
+    border-radius: var(--radius-xs);
+  }
+
+  h2 {
+    margin-block-start: var(--space-xl);
+    padding-block-start: var(--space-m);
+    border-block-start: var(--border-hairline) solid var(--line);
+  }
+
+  h3 {
+    margin-block: var(--space-l) var(--space-2xs);
+  }
+
+  /* Kleuren */
+  .swatches {
+    display: grid;
+    gap: var(--space-2xs);
+    grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .swatch {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2xs);
+    padding: var(--space-2xs);
+    border: var(--border-hairline) solid var(--line);
+    border-radius: var(--radius-s);
+  }
+
+  .swatch__chip {
+    width: 2.5rem;
+    height: 2.5rem;
+    flex: none;
+    border-radius: var(--radius-xs);
+    border: var(--border-hairline) solid var(--line-strong);
+  }
+
+  .swatch__body {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+  }
+
+  .swatch__token {
+    background: none;
+    padding: 0;
+    color: var(--ink);
+  }
+
+  .swatch__use {
+    font-size: var(--step--2);
+    color: var(--ink-faint);
+  }
+
+  /* Letters */
+  .type-samples {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-s);
+  }
+
+  .type-sample {
+    padding-block-end: var(--space-s);
+    border-block-end: var(--border-hairline) solid var(--line);
+  }
+
+  .type-sample__meta {
+    font-size: var(--step--2);
+    color: var(--ink-faint);
+    margin-block-end: var(--space-3xs);
+  }
+
+  .type-sample__demo {
+    font-family: var(--font-display);
+    font-weight: 800;
+    line-height: var(--leading-tight);
+  }
+
+  /* Ruimte */
+  .spaces {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2xs);
+  }
+
+  .space {
+    display: flex;
+    align-items: center;
+    gap: var(--space-s);
+  }
+
+  .space code {
+    min-width: 9rem;
+  }
+
+  .space__bar {
+    height: 1rem;
+    background: var(--accent);
+    border-radius: var(--radius-xs);
+  }
+
+  /* Rijen */
+  .row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2xs);
+    align-items: flex-start;
+  }
+
+  .row--center {
+    align-items: center;
+    gap: var(--space-m);
+  }
+
+  .row--center .note {
+    margin: 0;
+  }
+
+  /* Tekeningetjes */
+  .icons {
+    display: grid;
+    gap: var(--space-2xs);
+    grid-template-columns: repeat(auto-fit, minmax(7rem, 1fr));
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .icon-cell {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-3xs);
+    padding: var(--space-xs);
+    border: var(--border-hairline) solid var(--line);
+    border-radius: var(--radius-s);
+    color: var(--accent-text);
+  }
+
+  .icon-cell code {
+    font-size: var(--step--2);
+    color: var(--ink-faint);
+  }
+
+  /* Regels */
+  .rules {
+    max-width: var(--measure);
+    padding-inline-start: var(--space-m);
+    color: var(--ink-soft);
+  }
+
+  .rules li + li {
+    margin-block-start: var(--space-2xs);
+  }
+</style>

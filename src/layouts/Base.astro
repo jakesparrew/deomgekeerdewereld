@@ -1,0 +1,182 @@
+---
+/**
+ * De schil rond elke pagina: head, koptekst, voettekst, mobiele balk.
+ */
+import '../styles/global.css';
+
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import MobileDock from '../components/MobileDock.astro';
+import JsonLd from '../components/JsonLd.astro';
+
+import { site } from '../data/site';
+import { hours } from '../lib/content';
+import { alternateUrl, HTML_LANG, type Lang, type RouteKey } from '../lib/i18n';
+import type { ResolvedEvent } from '../lib/events';
+
+interface Props {
+  title: string;
+  description: string;
+  lang?: Lang;
+  /** Welke navigatie-item actief is. */
+  active?: RouteKey;
+  /** Pad naar een og-afbeelding in /public. */
+  image?: string;
+  imageAlt?: string;
+  /** Events voor de JSON-LD. */
+  events?: ResolvedEvent[];
+  breadcrumbs?: { name: string; url: string }[];
+  /** Zet de titel niet achter " · De Omgekeerde Wereld". */
+  rawTitle?: boolean;
+  noindex?: boolean;
+}
+
+const {
+  title,
+  description,
+  lang = 'nl',
+  active,
+  image = '/og/omgekeerde-og.jpg',
+  imageAlt,
+  events = [],
+  breadcrumbs,
+  rawTitle = false,
+  noindex = false,
+} = Astro.props;
+
+const fullTitle = rawTitle ? title : `${title} · ${site.name}`;
+const pathname = Astro.url.pathname.endsWith('/')
+  ? Astro.url.pathname
+  : `${Astro.url.pathname}/`;
+const canonical = new URL(pathname, site.url).href;
+const ogImage = new URL(image, site.url).href;
+
+const nlUrl = new URL(alternateUrl(pathname, 'nl'), site.url).href;
+const enUrl = new URL(alternateUrl(pathname, 'en'), site.url).href;
+
+const hoursJson = JSON.stringify(hours);
+
+const defaultImageAlt =
+  lang === 'en'
+    ? 'The lit facade of De Omgekeerde Wereld on Sint-Pietersnieuwstraat in Ghent at night.'
+    : 'De verlichte gevel van De Omgekeerde Wereld in de Sint-Pietersnieuwstraat te Gent, bij avond.';
+---
+
+<!doctype html>
+<html lang={HTML_LANG[lang]} class="grain">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+
+    {noindex && <meta name="robots" content="noindex, follow" />}
+
+    {/* Een pagina die niet geïndexeerd mag worden, hoort geen canonical
+        of hreflang uit te sturen: dat spreekt de noindex tegen. */}
+    {!noindex && <link rel="canonical" href={canonical} />}
+
+    {
+      !noindex && (
+        <>
+          <link rel="alternate" hreflang="nl-BE" href={nlUrl} />
+          {/* /privacy/ en /cookies/ zijn voor beide talen dezelfde pagina.
+              Dan zou een "en"-verwijzing naar een Nederlandse URL Google
+              iets vertellen dat niet klopt, dus die laten we weg. */}
+          {enUrl !== nlUrl && <link rel="alternate" hreflang="en" href={enUrl} />}
+          <link rel="alternate" hreflang="x-default" href={nlUrl} />
+        </>
+      )
+    }
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={site.name} />
+    <meta property="og:locale" content={lang === 'en' ? 'en_GB' : 'nl_BE'} />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:alt" content={imageAlt ?? defaultImageAlt} />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <meta name="theme-color" content="#17100a" />
+
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+
+    <meta name="geo.position" content={`${site.geo.lat};${site.geo.lon}`} />
+    <meta name="geo.placename" content={`${site.name}, ${site.address.city}`} />
+    <meta name="geo.region" content="BE-VOV" />
+
+    <!--
+      Thema en de omgekeerde-wereld-knop worden vóór het schilderen gezet,
+      anders flikkert de pagina even in het verkeerde thema.
+    -->
+    <script is:inline>
+      (function () {
+        // Zet een vlag zodat CSS weet dat JavaScript het overneemt. Alles wat
+        // pas bruikbaar is mét script (het uitklapmenu, de thema-knop) blijft
+        // zonder deze vlag gewoon in zijn eenvoudige, werkende vorm staan.
+        document.documentElement.dataset.js = '1';
+        try {
+          var t = localStorage.getItem('omw-theme');
+          if (t === 'dag' || t === 'nacht') {
+            document.documentElement.setAttribute('data-theme', t);
+          }
+          if (localStorage.getItem('omw-flip') === '1') {
+            document.documentElement.setAttribute('data-flip', '1');
+          }
+        } catch (e) {
+          /* privémodus: gewoon het standaardthema */
+        }
+      })();
+    </script>
+
+    <script type="application/json" data-hours-config is:inline set:html={hoursJson}></script>
+
+    {
+      site.analytics.enabled && (
+        <script
+          is:inline
+          defer
+          data-domain={site.analytics.plausibleDomain}
+          src="https://plausible.io/js/script.js"
+        ></script>
+      )
+    }
+
+    <JsonLd lang={lang} events={events} breadcrumbs={breadcrumbs} />
+
+    <slot name="head" />
+  </head>
+
+  <body>
+    <div class="page-root">
+      <a class="skip-link" href="#inhoud">
+        {lang === 'en' ? 'Skip to content' : 'Ga naar de inhoud'}
+      </a>
+
+      <Header lang={lang} active={active} />
+
+      <main id="inhoud">
+        <slot />
+      </main>
+
+      <Footer lang={lang} />
+      <MobileDock lang={lang} active={active} />
+    </div>
+  </body>
+</html>
+
+<style is:global>
+  .page-root {
+    display: flex;
+    flex-direction: column;
+    min-height: 100svh;
+  }
+
+  main {
+    flex: 1;
+  }
+</style>

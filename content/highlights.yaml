@@ -1,0 +1,93 @@
+# ============================================================
+# DE HOMEPAGINA
+# ------------------------------------------------------------
+# Dit is het bestand dat ge het vaakst zult openen. Eén keer per
+# maand het bier aanpassen en ge zijt vertrokken.
+# ============================================================
+
+# ---- De grote foto en de titel bovenaan ----
+# Zet een foto in public/images/ en schrijf de bestandsnaam bij `image`.
+# Zolang dat leeg is, toont de site een nette plaatshouder met de opdracht.
+hero:
+  image: 'gevel-familie.jpg'
+  alt: 'De gevel van De Omgekeerde Wereld met een ballonnenboog, het gouden zonnetje boven de deur en drie mensen in de deuropening.'
+  altEn: 'The facade of De Omgekeerde Wereld with a balloon arch, the golden sun above the door and three people standing in the doorway.'
+  brief: >-
+    De gevel bij avond. Licht aan, krijtborden leesbaar, liefst wat volk op het terras.
+    Liggend, 3:2. Sla op als public/images/gevel-avond.jpg.
+  briefEn: >-
+    The facade at night. Lights on, chalkboards readable, ideally some people outside.
+    Landscape, 3:2. Save as public/images/gevel-avond.jpg.
+  headline: 'Een plek zoals vroeger, midden in Gent'
+  headlineEn: 'An old-fashioned bar, right in the middle of Ghent'
+  lead: >-
+    Bruine kroeg rechtover VIERNULVIER. Meer dan 69 bierkes, een gratis pooltafel
+    en muziek uit den ouwen doos. Elke dag open van 14 uur tot laat.
+  leadEn: >-
+    An old-school brown cafe opposite VIERNULVIER. More than 69 beers, a free pool
+    table and music from the good old days. Open every day from 2pm until late.
+
+beerOfTheMonth:
+  name: 'Ouwen Duiker'
+  brewery: 'Brouwerij Van Steenberge'
+  style: 'Blond'
+  abv: 8.0
+  price: 3.50
+  month: '2026-09'
+  blurb: >-
+    Straf blondje van bij ons om de hoek. Deze maand aan promoprijs,
+    dus profiteer ervan zolang het vat meegaat.
+  blurbEn: >-
+    A strong blonde from just around the corner. On offer all month,
+    so make the most of it while the keg lasts.
+
+# De tegels onder de hero. Hou het bij zes; meer wordt een boodschappenlijst.
+# `icon` verwijst naar een tekening in src/components/Icon.astro.
+tiles:
+  - icon: beer
+    label: 'Bierkes op de kaart'
+    labelEn: 'Beers on the menu'
+    value: '69+'
+    note: 'Van pils tot trappist, met vijftien keer 0,0 ertussen.'
+    noteEn: 'From lager to trappist, with fifteen alcohol-free options.'
+    href: '/kaart/'
+    hrefEn: '/en/menu/'
+
+  - icon: pool
+    label: 'Poolke spelen'
+    labelEn: 'A game of pool'
+    value: 'Gratis'
+    valueEn: 'Free'
+    note: 'Altijd. Ge moet enkel wachten tot de tafel vrij is.'
+    noteEn: 'Always. You only have to wait for the table.'
+
+  - icon: foosball
+    label: 'Kickeren'
+    labelEn: 'Table football'
+    value: '€ 0,50'
+    note: 'Het goedkoopste toernooi van Gent.'
+    noteEn: 'The cheapest tournament in Ghent.'
+
+  - icon: pils
+    label: 'Een pilske'
+    labelEn: 'A lager'
+    value: '€ 2,70'
+    note: 'Stella van het vat. Al jaren dezelfde prijs.'
+    noteEn: 'Stella on tap. Same price for years.'
+
+  - icon: music
+    label: 'Concertjes en fiestjes'
+    labelEn: 'Gigs and parties'
+    value: 'Gratis'
+    valueEn: 'Free'
+    note: 'Soul, funk, disco, jazz. Vaak uit den ouwen doos.'
+    noteEn: 'Soul, funk, disco, jazz. Often from the good old days.'
+    href: '/agenda/'
+    hrefEn: '/en/events/'
+
+  - icon: coffee
+    label: 'Koffie à volonté'
+    labelEn: 'Bottomless coffee'
+    value: '€ 3,00'
+    note: 'Blijf zitten zolang ge wilt. Da''s een beetje het idee.'
+    noteEn: 'Stay as long as you like. That is rather the point.'

@@ -1,0 +1,193 @@
+---
+/**
+ * Eén tekening per begrip. Allemaal op een raster van 24, één lijndikte,
+ * zodat ze naast elkaar rustig blijven.
+ */
+export type IconName =
+  | 'beer'
+  | 'pils'
+  | 'pool'
+  | 'foosball'
+  | 'music'
+  | 'coffee'
+  | 'chess'
+  | 'terrace'
+  | 'cocktail'
+  | 'pin'
+  | 'phone'
+  | 'clock'
+  | 'mail'
+  | 'wifi'
+  | 'arrow';
+
+interface Props {
+  name: IconName | string;
+  size?: number;
+  class?: string;
+  title?: string;
+}
+
+const { name, size = 24, class: className = '', title } = Astro.props;
+---
+
+<svg
+  class:list={['icon', className]}
+  width={size}
+  height={size}
+  viewBox="0 0 24 24"
+  fill="none"
+  stroke="currentColor"
+  stroke-width="1.6"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+  role={title ? 'img' : 'presentation'}
+  aria-hidden={title ? undefined : 'true'}
+>
+  {title && <title>{title}</title>}
+
+  {
+    name === 'beer' && (
+      <>
+        <path d="M6 8h9v11a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2V8Z" />
+        <path d="M15 10h2.5a2.5 2.5 0 0 1 0 5H15" />
+        <path d="M6 8c0-1.7 1.2-2.6 2.4-2.4C8.7 4 10 3.2 11.4 4c1-1 2.8-.7 3.3.8 1.4-.2 2.3.8 2.3 2" />
+        <path d="M9 12v5M12 12v5" />
+      </>
+    )
+  }
+
+  {
+    name === 'pils' && (
+      <>
+        <path d="M7 7h10l-1 12a2 2 0 0 1-2 2h-4a2 2 0 0 1-2-2L7 7Z" />
+        <path d="M6.6 7c.4-1.8 2.6-3 5.4-3s5 1.2 5.4 3" />
+        <path d="M7.7 13h8.6" />
+      </>
+    )
+  }
+
+  {
+    name === 'pool' && (
+      <>
+        <circle cx="12" cy="12" r="9" />
+        <circle cx="12" cy="12" r="3.6" />
+        <path d="M12 3v1.8M12 19.2V21M3 12h1.8M19.2 12H21" />
+      </>
+    )
+  }
+
+  {
+    name === 'foosball' && (
+      <>
+        <rect x="3" y="5" width="18" height="14" rx="2" />
+        <path d="M9 3.5v17M15 3.5v17" />
+        <circle cx="12" cy="12" r="1.6" />
+      </>
+    )
+  }
+
+  {
+    name === 'music' && (
+      <>
+        <path d="M9 18V6l11-2v12" />
+        <circle cx="6.5" cy="18" r="2.5" />
+        <circle cx="17.5" cy="16" r="2.5" />
+      </>
+    )
+  }
+
+  {
+    name === 'coffee' && (
+      <>
+        <path d="M4 9h13v6a5 5 0 0 1-5 5H9a5 5 0 0 1-5-5V9Z" />
+        <path d="M17 11h1.5a2.5 2.5 0 0 1 0 5H17" />
+        <path d="M8 2.5c-.8 1.2-.8 2 0 3.2M12 2.5c-.8 1.2-.8 2 0 3.2" />
+      </>
+    )
+  }
+
+  {
+    name === 'chess' && (
+      <>
+        <path d="M10 3h4v2l-1.2 1.4a4 4 0 0 1 2.2 3.6c0 1.6-1 2.7-2 3.3l.6 3.7H8.4l.6-3.7c-1-.6-2-1.7-2-3.3a4 4 0 0 1 2.2-3.6L8 5V3Z" />
+        <path d="M6.5 17h11l1 4h-13l1-4Z" />
+      </>
+    )
+  }
+
+  {
+    name === 'terrace' && (
+      <>
+        <path d="M12 3c4.5 0 8.5 2.6 9.5 5.5h-19C3.5 5.6 7.5 3 12 3Z" />
+        <path d="M12 8.5V21" />
+        <path d="M8.5 21h7" />
+      </>
+    )
+  }
+
+  {
+    name === 'cocktail' && (
+      <>
+        <path d="M4 4h16l-8 8-8-8Z" />
+        <path d="M12 12v8M8.5 20h7" />
+        <path d="M16.5 7 20 3.5" />
+      </>
+    )
+  }
+
+  {
+    name === 'pin' && (
+      <>
+        <path d="M12 21s7-6.4 7-11a7 7 0 1 0-14 0c0 4.6 7 11 7 11Z" />
+        <circle cx="12" cy="10" r="2.6" />
+      </>
+    )
+  }
+
+  {
+    name === 'phone' && (
+      <path d="M7.6 3.5c.5 0 1 .3 1.1.8l.9 3a1.2 1.2 0 0 1-.3 1.2L8 9.7a11.8 11.8 0 0 0 6.3 6.3l1.2-1.3a1.2 1.2 0 0 1 1.2-.3l3 .9c.5.2.8.6.8 1.1v2.1a1.8 1.8 0 0 1-2 1.8A17.2 17.2 0 0 1 3.7 5.5a1.8 1.8 0 0 1 1.8-2h2.1Z" />
+    )
+  }
+
+  {
+    name === 'clock' && (
+      <>
+        <circle cx="12" cy="12" r="9" />
+        <path d="M12 7v5.3l3.2 2" />
+      </>
+    )
+  }
+
+  {
+    name === 'mail' && (
+      <>
+        <rect x="3" y="5" width="18" height="14" rx="2" />
+        <path d="m3.5 7 8.5 6 8.5-6" />
+      </>
+    )
+  }
+
+  {
+    name === 'wifi' && (
+      <>
+        <path d="M2.5 8.5a14 14 0 0 1 19 0" />
+        <path d="M5.8 12a9.4 9.4 0 0 1 12.4 0" />
+        <path d="M9 15.4a4.7 4.7 0 0 1 6 0" />
+        <circle cx="12" cy="19" r="1" fill="currentColor" stroke="none" />
+      </>
+    )
+  }
+
+  {
+    name === 'arrow' && <path d="M4 12h15m0 0-5.5-5.5M19 12l-5.5 5.5" />
+  }
+
+  {name === 'check' && <path d="m4.5 12.5 5 5 10-11" />}
+</svg>
+
+<style>
+  .icon {
+    flex: none;
+  }
+</style>

@@ -1,0 +1,80 @@
+# ============================================================
+# DE BOVENVERDIEPING — "DE BIBLIOTHEEK"
+# ------------------------------------------------------------
+# Alles wat op /bovenzaal/ staat en dat af en toe verandert.
+# Laat een veld leeg en de site zegt gewoon "in overleg" in plaats
+# van er een getal bij te verzinnen.
+# ============================================================
+
+# ---- Hoe groot is't? ----
+# Laat leeg zolang ge de juiste cijfers niet hebt. NIET gokken:
+# een fout aantal in Google is erger dan geen aantal.
+capaciteit:
+  zittend: null # bv. 40
+  staand: null # bv. 70
+  oppervlakte: null # in m², bv. 85
+
+# ---- Wat kost het? ----
+# `formules` verschijnt als een lijstje. Zonder prijs toont de site
+# "prijs op aanvraag" en stuurt ze naar het formulier.
+prijs:
+  toon: false # zet op true zodra de prijzen kloppen
+  vanaf: null # bv. 150
+  eenheid: 'avond'
+  note: >-
+    De bovenverdieping verhuren we in overleg. Wat het kost hangt af van de dag,
+    het uur en of ge de toog erbij wilt. Laat hieronder iets weten en we rekenen
+    het samen uit.
+  noteEn: >-
+    We rent the upstairs by arrangement. What it costs depends on the day, the
+    hours and whether you want the bar with it. Drop us a line below and we will
+    work it out together.
+
+# ---- Wat zit erbij ----
+# Hieronder staat ALLEEN wat ik op de foto's zie of wat op jullie krijtbord
+# staat. Vul zelf aan: geluidsinstallatie? beamer? eigen toog? bediening van
+# beneden? Ik weet dat niet en ik ga het niet verzinnen.
+inbegrepen:
+  - nl: 'De hele verdieping voor u alleen'
+    en: 'The whole floor to yourselves'
+  - nl: 'De pooltafel, gratis zoals beneden'
+    en: 'The pool table, free as it is downstairs'
+  - nl: 'Een kicker'
+    en: 'A table football'
+  - nl: 'Zetels en lage tafels'
+    en: 'Sofas and low tables'
+  - nl: 'Wifi'
+    en: 'Wifi'
+
+# ---- Waarvoor lenen mensen ze uit ----
+waarvoor:
+  - icon: beer
+    nl: 'Verjaardagen en afscheidsfeestjes'
+    en: 'Birthdays and leaving parties'
+  - icon: pils
+    nl: 'Clubavonden, doopnazit en cantusafloop'
+    en: 'Club nights and the tail end of a cantus'
+  - icon: music
+    nl: 'Kleine concerten, dj-sets en luisteravonden'
+    en: 'Small concerts, DJ sets and listening nights'
+  - icon: coffee
+    nl: 'Vergaderingen, lezingen en workshops overdag'
+    en: 'Meetings, talks and workshops during the day'
+  - icon: pool
+    nl: 'Quizavonden en pooltoernooien'
+    en: 'Quiz nights and pool tournaments'
+  - icon: clock
+    nl: 'Repetities en opnames op een rustig uur'
+    en: 'Rehearsals and recordings at a quiet hour'
+
+# ---- Praktisch ----
+# Alleen "eigen eten" staat hier omdat het in jullie merkdocument staat.
+# De rest moet ge zelf invullen. Vragen waar mensen sowieso mee zullen komen:
+#   - is er een lift, of enkel de trap?
+#   - mag er eigen drank binnen, of komt drank altijd van jullie?
+#   - kan het overdag, of alleen op bepaalde avonden?
+#   - tot hoe laat mag het boven doorgaan?
+#   - hoeveel op voorhand moet iemand vastleggen?
+praktisch:
+  - nl: 'Eigen eten meebrengen mag, zoals overal bij ons.'
+    en: 'You may bring your own food, as anywhere in the place.'

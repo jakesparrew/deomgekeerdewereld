@@ -1,0 +1,1518 @@
+# ------------------------------------------------------------------
+# DE KAART VAN DEN OMGEKEERDE
+# ------------------------------------------------------------------
+# Dit bestand is de hele kaart. Wat hier staat, staat op de site.
+# Ge moet geen programmeur zijn om dit aan te passen — lees gewoon
+# even mee.
+#
+# EEN PRIJS VERANDEREN
+#   Zoek het item en verander enkel het getal achter "price:".
+#   Altijd met een punt, nooit met een komma. 2.70 wordt op de
+#   site vanzelf "€ 2,70".
+#
+# EEN ITEM TOEVOEGEN
+#   Kopieer een bestaand blokje en pas het aan. Het minimum is:
+#     - id: nieuw-bierke
+#       name: Nieuw Bierke
+#       category: bier
+#       price: 5.00
+#   Let op: twee spaties inspringen, en een streepje voor "id".
+#   Is er geen prijs (gratis, "priceless"), gebruik dan
+#   "priceLabel: Gratis" in plaats van "price:".
+#
+# IDS
+#   Elke "id" moet uniek zijn in heel dit bestand: kleine letters,
+#   cijfers en streepjes, geen spaties of leestekens. Staat er twee
+#   keer dezelfde id, dan weigert de site te bouwen en zegt ze welke.
+#   Verander een id liever niet meer nadat hij online staat.
+#
+# IETS TIJDELIJK UITVERKOCHT?
+#   Zet er "available: false" bij. Het item blijft staan, maar grijs.
+#   Niks wissen dus — anders moet ge het later opnieuw typen.
+#
+# CATEGORIEËN (category:)
+#   lokaal, promo, favos, bier, alcoholvrij, frisdrank, warm, spritz,
+#   apero, cocktails, rum, spirits, shots, eten
+#
+#   Elke drank staat maar ÉÉN keer in deze lijst, in zijn eigen
+#   categorie. Dat een bier ook lokaal is, of een favorietje, of in
+#   promo — dat zetten we met een tag. Daarom vindt ge hieronder geen
+#   items onder "lokaal" of "favos": die worden uit de tags gehaald.
+#
+# TAGS (tags: [...])
+#   lokaal             staat op ons lijstje LOKAAL
+#   promo              er is promo op
+#   favo               een favorietje van ons
+#   trappist           echte trappist
+#   alcoholvrij        0,0
+#   op-tap             van het vat
+#   gents              in of rond Gent gebrouwen
+#   bier-van-de-maand  er kan er maar één tegelijk zijn
+#
+# BIERSTIJLEN (style:, enkel bij bier)
+#   pils, blond, tripel, trappist, ipa, bruin, wit, fruit, geuze,
+#   stout, cider, amber
+#
+# ABV EN BROUWERIJ
+#   Enkel invullen als ge het zeker weet. Liever niks dan verkeerd.
+#
+# NOTITIES (note: / noteEn:)
+#   Enkel als het echt iets uitlegt. Niet elk bierke heeft een verhaaltje.
+# ------------------------------------------------------------------
+
+intro:
+  nl: >-
+    Van een simpel pilske tot bierkes die ge nergens anders vindt.
+    Alles wat achter de toog staat, staat hier ook — en klopt er iets
+    niet meer, vraagt het dan gewoon aan de toog.
+  en: >-
+    From a plain lager to beers you will not find anywhere else.
+    Everything behind the bar is on this list — and if something looks
+    off, just ask us at the bar.
+
+updated: '2026-09-10'
+
+items:
+  # ------------------------------------------------------------------
+  # LOKAAL — geen aparte lijst meer
+  # Rebel Local, Augustijn, Gentse Strop, Ouwen Duiker en Yugen Kombucha
+  # staan gewoon bij bier en frisdrank, met de tag "lokaal". Wilt ge er
+  # iets bijzetten? Zoek het item op en voeg "lokaal" toe aan zijn tags.
+  # ------------------------------------------------------------------
+
+  # ------------------------------------------------------------------
+  # PROMO — losse acties met een eigen prijs
+  # Dit zijn GEEN gewone bierkes met korting, maar aparte aanbiedingen.
+  # Loopt een actie af? Verwijder het blokje of zet available: false.
+  # De 1+1-bonnetjes van Guido Gids staan hier, met de bonprijs.
+  # BVDM = bier van de maand; die prijs geldt zolang dat bier loopt.
+  # ------------------------------------------------------------------
+  - id: bvdm-tripel-danvers
+    name: Tripel D'Anvers
+    category: promo
+    price: 3.50
+    # Stond op OrderBilly als "BVDM": een maandpromo. Bevestig of die nog loopt.
+    note: Maandpromo, zolang het vat meegaat.
+    noteEn: Monthly deal, while the keg lasts.
+    tags: [promo]
+  - id: bvdm-tripel-lefort
+    name: Tripel LeFort
+    category: promo
+    price: 3.50
+    # Stond op OrderBilly als "BVDM": een maandpromo. Bevestig of die nog loopt.
+    note: Maandpromo, zolang het vat meegaat.
+    noteEn: Monthly deal, while the keg lasts.
+    tags: [promo, favo]
+  - id: aperomer
+    name: Aper'Omer
+    category: promo
+    price: 3.50
+    note: Elke eerste vrijdag van de maand een Omer aan 3,50.
+    noteEn: First Friday of every month, an Omer for 3.50.
+    tags: [promo, favo]
+  - id: augustijn-1-1
+    name: Augustijn 1+1
+    category: promo
+    price: 4.80
+    note: Met een bon van Guido Gids twee voor de prijs van één.
+    noteEn: Two for the price of one with a Guido Gids voucher.
+    tags: [promo]
+  - id: piraat-1-1
+    name: Piraat 1+1
+    category: promo
+    price: 5.00
+    note: Met een bon van Guido Gids twee voor de prijs van één.
+    noteEn: Two for the price of one with a Guido Gids voucher.
+    tags: [promo]
+  - id: tongerlo-1-1
+    name: Tongerlo 1+1
+    category: promo
+    price: 4.80
+    note: Met een bon van Guido Gids twee voor de prijs van één.
+    noteEn: Two for the price of one with a Guido Gids voucher.
+    tags: [promo]
+  - id: keizer-karel-1-1
+    name: Keizer Karel 1+1
+    category: promo
+    price: 4.80
+    note: Met een bon van Guido Gids twee voor de prijs van één.
+    noteEn: Two for the price of one with a Guido Gids voucher.
+    tags: [promo]
+
+  # ------------------------------------------------------------------
+  # FAVO'S — geen aparte lijst meer
+  # Een favorietje krijgt de tag "favo" bij zijn gewone item. Wilt ge
+  # er eentje bijzetten of afhalen: zoek het item en pas zijn tags aan.
+  # ------------------------------------------------------------------
+
+  # ------------------------------------------------------------------
+  # BIER — de grootste lijst, alfabetisch gehouden na de vaten
+  # style: bepaalt onder welke filter het bier valt (zie kop van dit
+  # bestand). Van het vat? Tag "op-tap". Gents gebrouwen? Tag "gents".
+  # Er kan maar één bier "bier-van-de-maand" zijn — nu Ouwen Duiker.
+  # ------------------------------------------------------------------
+  - id: strongbow-apple
+    name: Strongbow Apple
+    category: bier
+    price: 5.00
+    style: cider
+  - id: strongbow-red-berries
+    name: Strongbow Red Berries
+    category: bier
+    price: 5.00
+    style: cider
+  # BBP = Brussels Beer Project. Staat in promo aan 4,50, dat is ook de
+  # gewone prijs, dus één item met de tag promo.
+  - id: bbp-mexican-sour
+    name: "BBP Mexican Sour"
+    category: bier
+    price: 4.50
+    tags: [promo]
+  - id: bbp-peaches-cream
+    name: "BBP Peaches & Cream"
+    category: bier
+    price: 4.50
+    tags: [promo]
+  - id: flying-fish
+    name: Flying Fish
+    category: bier
+    price: 5.00
+  - id: golden-tricky
+    name: Golden Tricky
+    category: bier
+    price: 5.00
+  - id: tout-bien-rouge
+    name: Tout Bien Rouge
+    category: bier
+    price: 4.00
+    tags: [promo]
+  - id: delta-ipa
+    name: Delta IPA
+    category: bier
+    price: 4.90
+    style: ipa
+  - id: gulden-draak-brewmaster
+    name: Gulden Draak Brewmaster
+    category: bier
+    price: 6.00
+    style: bruin
+    brewery: Van Steenberge
+  - id: cherry-chouffe
+    name: Cherry Chouffe
+    category: bier
+    price: 5.00
+    style: fruit
+    brewery: Achouffe
+    tags: [favo]
+  - id: gentse-mondello
+    name: Gentse Mondello
+    category: bier
+    price: 5.00
+    style: ipa
+    note: Blood orange IPA.
+    noteEn: Blood orange IPA.
+    tags: [gents]
+  - id: gentse-belgian-stars-stripes
+    name: "Gentse Belgian Stars & Stripes"
+    category: bier
+    price: 5.00
+    style: ipa
+    note: West coast IPA.
+    noteEn: West coast IPA.
+    tags: [gents]
+  - id: saison-dupont-dry-hop
+    name: Saison Dupont Dry Hop
+    category: bier
+    price: 5.00
+    style: blond
+  # Van het vat. De vier hieronder staan op de tap: verandert er een vat,
+  # haal dan de tag "op-tap" weg of zet ze bij een ander bier.
+  - id: stella-artois-33
+    name: Stella Artois 33cl
+    category: bier
+    price: 3.60
+    style: pils
+    abv: 5.2
+    brewery: AB InBev
+    tags: [op-tap, favo]
+  - id: la-chouffe
+    name: La Chouffe
+    category: bier
+    price: 5.00
+    style: blond
+    abv: 8.0
+    brewery: Achouffe
+    tags: [op-tap, favo]
+  - id: tripel-karmeliet
+    name: Tripel Karmeliet
+    category: bier
+    price: 5.00
+    style: tripel
+    abv: 8.4
+    brewery: Bosteels
+    tags: [op-tap, favo]
+  - id: hoegaarden-rosee
+    name: Hoegaarden Rosée
+    category: bier
+    price: 3.60
+    style: fruit
+    tags: [op-tap, favo]
+  # Ons pilske van 2,70.
+  - id: stella-artois-25
+    name: Stella Artois 25cl
+    category: bier
+    price: 2.70
+    style: pils
+    abv: 5.2
+    brewery: AB InBev
+    tags: [favo]
+  - id: bak-stella-artois
+    name: Bak Stella Artois
+    category: bier
+    price: 55.00
+    style: pils
+    brewery: AB InBev
+    note: Een volle bak Stella.
+    noteEn: A full crate of Stella.
+    tags: [promo, favo]
+  - id: augustijn
+    name: Augustijn
+    category: bier
+    price: 4.50
+    style: blond
+    abv: 8.0
+    brewery: Van Steenberge
+    tags: [lokaal]
+  - id: barbar
+    name: Barbar
+    category: bier
+    price: 5.00
+    style: blond
+  - id: brugse-zot
+    name: Brugse Zot
+    category: bier
+    price: 4.90
+    style: blond
+    abv: 6.0
+    brewery: De Halve Maan
+  - id: bush-caractere
+    name: Bush Caractère
+    category: bier
+    price: 5.50
+    style: amber
+    brewery: Dubuisson
+  - id: bush-tripel
+    name: Bush Tripel
+    category: bier
+    price: 5.00
+    style: tripel
+    abv: 10.5
+    brewery: Dubuisson
+  - id: chimay-blue
+    name: Chimay Blue
+    category: bier
+    price: 6.00
+    style: trappist
+    abv: 9.0
+    brewery: Chimay
+    tags: [trappist]
+  # Cornet staat op de bron twee keer: 4,50 in promo en 5,00 bij de
+  # favo's. We houden de promoprijs van 4,50 en zetten de tag promo.
+  - id: cornet
+    name: Cornet
+    category: bier
+    price: 4.50
+    style: blond
+    tags: [promo, favo]
+  - id: corona-extra
+    name: Corona Extra
+    category: bier
+    price: 4.90
+    style: pils
+    abv: 4.5
+  - id: de-poes
+    name: De Poes
+    category: bier
+    price: 4.90
+    style: blond
+  - id: delirium
+    name: Delirium
+    category: bier
+    price: 5.00
+    style: blond
+    abv: 8.5
+    brewery: Huyghe
+  - id: duvel
+    name: Duvel
+    category: bier
+    price: 5.00
+    style: blond
+    abv: 8.5
+    brewery: Duvel Moortgat
+    tags: [favo]
+  - id: duvel-666
+    name: Duvel 666
+    category: bier
+    price: 4.90
+    style: blond
+    brewery: Duvel Moortgat
+    tags: [favo]
+  - id: duvel-tripel-hop
+    name: Duvel Tripel Hop
+    category: bier
+    price: 6.00
+    style: tripel
+    brewery: Duvel Moortgat
+  - id: export-kruger
+    name: Export Kruger
+    category: bier
+    price: 3.60
+    style: pils
+  - id: gentse-strop
+    name: Gentse Strop
+    category: bier
+    price: 5.00
+    style: blond
+    abv: 6.9
+    brewery: Roman
+    tags: [lokaal, gents]
+  - id: gouden-carolus-classic
+    name: Gouden Carolus Classic
+    category: bier
+    price: 5.00
+    style: bruin
+    abv: 8.5
+    brewery: Het Anker
+  - id: gouden-carolus-tripel
+    name: Gouden Carolus Tripel
+    category: bier
+    price: 5.00
+    style: tripel
+    brewery: Het Anker
+  - id: gouden-carolus-whisky
+    name: Gouden Carolus Whisky
+    category: bier
+    price: 6.00
+    style: bruin
+    brewery: Het Anker
+  - id: hoegaarden
+    name: Hoegaarden
+    category: bier
+    price: 2.80
+    style: wit
+    abv: 4.9
+  - id: jungle-joy
+    name: Jungle Joy
+    category: bier
+    price: 5.50
+    style: blond
+  - id: keizer-karel
+    name: Keizer Karel
+    category: bier
+    price: 5.00
+    style: blond
+  - id: kriek-belle-vue
+    name: Kriek Belle-Vue
+    category: bier
+    price: 3.60
+    style: fruit
+    tags: [favo]
+  - id: kwak
+    name: Kwak
+    category: bier
+    price: 5.00
+    style: amber
+    abv: 8.4
+    brewery: Bosteels
+  - id: la-trappe-quadrupel
+    name: La Trappe Quadrupel
+    category: bier
+    price: 6.00
+    style: trappist
+    abv: 10.0
+    tags: [trappist]
+  # Leffe staat twee keer op de bron, blond en bruin. Daarom twee items
+  # met een eigen naam, anders botsen de ids.
+  - id: leffe-blond
+    name: Leffe Blond
+    category: bier
+    price: 4.80
+    style: blond
+    abv: 6.6
+  - id: leffe-bruin
+    name: Leffe Bruin
+    category: bier
+    price: 4.80
+    style: bruin
+  - id: martha-sexy-blond
+    name: Martha Sexy Blond
+    category: bier
+    price: 5.00
+    style: blond
+  - id: omer
+    name: Omer
+    category: bier
+    price: 5.00
+    style: blond
+    abv: 8.0
+    brewery: Omer Vander Ghinste
+    tags: [favo]
+  - id: orval
+    name: Orval
+    category: bier
+    price: 6.00
+    style: trappist
+    abv: 6.2
+    brewery: Brasserie d'Orval
+    tags: [trappist]
+  - id: orval-gerijpt
+    name: Orval gerijpt
+    category: bier
+    price: 7.00
+    style: trappist
+    abv: 6.2
+    brewery: Brasserie d'Orval
+    note: Fles die een tijd in de kelder heeft gelegen.
+    noteEn: Bottle-aged Orval.
+    tags: [trappist]
+  # De bron zet er "(blond)" bij, maar dit is natuurlijk een geuze.
+  - id: oude-geuze-boon
+    name: Oude Geuze Boon
+    category: bier
+    price: 7.50
+    style: geuze
+    abv: 7.0
+    brewery: Boon
+  - id: rebel-local
+    name: Rebel Local
+    category: bier
+    price: 5.00
+    style: blond
+    tags: [lokaal, gents]
+  # Bier van de maand: deze prijs moet gelijklopen met content/highlights.yaml.
+  - id: ouwen-duiker
+    name: Ouwen Duiker
+    category: bier
+    price: 3.50
+    style: blond
+    abv: 8.0
+    brewery: Van Steenberge
+    note: Bier van de maand, aan promoprijs.
+    noteEn: Beer of the month, at a reduced price.
+    tags: [lokaal, gents, favo, promo, bier-van-de-maand]
+  - id: piraat
+    name: Piraat
+    category: bier
+    price: 5.50
+    style: blond
+    abv: 10.5
+    brewery: Van Steenberge
+  - id: rochefort-10
+    name: Rochefort 10
+    category: bier
+    price: 6.00
+    style: trappist
+    abv: 11.3
+    brewery: Rochefort
+    tags: [trappist]
+  - id: rodenbach-grand-cru
+    name: Rodenbach Grand Cru
+    category: bier
+    price: 5.00
+    style: bruin
+    abv: 6.0
+  - id: salitos
+    name: Salitos
+    category: bier
+    price: 5.00
+    style: pils
+    note: Pils met tequila.
+    noteEn: Lager with tequila.
+  - id: scotch-cts
+    name: Scotch cts
+    category: bier
+    price: 4.00
+    style: stout
+  # St. Bernardus is een abdijbier, geen trappist: er staat geen klooster achter.
+  - id: st-bernardus-abt-12
+    name: St. Bernardus Abt 12
+    category: bier
+    price: 6.00
+    style: bruin
+    abv: 10.0
+    brewery: St. Bernardus
+  - id: st-bernardus-tripel
+    name: St. Bernardus Tripel
+    category: bier
+    price: 5.00
+    style: tripel
+    brewery: St. Bernardus
+  - id: straffe-hendrik
+    name: Straffe Hendrik
+    category: bier
+    price: 5.00
+    style: blond
+    abv: 9.0
+  - id: tietje
+    name: Tietje
+    category: bier
+    price: 5.00
+    style: blond
+  - id: tongerlo
+    name: Tongerlo
+    category: bier
+    price: 5.00
+    style: blond
+  - id: tripel-lefort
+    name: Tripel LeFort
+    category: bier
+    price: 5.00
+    style: tripel
+    abv: 8.8
+    brewery: Omer Vander Ghinste
+    tags: [favo]
+  - id: triple-danvers
+    name: Triple D'Anvers
+    category: bier
+    price: 5.00
+    style: tripel
+  - id: troubadour-magma
+    name: Troubadour Magma
+    category: bier
+    price: 5.00
+    style: amber
+  - id: unwanted-tattoo
+    name: Unwanted Tattoo
+    category: bier
+    price: 4.90
+    style: ipa
+    note: IPA met gember.
+    noteEn: Ginger IPA.
+  - id: vedett
+    name: Vedett
+    category: bier
+    price: 4.00
+    style: pils
+    abv: 5.2
+    brewery: Duvel Moortgat
+  - id: victoria
+    name: Victoria
+    category: bier
+    price: 5.00
+    style: blond
+  - id: westmalle
+    name: Westmalle
+    category: bier
+    price: 5.00
+    style: trappist
+    brewery: Westmalle
+    tags: [trappist]
+  - id: westmalle-tripel
+    name: Westmalle Tripel
+    category: bier
+    price: 5.50
+    style: trappist
+    abv: 9.5
+    brewery: Westmalle
+    tags: [trappist]
+  - id: witkap-pater-stimulo
+    name: Witkap Pater Stimulo
+    category: bier
+    price: 4.90
+    style: blond
+
+  # ------------------------------------------------------------------
+  # ALCOHOLVRIJ — alles zonder alcohol, ook de 0,0-bierkes
+  # Hier geen style invullen: de filter op bierstijl geldt enkel voor
+  # de categorie bier. Iedereen hier krijgt de tag "alcoholvrij".
+  # ------------------------------------------------------------------
+  - id: tripel-karmeliet-00
+    name: '0,0 Tripel Karmeliet'
+    category: alcoholvrij
+    price: 5.00
+    tags: [alcoholvrij]
+  - id: vedett-00
+    name: '0,0 Vedett'
+    category: alcoholvrij
+    price: 5.00
+    tags: [alcoholvrij]
+  - id: energibajer-lemon-00
+    name: '0,0 Energibajer Lemon'
+    category: alcoholvrij
+    price: 6.00
+    tags: [alcoholvrij]
+  - id: ramon-00
+    name: '0,0 Ramon'
+    category: alcoholvrij
+    price: 3.50
+    tags: [alcoholvrij]
+  - id: virgin-mojito
+    name: Virgin Mojito
+    category: alcoholvrij
+    price: 8.00
+    tags: [alcoholvrij]
+  - id: virgin-mojito-tropicana
+    name: Virgin Mojito Tropicana
+    category: alcoholvrij
+    price: 9.00
+    tags: [alcoholvrij]
+  - id: energibajer-00
+    name: '0,0 Energibajer'
+    category: alcoholvrij
+    price: 6.00
+    tags: [alcoholvrij]
+  - id: liefmans-00
+    name: '0,0 Liefmans'
+    category: alcoholvrij
+    price: 3.60
+    tags: [alcoholvrij]
+  - id: dokkie-00
+    name: '0,0 Dokkie'
+    category: alcoholvrij
+    price: 5.00
+    tags: [alcoholvrij]
+  - id: ouwen-duiker-00
+    name: '0,0 Ouwen Duiker'
+    category: alcoholvrij
+    price: 6.00
+    tags: [alcoholvrij, lokaal, gents]
+  - id: stella-00
+    name: '0,0 Stella'
+    category: alcoholvrij
+    price: 2.70
+    tags: [alcoholvrij]
+  - id: corona-00
+    name: '0,0 Corona'
+    category: alcoholvrij
+    price: 5.00
+    tags: [alcoholvrij]
+  - id: nona-spritz-tonic-00
+    name: '0,0 Nona Spritz & Tonic'
+    category: alcoholvrij
+    price: 10.00
+    tags: [alcoholvrij]
+  - id: nona-ginger-tonic-00
+    name: '0,0 Nona Ginger & Tonic'
+    category: alcoholvrij
+    price: 10.00
+    tags: [alcoholvrij]
+  - id: nona-june-tonic-00
+    name: '0,0 Nona June & Tonic'
+    category: alcoholvrij
+    price: 10.00
+    tags: [alcoholvrij]
+
+  # ------------------------------------------------------------------
+  # FRISDRANK — flesjes, sapjes en tonics
+  # Nieuw frisdrankje? Kopieer een blokje, nieuwe id, nieuwe naam, prijs.
+  # ------------------------------------------------------------------
+  - id: fever-tree-grapefruit
+    name: Fever Tree Grapefruit
+    category: frisdrank
+    price: 4.00
+  - id: fuze-tea-sparkling-lemon
+    name: Fuze Tea Sparkling Lemon
+    category: frisdrank
+    price: 2.70
+    tags: [favo]
+  - id: el-tony-mate
+    name: El Tony Mate
+    category: frisdrank
+    price: 4.50
+  - id: druivelaere-druivensap
+    name: Druivelaere Puur Druivensap
+    category: frisdrank
+    price: 4.00
+  - id: perelaere-perensap
+    name: Perelaere Puur Perensap
+    category: frisdrank
+    price: 4.00
+  - id: chaudfontaine-plat
+    name: Chaudfontaine Plat
+    category: frisdrank
+    price: 2.20
+  # "Bruis water" bij de favo's is ditzelfde flesje.
+  - id: chaudfontaine-bruis
+    name: Chaudfontaine Bruis
+    category: frisdrank
+    price: 2.20
+    tags: [favo]
+  - id: minute-maid-appelsap
+    name: Minute Maid Appelsap
+    category: frisdrank
+    price: 2.70
+  - id: minute-maid-sinaasappelsap
+    name: Minute Maid Sinaasappelsap
+    category: frisdrank
+    price: 2.70
+  - id: minute-maid-multivitaminesap
+    name: Minute Maid Multivitaminesap
+    category: frisdrank
+    price: 2.70
+  - id: vers-sinaasappelsap
+    name: Vers sinaasappelsap
+    category: frisdrank
+    price: 4.50
+  - id: big-tom-tomatensap
+    name: Big Tom Spiced Tomatensap
+    category: frisdrank
+    price: 4.00
+  - id: cranberrysap
+    name: Cranberrysap
+    category: frisdrank
+    price: 3.50
+  - id: coca-cola
+    name: Coca Cola
+    category: frisdrank
+    price: 2.70
+    tags: [favo]
+  - id: coca-cola-zero
+    name: Coca Cola Zero
+    category: frisdrank
+    price: 2.70
+    tags: [favo]
+  - id: home-made-iced-tea
+    name: Home Made Iced Tea
+    category: frisdrank
+    price: 4.50
+    note: Zelf gemaakt, geen flesje.
+    noteEn: We make it ourselves, not from a bottle.
+  - id: agrumes-royal-bliss
+    name: Agrumes Royal Bliss
+    category: frisdrank
+    price: 2.70
+  - id: almdudler
+    name: Almdudler
+    category: frisdrank
+    price: 4.50
+  - id: fanta-orange
+    name: Fanta Orange
+    category: frisdrank
+    price: 2.70
+  - id: yugen-kombucha
+    name: Yugen Kombucha
+    category: frisdrank
+    price: 5.00
+    tags: [lokaal]
+  - id: appeltiser
+    name: Appeltiser
+    category: frisdrank
+    price: 4.00
+  - id: sprite
+    name: Sprite
+    category: frisdrank
+    price: 2.70
+  - id: nalu
+    name: Nalu
+    category: frisdrank
+    price: 4.00
+  - id: red-bull
+    name: Red Bull
+    category: frisdrank
+    price: 4.00
+  - id: cecemel
+    name: Cecemel
+    category: frisdrank
+    price: 4.00
+  - id: fever-tree-ginger-ale
+    name: Fever Tree Ginger Ale
+    category: frisdrank
+    price: 4.00
+  - id: fever-tree-ginger-beer
+    name: Fever Tree Ginger Beer
+    category: frisdrank
+    price: 4.00
+  - id: fever-tree-ginger-beer-blood-orange
+    name: Fever Tree Ginger Beer Blood Orange
+    category: frisdrank
+    price: 4.00
+  - id: fever-tree-tonic
+    name: Fever Tree Tonic
+    category: frisdrank
+    price: 4.00
+
+  # ------------------------------------------------------------------
+  # WARM — koffie, thee en de straffe warme dingen
+  # De thees staan per soort. Nieuw theetje? Kopieer een regel eronder.
+  # ------------------------------------------------------------------
+  - id: verse-gember-citroen-thee
+    name: Verse gember- en citroenthee
+    category: warm
+    price: 3.00
+  - id: warm-perensap-kaneel
+    name: Warm perensap met kaneel
+    category: warm
+    price: 4.50
+  - id: groene-dammam-thee
+    name: Groene Dammam Thee
+    category: warm
+    price: 3.00
+  - id: espresso
+    name: Espresso
+    category: warm
+    price: 2.50
+  - id: koffie
+    name: Koffie
+    category: warm
+    price: 2.50
+  - id: koffie-a-volonte
+    name: Koffie à volonté
+    category: warm
+    price: 3.00
+    note: Zoveel tassen als ge wilt.
+    noteEn: As many cups as you like.
+    tags: [favo]
+  - id: dubbel-shot-espresso
+    name: Dubbel shot espresso
+    category: warm
+    price: 3.00
+  - id: deca
+    name: Deca
+    category: warm
+    price: 2.50
+  - id: cappuccino
+    name: Cappuccino
+    category: warm
+    price: 3.50
+  - id: latte-macchiato
+    name: Latte Macchiato
+    category: warm
+    price: 4.00
+  - id: warme-choco
+    name: Warme choco
+    category: warm
+    price: 4.00
+  - id: bosvruchten-thee
+    name: Bosvruchten Thee
+    category: warm
+    price: 3.00
+  - id: verse-munt-thee
+    name: Verse Munt Thee
+    category: warm
+    price: 3.00
+  - id: groene-citroen-thee
+    name: Groene Citroen Thee
+    category: warm
+    price: 3.00
+  - id: groene-lindebloesem-thee
+    name: Groene Lindebloesem Thee
+    category: warm
+    price: 3.00
+  - id: kamille-thee
+    name: Kamille Thee
+    category: warm
+    price: 3.00
+  - id: zwarte-caramel-thee
+    name: Zwarte Caramel Thee
+    category: warm
+    price: 3.00
+  - id: zwarte-darjeeling-thee
+    name: Zwarte Darjeeling Thee
+    category: warm
+    price: 3.00
+  - id: irish-coffee
+    name: Irish Coffee
+    category: warm
+    price: 8.50
+  - id: italian-coffee
+    name: Italian Coffee
+    category: warm
+    price: 8.50
+  - id: baileys-coffee
+    name: Baileys Coffee
+    category: warm
+    price: 8.50
+  - id: straffen-choco-baileys
+    name: Straffen Choco Baileys
+    category: warm
+    price: 8.50
+  - id: straffen-choco-rum
+    name: Straffen Choco Rum
+    category: warm
+    price: 8.50
+
+  # ------------------------------------------------------------------
+  # SPRITZ — allemaal aan dezelfde prijs
+  # Verandert de spritzprijs? Dan moet ge hem hieronder overal aanpassen.
+  # ------------------------------------------------------------------
+  - id: aperol-spritz
+    name: Aperol Spritz
+    category: spritz
+    price: 9.00
+    tags: [favo]
+  - id: '43-spritz'
+    name: '43 Spritz'
+    category: spritz
+    price: 9.00
+  - id: limoncello-spritz
+    name: Limoncello Spritz
+    category: spritz
+    price: 9.00
+  - id: hugo-spritz
+    name: Hugo Spritz
+    category: spritz
+    price: 9.00
+  - id: campari-spritz
+    name: Campari Spritz
+    category: spritz
+    price: 9.00
+  - id: lillet-rose-spritz
+    name: Lillet Rosé Spritz
+    category: spritz
+    price: 9.00
+    tags: [favo]
+
+  # ------------------------------------------------------------------
+  # APERO & WIJN — glazen, flessen en aperitiefkes
+  # Wijn per glas en per fles staan als aparte items. Verandert de
+  # wijn zelf, dan hoeft ge enkel de prijs na te kijken.
+  # ------------------------------------------------------------------
+  - id: glas-witte-wijn
+    name: Glas Witte Wijn
+    category: apero
+    price: 4.60
+    tags: [favo]
+  - id: glas-rose-wijn
+    name: Glas Rosé Wijn
+    category: apero
+    price: 4.60
+  - id: glas-rode-wijn
+    name: Glas Rode Wijn
+    category: apero
+    price: 4.60
+  - id: glas-cava
+    name: Glas Cava
+    category: apero
+    price: 6.00
+    tags: [favo]
+  - id: fles-wit
+    name: Fles Wit
+    category: apero
+    price: 20.00
+  - id: fles-rose
+    name: Fles Rosé
+    category: apero
+    price: 20.00
+  - id: fles-rood
+    name: Fles Rood
+    category: apero
+    price: 20.00
+  - id: fles-cava
+    name: Fles Cava
+    category: apero
+    price: 30.00
+  - id: campari
+    name: Campari
+    category: apero
+    price: 5.00
+  # Dit is hetzelfde glas als "Glas Limoncello" bij de spirits.
+  - id: limoncello
+    name: Limoncello
+    category: apero
+    price: 5.50
+  - id: martini-wit
+    name: Martini Wit
+    category: apero
+    price: 5.00
+  - id: martini-rood
+    name: Martini Rood
+    category: apero
+    price: 5.00
+  - id: lillet-wit
+    name: Lillet Wit
+    category: apero
+    price: 5.00
+  - id: lillet-rose
+    name: Lillet Rosé
+    category: apero
+    price: 5.00
+  - id: martini-bellini
+    name: Martini Bellini
+    category: apero
+    price: 8.50
+  - id: martini-bellini-fles
+    name: Martini Bellini Fles
+    category: apero
+    price: 35.00
+  - id: roomer
+    name: Roomer
+    category: apero
+    price: 5.50
+    note: Aperitief van vlierbloesem.
+    noteEn: Belgian elderflower aperitif.
+  - id: coupe-fleur
+    name: Coupe Fleur
+    category: apero
+    price: 7.50
+  - id: ricard
+    name: Ricard (2cl)
+    category: apero
+    price: 3.00
+  - id: rode-porto
+    name: Rode Porto
+    category: apero
+    price: 5.00
+  - id: picon-vin-blanc
+    name: Picon Vin Blanc
+    category: apero
+    price: 7.00
+
+  # ------------------------------------------------------------------
+  # COCKTAILS — alles vers gemaakt achter de toog
+  # Nieuwe cocktail? Kopieer een blokje. Zet er enkel een note bij als
+  # de naam niet verklapt wat erin zit.
+  # ------------------------------------------------------------------
+  - id: lazy-red-cheeks
+    name: Lazy Red Cheeks
+    category: cocktails
+    price: 11.00
+  - id: qt-lime-hard-ice-tea
+    name: QT Lime HARD Ice Tea
+    category: cocktails
+    price: 6.00
+  - id: qt-peach-hard-ice-tea
+    name: QT Peach HARD Ice Tea
+    category: cocktails
+    price: 6.00
+  - id: el-turbo-tony
+    name: El Turbo Tony
+    category: cocktails
+    price: 9.00
+  - id: tony-aperoni
+    name: Tony Aperoni
+    category: cocktails
+    price: 9.00
+  - id: amaretto-sour
+    name: Amaretto Sour
+    category: cocktails
+    price: 11.00
+  - id: bloody-mary
+    name: Bloody Mary
+    category: cocktails
+    price: 9.00
+  - id: carajilo
+    name: Carajilo
+    category: cocktails
+    price: 11.00
+    note: Licor 43 met espresso.
+    noteEn: Licor 43 with espresso.
+  - id: cosmopolitan
+    name: Cosmopolitan
+    category: cocktails
+    price: 11.00
+  - id: cuba-libre
+    name: Cuba Libre
+    category: cocktails
+    price: 9.00
+  - id: dark-stormy
+    name: "Dark & Stormy"
+    category: cocktails
+    price: 9.50
+  - id: dark-stormy-blood-orange
+    name: "Dark & Stormy Blood Orange"
+    category: cocktails
+    price: 9.50
+  - id: espresso-martini
+    name: Espresso Martini
+    category: cocktails
+    price: 11.00
+  - id: long-island-iced-tea
+    name: Long Island Iced Tea
+    category: cocktails
+    price: 11.00
+  - id: mojito
+    name: Mojito
+    category: cocktails
+    price: 11.00
+  - id: mojito-tropicana
+    name: Mojito Tropicana
+    category: cocktails
+    price: 12.00
+  - id: moscow-mule
+    name: Moscow Mule
+    category: cocktails
+    price: 9.50
+  - id: negroni
+    name: Negroni
+    category: cocktails
+    price: 11.00
+  - id: old-fashioned
+    name: Old Fashioned
+    category: cocktails
+    price: 11.00
+  - id: pornstar-martini
+    name: Pornstar Martini
+    category: cocktails
+    price: 11.00
+  - id: passoa-orange
+    name: Passoa Orange
+    category: cocktails
+    price: 8.50
+  - id: safari-orange
+    name: Safari Orange
+    category: cocktails
+    price: 8.50
+  - id: sex-on-the-beach
+    name: Sex on the Beach
+    category: cocktails
+    price: 11.00
+  - id: skinny-bitch
+    name: Skinny Bitch
+    category: cocktails
+    price: 8.50
+  - id: tequila-sunrise
+    name: Tequila Sunrise
+    category: cocktails
+    price: 9.00
+  - id: whisky-sour
+    name: Whisky Sour
+    category: cocktails
+    price: 11.00
+  - id: vodka-red-bull
+    name: Vodka Red Bull
+    category: cocktails
+    price: 9.00
+    tags: [favo]
+  - id: havana-club-especial-cola
+    name: "Havana Club Especial & Cola"
+    category: cocktails
+    price: 8.50
+    tags: [favo]
+
+  # ------------------------------------------------------------------
+  # RUM — per glas
+  # Een shotje van dezelfde rum staat verderop bij de shots, met een
+  # eigen prijs. Verander er dus altijd twee als de prijs stijgt.
+  # ------------------------------------------------------------------
+  - id: kraken
+    name: Kraken
+    category: rum
+    price: 7.50
+  - id: havana-especial
+    name: Havana Especial
+    category: rum
+    price: 6.00
+  - id: havana-wit
+    name: Havana Wit
+    category: rum
+    price: 6.00
+  - id: havana-7-anos
+    name: Havana 7 Años
+    category: rum
+    price: 7.50
+  - id: havana-spiced
+    name: Havana Spiced
+    category: rum
+    price: 6.50
+  - id: la-hechicera
+    name: La Hechicera
+    category: rum
+    price: 7.50
+  - id: bumbu
+    name: Bumbu
+    category: rum
+    price: 7.50
+  - id: bumbu-xo
+    name: Bumbu XO
+    category: rum
+    price: 9.00
+  - id: diplomatico
+    name: Diplomático
+    category: rum
+    price: 9.00
+  - id: don-papa
+    name: Don Papa
+    category: rum
+    price: 9.00
+
+  # ------------------------------------------------------------------
+  # ANDERE SPIRITS — whisky, gin, wodka en de zoete glazen
+  # "Glas ..." wil zeggen: per glas, niet als shot. De shots staan
+  # in hun eigen lijst hieronder.
+  # ------------------------------------------------------------------
+  - id: aberlour-chivas
+    name: Aberlour / Chivas
+    category: spirits
+    price: 9.00
+  - id: glas-baileys
+    name: Glas Baileys
+    category: spirits
+    price: 6.00
+  - id: jameson
+    name: Jameson
+    category: spirits
+    price: 6.00
+  - id: four-roses
+    name: Four Roses
+    category: spirits
+    price: 7.50
+  - id: jack-daniels
+    name: Jack Daniels
+    category: spirits
+    price: 7.50
+  - id: lagavulin-16
+    name: Lagavulin 16 jaar
+    category: spirits
+    price: 10.00
+  - id: shankys-whip
+    name: Shanky's Whip
+    category: spirits
+    price: 6.00
+  - id: beefeater
+    name: Beefeater
+    category: spirits
+    price: 5.50
+  - id: malfy-limon
+    name: Malfy Limon
+    category: spirits
+    price: 6.50
+  - id: malfy-arancia
+    name: Malfy Arancia
+    category: spirits
+    price: 6.50
+  - id: hendricks
+    name: Hendrick's
+    category: spirits
+    price: 7.50
+  - id: monkey-47
+    name: Monkey 47
+    category: spirits
+    price: 9.00
+  - id: glas-amaretto
+    name: Glas Amaretto
+    category: spirits
+    price: 6.00
+  - id: glas-cointreau
+    name: Glas Cointreau
+    category: spirits
+    price: 6.00
+  - id: glas-43
+    name: Glas 43
+    category: spirits
+    price: 6.00
+  - id: glas-grappa
+    name: Glas Grappa
+    category: spirits
+    price: 6.00
+  - id: fles-amaretto
+    name: Fles Amaretto
+    category: spirits
+    price: 85.00
+  - id: absolut
+    name: Absolut
+    category: spirits
+    price: 6.00
+  - id: zubrowka
+    name: Zubrowka
+    category: spirits
+    price: 8.00
+
+  # ------------------------------------------------------------------
+  # SHOTS — het meeste aan 4,00
+  # Gaat de standaardprijs omhoog, dan moet ge ze hier stuk voor stuk
+  # aanpassen. De duurdere shots staan er tussen met hun eigen prijs.
+  # ------------------------------------------------------------------
+  - id: shot-white-milf
+    name: Shot White MILF
+    category: shots
+    price: 4.00
+    note: Half St-Germain, half vodka.
+    noteEn: Half St-Germain, half vodka.
+  - id: shot-rum-kraken
+    name: Shot Rum Kraken
+    category: shots
+    price: 4.00
+  - id: bols-blue-1575
+    name: Bols Blue 1575
+    category: shots
+    price: 4.00
+  - id: '43-creme-brulee'
+    name: '43 Crème Brûlée'
+    category: shots
+    price: 4.00
+  - id: '5-shots-mokkatje'
+    name: '5 shots Mokkatje'
+    category: shots
+    price: 20.00
+    note: Vijf shotjes, voor aan tafel.
+    noteEn: Five shots, for the whole table.
+  - id: shot-peleton-de-la-muertes
+    name: Shot Peleton de la Muertes
+    category: shots
+    price: 4.00
+  - id: andere-mix
+    name: Andere Mix
+    category: shots
+    price: 4.50
+    note: Zeg maar wat ge graag hebt, we mixen iets.
+    noteEn: Tell us what you like and we will mix something.
+  - id: shot-tequila-silver
+    name: Shot Tequila SILVER
+    category: shots
+    price: 4.00
+  - id: shot-tequila-gold
+    name: Shot Tequila GOLD
+    category: shots
+    price: 4.00
+  - id: shot-limoncello
+    name: Shot Limoncello
+    category: shots
+    price: 4.00
+  - id: shot-43
+    name: Shot 43
+    category: shots
+    price: 4.00
+  - id: shot-amaretto
+    name: Shot Amaretto
+    category: shots
+    price: 4.00
+  - id: shot-baileys
+    name: Shot Baileys
+    category: shots
+    price: 4.00
+  - id: shot-fireball
+    name: Shot Fireball
+    category: shots
+    price: 4.00
+  - id: shot-b52
+    name: Shot B52
+    category: shots
+    price: 4.50
+  - id: shot-brainz
+    name: Shot Brainz
+    category: shots
+    price: 4.00
+  - id: shot-cointreau
+    name: Shot Cointreau
+    category: shots
+    price: 4.00
+  - id: shot-grappa
+    name: Shot Grappa
+    category: shots
+    price: 4.00
+  - id: shot-passoa
+    name: Shot Passoa
+    category: shots
+    price: 4.00
+  - id: shot-peach-likeur
+    name: Shot Peach likeur
+    category: shots
+    price: 4.00
+  - id: shot-safari
+    name: Shot Safari
+    category: shots
+    price: 4.00
+  - id: shot-sambuca
+    name: Shot Sambuca
+    category: shots
+    price: 4.00
+  - id: shot-st-germain
+    name: Shot St-Germain
+    category: shots
+    price: 4.00
+  - id: shot-rum-bumbu
+    name: Shot Rum Bumbu
+    category: shots
+    price: 4.00
+  - id: shot-rum-bumbu-x
+    name: Shot Rum Bumbu X
+    category: shots
+    price: 5.00
+  - id: shot-rum-diplomatico
+    name: Shot Rum Diplomático
+    category: shots
+    price: 5.00
+  - id: shot-rum-don-papa
+    name: Shot Rum Don Papa
+    category: shots
+    price: 5.00
+  - id: shot-rum-havana-7y
+    name: Shot Rum Havana 7y
+    category: shots
+    price: 5.00
+  - id: shot-rum-havana-cuban-spiced
+    name: Shot Rum Havana Cuban Spiced
+    category: shots
+    price: 4.50
+  - id: shot-rum-havana-especial
+    name: Shot Rum Havana Especial
+    category: shots
+    price: 4.00
+  - id: shot-rum-havana-wit
+    name: Shot Rum Havana Wit
+    category: shots
+    price: 4.00
+  - id: shot-rum-la-hechicera
+    name: Shot Rum La Hechicera
+    category: shots
+    price: 5.00
+  - id: shot-whisky-aberlour-12y
+    name: Shot Whisky Aberlour 12y
+    category: shots
+    price: 5.00
+  - id: shot-whisky-chivas-12y
+    name: Shot Whisky Chivas 12y
+    category: shots
+    price: 5.00
+  - id: shot-whisky-jack-daniels
+    name: Shot Whisky Jack Daniels
+    category: shots
+    price: 4.00
+  - id: shot-whisky-jameson
+    name: Shot Whisky Jameson
+    category: shots
+    price: 4.00
+  - id: shot-whisky-lagavulin-16
+    name: Shot Whisky Lagavulin 16 jaar
+    category: shots
+    price: 7.00
+  - id: shot-whisky-shankys-whip
+    name: Shot Whisky Shanky's Whip
+    category: shots
+    price: 4.00
+  - id: shot-wodka-absolut
+    name: Shot Wodka Absolut
+    category: shots
+    price: 4.00
+  - id: shot-wodka-absolut-tabasco
+    name: Shot Wodka Absolut Tabasco
+    category: shots
+    price: 4.00
+  - id: shot-wodka-zubrowka
+    name: Shot Wodka Zubrowka
+    category: shots
+    price: 4.00
+  - id: shot-whisky-four-roses
+    name: Shot Whisky Four Roses
+    category: shots
+    price: 4.00
+
+  # ------------------------------------------------------------------
+  # ETEN — geen keuken, wel iets bij uw pint
+  # Komt er iets bij op het plankje? Pas gerust de naam aan, maar laat
+  # de id staan zoals hij is.
+  # ------------------------------------------------------------------
+  - id: '5-kaasballetjes'
+    name: '5 kaasballetjes met saus'
+    category: eten
+    price: 8.00
+  - id: '6-bitterballetjes'
+    name: '6 bitterballetjes met saus'
+    category: eten
+    price: 8.00
+  - id: kaasplank
+    name: Kaasplank
+    category: eten
+    price: 8.50
+  - id: kaas-serranoham-plankje
+    name: "Kaas & serranoham plankje"
+    category: eten
+    price: 14.50
+  - id: chips
+    name: Chips
+    category: eten
+    price: 2.50
+  - id: droge-worst
+    name: Droge worst
+    category: eten
+    price: 2.50

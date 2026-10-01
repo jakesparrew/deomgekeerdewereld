@@ -1,0 +1,443 @@
+---
+/**
+ * Reserveren — of beter: aanvragen.
+ * Den Omgekeerde houdt geen tafels vrij. Deze pagina is voor groepen,
+ * verjaardagen, studentenclubs, concerten en samenwerkingen.
+ */
+import Base from '../layouts/Base.astro';
+import Icon from '../components/Icon.astro';
+import Photo from '../components/Photo.astro';
+import ReservationForm from '../components/ReservationForm.astro';
+import ReserveButton from '../components/ReserveButton.astro';
+
+import { site } from '../data/site';
+import { route, strings } from '../lib/i18n';
+
+const lang = 'nl' as const;
+const T = strings(lang);
+
+const breadcrumbs = [
+  { name: 'Home', url: route('home', lang) },
+  { name: 'Reserveren', url: route('reserve', lang) },
+];
+
+const soorten = [
+  {
+    icon: 'beer',
+    title: 'Een bende of een verjaardag',
+    body:
+      'Komt ge met tien, twintig of dertig man vieren? Laat het weten, dan houden we rekening met u en staat er genoeg koud.',
+  },
+  {
+    icon: 'pils',
+    title: 'Studentenclub of doop',
+    body:
+      'Clubavond, cantus-nazit of gewoon een doop die ergens moet landen. Zeg met hoeveel ge zijt en wanneer, dan spreken we af wat kan.',
+  },
+  {
+    icon: 'music',
+    title: 'Concert of DJ-set',
+    body:
+      'Speelt ge zelf, of draait ge platen? Concerten en fuiven zijn hier gratis voor het volk. Stuur een linkje mee naar uw muziek.',
+  },
+  {
+    icon: 'coffee',
+    title: 'Samenwerking of partnership',
+    body:
+      'Een idee met een vereniging, een festival of de buren van hiernaast? Kom eens langs voor een koffie, of schrijf het eerst hier op.',
+  },
+];
+
+const weetjes = [
+  'Elke dag open vanaf 14 uur tot laat. Donderdag, vrijdag en zaterdag nog wat later.',
+  'Een pilske kost € 2,70, er staan meer dan 69 bierkes op de kaart en koffie is à volonté voor € 3,00.',
+  'Poolke spelen is gratis, kickeren kost € 0,50 en er ligt ook een schaakbord.',
+  'Concerten en fuiven zijn gratis. Aper’Omer is elke eerste vrijdag van de maand.',
+  'De muziek gaat van soul, funk en disco over jazz, blues en bossa nova naar hiphop, house en rock-’n-roll.',
+  'Hoe groter de bende, hoe vroeger ge het best iets laat weten. Een week op voorhand is fijn, een maand is nog beter.',
+];
+---
+
+<Base
+  title="Reserveren"
+  description="Voor een pintje moet ge bij den Omgekeerde niks reserveren. Komt ge met een groep, viert ge iets, of hebt ge een voorstel voor een concert of een samenwerking? Laat het hier weten."
+  lang={lang}
+  active="reserve"
+  breadcrumbs={breadcrumbs}
+>
+  <section class="section">
+    <div class="wrap">
+      <p class="eyebrow">Reserveren</p>
+      <h1>{T.reserveTitle}</h1>
+
+      <div class="intro">
+        <div class="prose stack">
+          <p class="lead">
+            Eerst het belangrijkste: voor een pintje moet ge hier niks reserveren.
+            Ge komt binnen, ge zoekt een plekske, en zit het vol dan schuift er wel
+            iemand op. Zo doen we dat al sinds 2014.
+          </p>
+          <p>
+            Wilt ge toch zeker zijn van een tafel, dan kunt ge er een vastleggen.
+          </p>
+          <p class="reserve-cta">
+            <ReserveButton lang={lang} variant="primary" />
+          </p>
+          <p>
+            Wat we wél graag op voorhand weten: dat ge met een hele bende afkomt,
+            dat er iemand verjaart, dat uw studentenclub een avond zoekt, dat ge
+            wilt spelen of draaien, of dat ge een voorstel hebt om samen iets te
+            doen. Vul hieronder in wat ge in gedachten hebt — het komt meteen bij
+            de juiste persoon terecht.
+          </p>
+        </div>
+
+        <aside class="walkin" aria-labelledby="walkin-titel">
+          <h2 class="walkin__title" id="walkin-titel">
+            <Icon name="clock" size={20} />
+            Gewoon iets komen drinken?
+          </h2>
+          <p class="walkin__body">
+            Dan moet ge niks invullen. We zijn elke dag open van 14 uur tot laat
+            en de deur staat voor iedereen open — student, buur of passant.
+          </p>
+          <p class="walkin__links">
+            <a href={route('contact', lang)}>{T.whereToFind}</a>
+            <span aria-hidden="true">·</span>
+            <a href={route('agenda', lang)}>{T.agendaTitle}</a>
+          </p>
+        </aside>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--tight">
+    <div class="wrap">
+      <p class="eyebrow">Waarvoor wél</p>
+      <h2>Hiervoor verwittigt ge ons best</h2>
+
+      <ul class="soorten" role="list">
+        {
+          soorten.map((soort) => (
+            <li class="card soort">
+              <span class="soort__icon" aria-hidden="true">
+                <Icon name={soort.icon} size={22} />
+              </span>
+              <h3 class="soort__title">{soort.title}</h3>
+              <p class="soort__body">{soort.body}</p>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <section class="section section--tight" id="aanvraag">
+    <div class="wrap">
+      <p class="eyebrow">Laat iets weten</p>
+      <h2>Vertel eens wat ge van plan zijt</h2>
+
+      <div class="aanvraag">
+        <div class="aanvraag__form">
+          <ReservationForm lang={lang} />
+        </div>
+
+        <aside class="aanvraag__aside" aria-labelledby="weetjes-titel">
+          <div class="card">
+            <h3 id="weetjes-titel">Goed om weten</h3>
+            <ul class="weetjes" role="list">
+              {weetjes.map((weetje) => <li>{weetje}</li>)}
+            </ul>
+          </div>
+
+          <Photo
+            alt="Een volle toog in De Omgekeerde Wereld, met een groep vrienden die klinkt onder de lampen."
+            brief="Groepsavond aan de toog: acht à tien mensen die klinken, glazen in de lucht, warm kaarslicht en de spiegel achter de toog. Liggend, geen flits, korrel mag."
+            ratio="4 / 3"
+            caption="Een bende in den Omgekeerde, ergens op een donderdag."
+          />
+        </aside>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--tight">
+    <div class="wrap">
+      <p class="eyebrow">Liever direct</p>
+      <h2>Belt of mailt gerust</h2>
+
+      <div class="direct">
+        <div class="card direct__card">
+          <h3 class="direct__title">
+            <Icon name="phone" size={20} />
+            {T.callUs}
+          </h3>
+          <p>
+            <a class="direct__big" href={`tel:${site.phoneHref}`}>{site.phone}</a>
+          </p>
+          <p class="direct__note">
+            Achter de toog is het niet altijd stil. Krijgt ge niemand te pakken,
+            probeer dan later op de avond nog eens of stuur een mailtje.
+          </p>
+        </div>
+
+        <div class="card direct__card">
+          <h3 class="direct__title">
+            <Icon name="mail" size={20} />
+            Rechtstreeks mailen
+          </h3>
+          <ul class="direct__mails" role="list">
+            <li>
+              <a href={`mailto:${site.email.events}`}>{site.email.events}</a>
+              <span class="direct__who">Tristan — events, groepen en boekingen</span>
+            </li>
+            <li>
+              <a href={`mailto:${site.email.partnerships}`}>{site.email.partnerships}</a>
+              <span class="direct__who">Ran — samenwerkingen en partnerships</span>
+            </li>
+            <li>
+              <a href={`mailto:${site.email.general}`}>{site.email.general}</a>
+              <span class="direct__who">Al de rest</span>
+            </li>
+          </ul>
+        </div>
+
+        <div class="card direct__card">
+          <h3 class="direct__title">
+            <Icon name="clock" size={20} />
+            Wanneer antwoorden we?
+          </h3>
+          <p class="direct__note">
+            We lezen alles zelf, tussen het tappen door. Meestal krijgt ge binnen
+            twee dagen antwoord. Is er een weekend tussen gevallen, geef ons dan
+            wat langer. Is het dringend? Bel gewoon.
+          </p>
+          <p class="direct__note">
+            Ge vindt ons ook op Instagram —{' '}
+            <a href={site.social.instagram} rel="me noopener">
+              {site.social.instagramHandle}
+            </a>. Daar staat het meeste te lezen over wat er te doen is.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  /* ---- Intro ---- */
+  .intro {
+    display: grid;
+    gap: var(--space-l);
+    margin-block-start: var(--space-m);
+  }
+
+  @media (min-width: 56em) {
+    .intro {
+      grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr);
+      align-items: start;
+      gap: var(--space-xl);
+    }
+  }
+
+  .reserve-cta {
+    margin-block-start: var(--space-m);
+  }
+
+  .lead {
+    font-size: var(--step-1);
+    line-height: var(--leading-snug);
+    color: var(--ink);
+  }
+
+  .walkin {
+    background: var(--bg-raised);
+    border: var(--border-hairline) solid var(--line);
+    border-inline-start: 3px solid var(--accent-text);
+    border-radius: var(--radius-s);
+    padding: var(--space-m);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2xs);
+  }
+
+  .walkin__title {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2xs);
+    font-size: var(--step-1);
+    color: var(--ink);
+  }
+
+  .walkin__body {
+    font-size: var(--step--1);
+    line-height: var(--leading-normal);
+    color: var(--ink-soft);
+  }
+
+  .walkin__links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2xs);
+    font-size: var(--step--1);
+    font-weight: 600;
+  }
+
+  .walkin__links span {
+    color: var(--ink-faint);
+  }
+
+  /* ---- Waarvoor wél ---- */
+  .soorten {
+    list-style: none;
+    padding: 0;
+    margin-block-start: var(--space-m);
+    display: grid;
+    gap: var(--space-s);
+  }
+
+  @media (min-width: 42em) {
+    .soorten {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  .soort {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2xs);
+  }
+
+  .soort__icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.5rem;
+    height: 2.5rem;
+    color: var(--accent-text);
+    background: var(--bg-inset);
+    border: var(--border-hairline) solid var(--line);
+    border-radius: var(--radius-s);
+  }
+
+  .soort__title {
+    font-size: var(--step-1);
+  }
+
+  .soort__body {
+    font-size: var(--step--1);
+    line-height: var(--leading-normal);
+    color: var(--ink-soft);
+  }
+
+  /* ---- Het formulier ---- */
+  .aanvraag {
+    display: grid;
+    gap: var(--space-xl);
+    margin-block-start: var(--space-m);
+  }
+
+  @media (min-width: 60em) {
+    .aanvraag {
+      grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr);
+      align-items: start;
+      gap: var(--space-2xl);
+    }
+  }
+
+  .aanvraag__aside {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-m);
+  }
+
+  .weetjes {
+    list-style: none;
+    padding: 0;
+    margin-block-start: var(--space-2xs);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2xs);
+    font-size: var(--step--1);
+    line-height: var(--leading-snug);
+    color: var(--ink-soft);
+  }
+
+  .weetjes li {
+    padding-inline-start: var(--space-s);
+    position: relative;
+  }
+
+  .weetjes li::before {
+    content: '';
+    position: absolute;
+    inset-block-start: 0.6em;
+    inset-inline-start: 0;
+    width: var(--space-2xs);
+    height: 2px;
+    background: var(--accent-text);
+  }
+
+  /* ---- Bellen of mailen ---- */
+  .direct {
+    display: grid;
+    gap: var(--space-s);
+    margin-block-start: var(--space-m);
+  }
+
+  @media (min-width: 52em) {
+    .direct {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+
+  .direct__card {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2xs);
+  }
+
+  .direct__title {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2xs);
+    font-size: var(--step-1);
+  }
+
+  .direct__big {
+    font-family: var(--font-display);
+    font-size: var(--step-2);
+    font-weight: 700;
+    letter-spacing: var(--tracking-tight);
+    text-decoration: none;
+  }
+
+  .direct__note {
+    font-size: var(--step--1);
+    line-height: var(--leading-normal);
+    color: var(--ink-soft);
+  }
+
+  .direct__mails {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2xs);
+  }
+
+  .direct__mails li {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .direct__mails a {
+    font-weight: 600;
+    word-break: break-word;
+  }
+
+  .direct__who {
+    font-size: var(--step--2);
+    color: var(--ink-faint);
+  }
+</style>

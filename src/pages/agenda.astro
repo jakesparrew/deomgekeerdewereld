@@ -1,0 +1,438 @@
+---
+/**
+ * De agenda. Wat er aankomt staat bovenaan, de eerstvolgende avond groot.
+ * Is er niks gepland, dan zeggen we gewoon waarom ge tóch moet binnenspringen.
+ */
+import Base from '../layouts/Base.astro';
+import EventCard from '../components/EventCard.astro';
+import Icon from '../components/Icon.astro';
+import Photo from '../components/Photo.astro';
+
+import { site } from '../data/site';
+import { events } from '../lib/content';
+import { buildAgenda } from '../lib/events';
+import { route, strings, type Lang } from '../lib/i18n';
+
+const lang: Lang = 'nl';
+const T = strings(lang);
+
+const { upcoming, past, next, today } = buildAgenda(events, new Date());
+
+const rest = next ? upcoming.slice(1) : upcoming;
+const pastShown = past.slice(0, 12);
+const todayIds = new Set(today.map((e) => e.id));
+
+const description =
+  'Wat te doen in Gent? Gratis concerten, dj-avonden, quiz en de Aper’Omer in ' +
+  'De Omgekeerde Wereld, rechtover VIERNULVIER. Bekijk de agenda — elke dag open ' +
+  'van 14 uur tot laat.';
+
+const breadcrumbs = [
+  { name: site.name, url: route('home', lang) },
+  { name: 'Agenda', url: route('agenda', lang) },
+];
+
+/** Redenen om binnen te springen als er niks gepland staat. */
+const reasons = [
+  {
+    icon: 'beer',
+    title: '69 bierkes en meer',
+    text: 'Van een pilske van € 2,70 tot iets dat ge nog nooit geproefd hebt.',
+  },
+  {
+    icon: 'pool',
+    title: 'Gratis poolke',
+    text: 'De tafel kost niks. Kickeren is 50 cent, schaken doet ge voor de eer.',
+  },
+  {
+    icon: 'music',
+    title: 'Muziek uit den ouwen doos',
+    text: 'Soul, funk, disco, jazz en al eens rock ’n roll. Zelden stil.',
+  },
+];
+---
+
+<Base
+  title="Agenda"
+  description={description}
+  lang={lang}
+  active="agenda"
+  events={upcoming}
+  breadcrumbs={breadcrumbs}
+>
+  <!-- ============ Kop ============ -->
+  <section class="section section--tight">
+    <div class="wrap">
+      <p class="eyebrow">Agenda</p>
+      <h1>{T.agendaTitle}</h1>
+      <div class="lede prose">
+        <p>
+          Concerten, dj&#8217;s, quizzen en de Aper&#8217;Omer: bij ons is de inkom
+          bijna altijd gratis en de affiche zelden voorspelbaar. Hieronder staat wat
+          al vastligt.
+        </p>
+        <p class="lede__note">
+          Alles wat last-minute passeert, zet Tristan het eerst op Instagram.
+          Wilt ge niks missen, volg ons daar.
+        </p>
+      </div>
+
+      <p class="lede__actions">
+        <a
+          class="btn btn--primary"
+          href={site.social.instagram}
+          target="_blank"
+          rel="noopener"
+        >
+          {site.social.instagramHandle}
+          <span class="visually-hidden"> op Instagram (opent in een nieuw venster)</span>
+        </a>
+        <a class="btn btn--ghost" href={route('menu', lang)}>{T.menuTitle}</a>
+      </p>
+    </div>
+  </section>
+
+  <!-- ============ Wat komt er aan ============ -->
+  <section class="section" aria-labelledby="komt-eraan">
+    <div class="wrap">
+      <p class="eyebrow">Op de affiche</p>
+      <h2 id="komt-eraan">{T.upcoming}</h2>
+
+      {
+        next ? (
+          <div class="agenda">
+            <EventCard
+              event={next}
+              lang={lang}
+              variant="featured"
+              isToday={todayIds.has(next.id)}
+            />
+
+            {rest.length > 0 && (
+              <ul class="agenda__list" role="list">
+                {rest.map((event) => (
+                  <li class="agenda__item">
+                    <EventCard event={event} lang={lang} isToday={todayIds.has(event.id)} />
+                  </li>
+                ))}
+              </ul>
+            )}
+
+            <p class="agenda__note">
+              De agendaknop opent Google Agenda in een nieuw venster. Lukt dat niet,
+              schrijf het dan op een bierviltje &#8212; werkt al jaren.
+            </p>
+          </div>
+        ) : (
+          <div class="leeg">
+            <p class="leeg__lead">{T.noEvents}</p>
+
+            <ul class="leeg__reasons" role="list">
+              {reasons.map((reason) => (
+                <li class="leeg__reason">
+                  <span class="leeg__icon">
+                    <Icon name={reason.icon} size={22} />
+                  </span>
+                  <span>
+                    <strong class="leeg__title">{reason.title}</strong>
+                    <span class="leeg__text">{reason.text}</span>
+                  </span>
+                </li>
+              ))}
+            </ul>
+
+            <p class="leeg__actions">
+              <a class="btn btn--primary" href={route('menu', lang)}>
+                {T.menuTitle}
+              </a>
+              <a
+                class="btn btn--ghost"
+                href={site.social.instagram}
+                target="_blank"
+                rel="noopener"
+              >
+                Volg ons op Instagram
+                <span class="visually-hidden"> (opent in een nieuw venster)</span>
+              </a>
+            </p>
+
+            <Photo
+              alt="De toog van De Omgekeerde Wereld op een rustige avond, met volk aan de pooltafel."
+              brief="Sfeerbeeld zonder event: de toog bij kaarslicht, iemand aan de pooltafel, half volle glazen. Liggend, warm licht."
+              ratio="16 / 9"
+              loading="lazy"
+            />
+          </div>
+        )
+      }
+    </div>
+  </section>
+
+  <!-- ============ Instagram ============ -->
+  <section class="section section--tight" aria-labelledby="insta">
+    <div class="wrap">
+      <div class="insta">
+        <div class="insta__body">
+          <h2 id="insta" class="insta__title">{T.followUs} op Instagram</h2>
+          <p>
+            {T.agendaTitle} Het snelste antwoord staat op Instagram. Daar zetten we
+            de affiches, de dj&#8217;s van het laatste moment en de foto&#8217;s van
+            gisterenavond.
+          </p>
+        </div>
+        <p class="insta__actions">
+          <a
+            class="btn btn--solid"
+            href={site.social.instagram}
+            target="_blank"
+            rel="noopener"
+          >
+            {site.social.instagramHandle}
+            <span class="visually-hidden"> op Instagram (opent in een nieuw venster)</span>
+          </a>
+          <a class="btn btn--ghost" href={`mailto:${site.email.events}`}>
+            Zelf iets organiseren?
+          </a>
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ Al geweest ============ -->
+  {
+    pastShown.length > 0 && (
+      <section class="section" aria-labelledby="al-geweest">
+        <div class="wrap">
+          <p class="eyebrow">Het archief</p>
+          <h2 id="al-geweest">{T.pastEvents}</h2>
+          <p class="verleden__lead">
+            Gemist? Da&#8217;s spijtig. Ze komen meestal terug.
+          </p>
+
+          <details class="verleden">
+            <summary class="verleden__summary">
+              <span>
+                Toon wat al geweest is ({pastShown.length})
+              </span>
+            </summary>
+
+            <ul class="verleden__list" role="list">
+              {pastShown.map((event) => (
+                <li>
+                  <EventCard event={event} lang={lang} variant="past" />
+                </li>
+              ))}
+            </ul>
+          </details>
+        </div>
+      </section>
+    )
+  }
+</Base>
+
+<style>
+  /* ---- Kop ---- */
+  .lede {
+    margin-block-start: var(--space-s);
+    color: var(--ink-soft);
+  }
+
+  .lede__note {
+    color: var(--ink-faint);
+  }
+
+  .lede__actions,
+  .leeg__actions,
+  .insta__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2xs) var(--space-s);
+    margin-block-start: var(--space-m);
+  }
+
+  /* ---- Wat komt er aan ---- */
+  .agenda {
+    margin-block-start: var(--space-l);
+  }
+
+  .agenda__list {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-m);
+    margin-block-start: var(--space-m);
+    padding: 0;
+    list-style: none;
+  }
+
+  @media (min-width: 52em) {
+    .agenda__list {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  .agenda__item {
+    display: flex;
+  }
+
+  .agenda__item > :global(*) {
+    width: 100%;
+  }
+
+  .agenda__note {
+    max-width: var(--measure);
+    margin-block-start: var(--space-m);
+    font-size: var(--step--1);
+    color: var(--ink-faint);
+  }
+
+  /* ---- Niks gepland ---- */
+  .leeg {
+    margin-block-start: var(--space-l);
+    padding: var(--space-l);
+    background: var(--bg-raised);
+    border: var(--border-hairline) solid var(--line);
+    border-radius: var(--radius-m);
+  }
+
+  .leeg__lead {
+    max-width: var(--measure);
+    font-family: var(--font-display);
+    font-size: var(--step-2);
+    line-height: var(--leading-snug);
+    letter-spacing: var(--tracking-tight);
+  }
+
+  .leeg__reasons {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-m);
+    margin-block-start: var(--space-l);
+    padding: 0;
+    list-style: none;
+  }
+
+  @media (min-width: 46em) {
+    .leeg__reasons {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  .leeg__reason {
+    display: flex;
+    gap: var(--space-xs);
+    align-items: flex-start;
+  }
+
+  .leeg__icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex: none;
+    width: 2.75rem;
+    height: 2.75rem;
+    color: var(--accent-text);
+    background: var(--bg-inset);
+    border: var(--border-hairline) solid var(--line-strong);
+    border-radius: var(--radius-s);
+  }
+
+  .leeg__title {
+    display: block;
+    font-family: var(--font-display);
+    font-size: var(--step-1);
+    line-height: var(--leading-snug);
+  }
+
+  .leeg__text {
+    display: block;
+    margin-block-start: var(--space-3xs);
+    font-size: var(--step--1);
+    color: var(--ink-soft);
+  }
+
+  /* Photo rendert zijn eigen <figure>; vandaar :global. */
+  .leeg :global(.photo) {
+    margin-block-start: var(--space-l);
+  }
+
+  /* ---- Instagram ---- */
+  .insta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-m);
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--space-l);
+    background: var(--bg-inset);
+    border: var(--border-hairline) solid var(--line-strong);
+    border-radius: var(--radius-m);
+  }
+
+  .insta__body {
+    max-width: var(--measure);
+    color: var(--ink-soft);
+  }
+
+  .insta__title {
+    margin-block-end: var(--space-2xs);
+    font-size: var(--step-2);
+    color: var(--ink);
+  }
+
+  .insta__actions {
+    margin-block-start: 0;
+  }
+
+  /* ---- Al geweest ---- */
+  .verleden__lead {
+    margin-block-start: var(--space-2xs);
+    color: var(--ink-faint);
+  }
+
+  .verleden {
+    margin-block-start: var(--space-m);
+    border-block-start: var(--border-hairline) solid var(--line);
+  }
+
+  .verleden__summary {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2xs);
+    min-height: var(--tap-min);
+    font-size: var(--step--1);
+    font-weight: 700;
+    letter-spacing: var(--tracking-wide);
+    text-transform: uppercase;
+    color: var(--accent-text);
+    cursor: pointer;
+    list-style: none;
+  }
+
+  .verleden__summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .verleden__summary::after {
+    content: '';
+    width: 0.5rem;
+    height: 0.5rem;
+    border-right: 2px solid currentColor;
+    border-bottom: 2px solid currentColor;
+    transform: translateY(-2px) rotate(45deg);
+    transition: transform var(--dur-fast) var(--ease-out);
+  }
+
+  .verleden[open] .verleden__summary::after {
+    transform: translateY(2px) rotate(225deg);
+  }
+
+  .verleden__summary:hover {
+    color: var(--ink);
+  }
+
+  .verleden__list {
+    margin-block-start: var(--space-xs);
+    padding: 0;
+    list-style: none;
+  }
+</style>

@@ -1,0 +1,556 @@
+---
+/**
+ * Contact & route.
+ *
+ * Alles wat iemand nodig heeft om hier te geraken of iets te vragen:
+ * de volledige week aan uren, de uitzonderingen die eraan komen, een kaart
+ * die pas laadt als ge erom vraagt, en de juiste mensen achter de juiste
+ * mailadressen.
+ */
+import Base from '../layouts/Base.astro';
+import Icon from '../components/Icon.astro';
+import MapCard from '../components/MapCard.astro';
+import OpenStatus from '../components/OpenStatus.astro';
+
+import { site, addressLine } from '../data/site';
+import { hours } from '../lib/content';
+import { getUpcomingExceptions, getWeekRows } from '../lib/hours';
+import { parseLocalDateTime } from '../lib/format';
+import { route, strings, type Lang } from '../lib/i18n';
+
+const lang: Lang = 'nl';
+const T = strings(lang);
+
+const now = new Date();
+const week = getWeekRows(hours, now, lang);
+const exceptions = getUpcomingExceptions(hours, now);
+
+/** "2026-12-24" -> "24 december" */
+const dayMonth = new Intl.DateTimeFormat('nl-BE', {
+  timeZone: 'UTC',
+  day: 'numeric',
+  month: 'long',
+});
+
+const exceptionRows = exceptions.map((entry) => {
+  const when = dayMonth.format(parseLocalDateTime(entry.date));
+  return {
+    date: entry.date,
+    /** "24 december, Kerstavond" */
+    when: entry.label ? `${when}, ${entry.label}` : when,
+    time:
+      entry.closed || !entry.open || !entry.close
+        ? 'gesloten'
+        : `${entry.open} – ${entry.close}`,
+  };
+});
+
+const description = `De Omgekeerde Wereld, ${addressLine}, recht tegenover VIERNULVIER. Open elke dag van 14u tot laat. Alle uren, de route en hoe ge ons bereikt.`;
+
+const breadcrumbs = [
+  { name: 'Home', url: route('home', lang) },
+  { name: 'Contact', url: route('contact', lang) },
+];
+---
+
+<Base
+  title="Contact en route"
+  description={description}
+  lang="nl"
+  active="contact"
+  breadcrumbs={breadcrumbs}
+>
+  <!-- ============================================================ -->
+  <section class="section intro">
+    <div class="wrap">
+      <p class="eyebrow">Contact</p>
+      <h1>{T.whereToFind}</h1>
+      <p class="intro__lead">
+        {site.address.street}, recht tegenover VIERNULVIER. Elke dag open van 14 uur tot
+        laat, voor een pilske, een partijke pool of gewoon om ergens te zitten.
+      </p>
+
+      <div class="intro__meta">
+        <OpenStatus lang={lang} variant="pill" />
+        <a class="btn btn--primary" href={`tel:${site.phoneHref}`}>
+          <Icon name="phone" size={18} />
+          {site.phone}
+        </a>
+        <a class="btn btn--ghost" href={site.maps.google} rel="noopener">
+          <Icon name="pin" size={18} />
+          {T.route}
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================ -->
+  <section class="section section--tight" id="uren">
+    <div class="wrap">
+      <p class="eyebrow">Openingsuren</p>
+      <h2>{T.whenOpen}</h2>
+
+      <div class="hours-grid">
+        <div>
+          <OpenStatus lang={lang} variant="line" class="hours-status" />
+
+          <table class="hours-table">
+            <caption class="visually-hidden">Openingsuren per dag van de week</caption>
+            <tbody>
+              {
+                week.map((row) => (
+                  <tr class:list={[row.isToday && 'is-today']} data-day={row.dayKey}>
+                    <th scope="row">
+                      {row.label}
+                      <span class="today-tag" data-today-tag hidden={!row.isToday}>vandaag</span>
+                    </th>
+                    <td>{row.closed ? T.closed : `${row.open} – ${row.close}`}</td>
+                  </tr>
+                ))
+              }
+            </tbody>
+          </table>
+
+          <p class="hours-note">{hours.note ?? T.hoursNote}</p>
+        </div>
+
+        {
+          exceptionRows.length > 0 && (
+            <aside class="card exceptions" aria-labelledby="uitzonderingen">
+              <h3 class="exceptions__title" id="uitzonderingen">
+                <Icon name="clock" size={20} />
+                Even anders dan anders
+              </h3>
+              <p class="exceptions__lead">Op deze dagen wijken de uren af:</p>
+              <ul class="exceptions__list">
+                {exceptionRows.map((row) => (
+                  <li>
+                    <time datetime={row.date}>{row.when}</time>: <span>{row.time}</span>
+                  </li>
+                ))}
+              </ul>
+            </aside>
+          )
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================ -->
+  <section class="section" id="route">
+    <div class="wrap">
+      <p class="eyebrow">De weg naar hier</p>
+      <h2>Hoe geraakt ge hier?</h2>
+
+      <div class="route-grid">
+        <MapCard lang={lang} />
+
+        <div class="directions">
+          <dl class="directions__list">
+            <div>
+              <dt>Vanuit Gent-Sint-Pieters</dt>
+              <dd>
+                Tram 2 of 4 richting centrum, afstappen aan Verlorenkost of Vooruit. Een
+                minuut of tien. Te voet zijt ge er in een twintigtal minuten.
+              </dd>
+            </div>
+            <div>
+              <dt>Vanaf de Korenmarkt</dt>
+              <dd>
+                Een goeie 12 minuten stappen: de Sint-Pietersnieuwstraat in en blijven
+                gaan tot ge VIERNULVIER ziet.
+              </dd>
+            </div>
+            <div>
+              <dt>Waar ge moet kijken</dt>
+              <dd>
+                Recht tegenover VIERNULVIER, het oude Vooruit. Dat gebouw kent iedereen —
+                wij zitten aan de overkant, op nummer 116.
+              </dd>
+            </div>
+            <div>
+              <dt>Met de fiets</dt>
+              <dd>
+                Het is een studentenstraat, dus er staan fietsenstallingen in de buurt.
+                Zet hem vast, het blijft Gent.
+              </dd>
+            </div>
+          </dl>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================ -->
+  <section class="section section--tight" id="contact">
+    <div class="wrap">
+      <p class="eyebrow">Iets vragen</p>
+      <h2>Laat iets weten</h2>
+
+      <div class="channels">
+        <div class="card channel">
+          <h3 class="channel__title">
+            <Icon name="phone" size={20} />
+            Bellen
+          </h3>
+          <p class="channel__big">
+            <a href={`tel:${site.phoneHref}`}>{site.phone}</a>
+          </p>
+          <p class="channel__hint">
+            Voor iets dat direct moet. Vanaf 14 uur staat er iemand achter de toog.
+          </p>
+        </div>
+
+        <div class="card channel">
+          <h3 class="channel__title">
+            <Icon name="arrow" size={20} />
+            Instagram
+          </h3>
+          <p class="channel__big">
+            <a href={site.social.instagram} rel="me noopener">
+              {site.social.instagramHandle}
+            </a>
+          </p>
+          <p class="channel__hint">
+            Het snelste kanaal, en waar alles eerst staat: concerten, feestjes en wat er
+            vanavond te doen is.
+          </p>
+        </div>
+
+        <div class="card channel channel--wide">
+          <h3 class="channel__title">
+            <Icon name="mail" size={20} />
+            Mailen
+          </h3>
+          <dl class="mails">
+            <div>
+              <dt><a href={`mailto:${site.email.general}`}>{site.email.general}</a></dt>
+              <dd>Algemene vragen, verloren gerief, van alles en nog wat.</dd>
+            </div>
+            <div>
+              <dt><a href={`mailto:${site.email.events}`}>{site.email.events}</a></dt>
+              <dd>Events, boekingen en groepen: dat regelt Tristan.</dd>
+            </div>
+            <div>
+              <dt>
+                <a href={`mailto:${site.email.partnerships}`}>{site.email.partnerships}</a>
+              </dt>
+              <dd>Samenwerkingen, brouwers en voorstellen: bij Ran zijt ge juist.</dd>
+            </div>
+          </dl>
+        </div>
+
+        {
+          site.wifi.showPublicly && (
+            <div class="card channel">
+              <h3 class="channel__title">
+                <Icon name="wifi" size={20} />
+                {T.wifiLabel}
+              </h3>
+              <dl class="wifi">
+                <div>
+                  <dt>Netwerk</dt>
+                  <dd>{site.wifi.ssid}</dd>
+                </div>
+                <div>
+                  <dt>Paswoord</dt>
+                  <dd>{site.wifi.password}</dd>
+                </div>
+              </dl>
+              <p class="channel__hint">
+                Doet het niet? Vraagt het gerust aan de toog.
+              </p>
+            </div>
+          )
+        }
+      </div>
+
+      <p class="legal">
+        {site.legalName} · BTW {site.vat} · {addressLine}
+      </p>
+    </div>
+  </section>
+</Base>
+
+<style>
+  /* ---- Intro ---- */
+  .intro__lead {
+    max-width: var(--measure);
+    margin-block-start: var(--space-s);
+    font-size: var(--step-1);
+    line-height: var(--leading-snug);
+    color: var(--ink-soft);
+  }
+
+  .intro__meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-xs);
+    margin-block-start: var(--space-m);
+  }
+
+  /* ---- Uren ---- */
+  .hours-grid {
+    display: grid;
+    gap: var(--space-l);
+    margin-block-start: var(--space-m);
+  }
+
+  @media (min-width: 48em) {
+    .hours-grid {
+      grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr);
+      align-items: start;
+      gap: var(--space-xl);
+    }
+  }
+
+  .hours-status {
+    margin-block-end: var(--space-xs);
+  }
+
+  .hours-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .hours-table th,
+  .hours-table td {
+    padding: var(--space-xs) var(--space-2xs);
+    border-block-end: var(--border-hairline) solid var(--line);
+  }
+
+  .hours-table th {
+    text-align: start;
+    font-family: var(--font-body);
+    font-size: var(--step-0);
+    font-weight: 500;
+    color: var(--ink-soft);
+  }
+
+  .hours-table td {
+    text-align: end;
+    color: var(--ink-soft);
+    white-space: nowrap;
+  }
+
+  .hours-table tr.is-today th,
+  .hours-table tr.is-today td {
+    color: var(--ink);
+    font-weight: 700;
+  }
+
+  .hours-table tr.is-today {
+    background: color-mix(in srgb, var(--accent) 9%, transparent);
+  }
+
+  .hours-table tr.is-today th {
+    box-shadow: inset var(--space-3xs) 0 0 0 var(--accent);
+  }
+
+  .today-tag {
+    display: inline-block;
+    margin-inline-start: var(--space-2xs);
+    padding-inline: var(--space-3xs);
+    background: var(--accent);
+    color: var(--accent-ink);
+    font-size: var(--step--2);
+    font-weight: 700;
+    letter-spacing: var(--tracking-wide);
+    text-transform: uppercase;
+    border-radius: var(--radius-xs);
+    vertical-align: 0.1em;
+  }
+
+  .hours-note {
+    max-width: var(--measure);
+    margin-block-start: var(--space-s);
+    font-size: var(--step--1);
+    line-height: var(--leading-snug);
+    color: var(--ink-faint);
+  }
+
+  .exceptions__title {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2xs);
+    font-size: var(--step-1);
+  }
+
+  .exceptions__title :global(.icon) {
+    color: var(--accent-text);
+  }
+
+  .exceptions__lead {
+    margin-block-start: var(--space-2xs);
+    font-size: var(--step--1);
+    color: var(--ink-faint);
+  }
+
+  .exceptions__list {
+    margin-block-start: var(--space-xs);
+    padding: 0;
+    list-style: none;
+  }
+
+  .exceptions__list li {
+    padding-block: var(--space-2xs);
+    border-block-start: var(--border-hairline) solid var(--line);
+    font-size: var(--step--1);
+    color: var(--ink-soft);
+  }
+
+  .exceptions__list time {
+    font-weight: 700;
+    color: var(--ink);
+  }
+
+  .exceptions__list span {
+    white-space: nowrap;
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* ---- Route ---- */
+  .route-grid {
+    display: grid;
+    gap: var(--space-l);
+    margin-block-start: var(--space-m);
+  }
+
+  @media (min-width: 56em) {
+    .route-grid {
+      grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+      align-items: start;
+      gap: var(--space-xl);
+    }
+  }
+
+  .directions__list {
+    margin: 0;
+  }
+
+  .directions__list > div + div {
+    margin-block-start: var(--space-m);
+    padding-block-start: var(--space-m);
+    border-block-start: var(--border-hairline) solid var(--line);
+  }
+
+  .directions__list dt {
+    font-family: var(--font-display);
+    font-size: var(--step-1);
+    font-weight: 700;
+    line-height: var(--leading-tight);
+    letter-spacing: var(--tracking-tight);
+  }
+
+  .directions__list dd {
+    max-width: var(--measure);
+    margin: 0;
+    margin-block-start: var(--space-3xs);
+    color: var(--ink-soft);
+  }
+
+  /* ---- Kanalen ---- */
+  .channels {
+    display: grid;
+    gap: var(--space-m);
+    margin-block-start: var(--space-m);
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 17rem), 1fr));
+  }
+
+  @media (min-width: 56em) {
+    .channel--wide {
+      grid-column: span 2;
+    }
+  }
+
+  .channel__title {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2xs);
+    font-size: var(--step-1);
+  }
+
+  .channel__title :global(.icon) {
+    color: var(--accent-text);
+  }
+
+  .channel__big {
+    margin-block-start: var(--space-2xs);
+    font-size: var(--step-1);
+    font-weight: 600;
+    overflow-wrap: anywhere;
+  }
+
+  .channel__big a {
+    display: inline-flex;
+    align-items: center;
+    min-height: var(--tap-min);
+  }
+
+  .channel__hint {
+    margin-block-start: var(--space-2xs);
+    font-size: var(--step--1);
+    line-height: var(--leading-snug);
+    color: var(--ink-faint);
+  }
+
+  .mails {
+    margin-block-start: var(--space-2xs);
+  }
+
+  .mails > div + div {
+    margin-block-start: var(--space-2xs);
+    padding-block-start: var(--space-2xs);
+    border-block-start: var(--border-hairline) solid var(--line);
+  }
+
+  .mails dt {
+    font-weight: 600;
+    overflow-wrap: anywhere;
+  }
+
+  .mails dt a {
+    display: inline-flex;
+    align-items: center;
+    min-height: var(--tap-min);
+  }
+
+  .mails dd {
+    margin: 0;
+    font-size: var(--step--1);
+    color: var(--ink-faint);
+  }
+
+  .wifi {
+    margin-block-start: var(--space-2xs);
+    display: grid;
+    gap: var(--space-2xs);
+  }
+
+  .wifi dt {
+    font-size: var(--step--2);
+    font-weight: 600;
+    letter-spacing: var(--tracking-wide);
+    text-transform: uppercase;
+    color: var(--ink-faint);
+  }
+
+  .wifi dd {
+    margin: 0;
+    font-family: var(--font-body);
+    font-weight: 600;
+    color: var(--ink);
+    overflow-wrap: anywhere;
+  }
+
+  /* ---- Het kleine lettertje ---- */
+  .legal {
+    margin-block-start: var(--space-xl);
+    padding-block-start: var(--space-s);
+    border-block-start: var(--border-hairline) solid var(--line);
+    font-size: var(--step--2);
+    color: var(--ink-faint);
+  }
+</style>

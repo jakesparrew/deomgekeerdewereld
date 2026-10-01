@@ -1,0 +1,804 @@
+---
+/**
+ * De homepagina, in beide talen. /  en  /en/  gebruiken allebei dit bestand,
+ * zodat er nooit één versie achterop raakt.
+ */
+import Base from '../layouts/Base.astro';
+import SunLogo from './SunLogo.astro';
+import OpenStatus from './OpenStatus.astro';
+import Icon from './Icon.astro';
+import Photo from './Photo.astro';
+
+import { site } from '../data/site';
+import { hours, highlights, events } from '../lib/content';
+import { getStatus } from '../lib/hours';
+import { buildAgenda } from '../lib/events';
+import { euro, formatDate, formatTime, priceLabel } from '../lib/format';
+import { route, strings, type Lang } from '../lib/i18n';
+import { EVENT_TYPE_LABELS } from '../data/types';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const T = strings(lang);
+const en = lang === 'en';
+
+const now = new Date();
+const status = getStatus(hours, now, lang);
+const agenda = buildAgenda(events, now);
+const nextEvent = agenda.next;
+const isTonight = nextEvent
+  ? agenda.today.some((e) => e.id === nextEvent.id)
+  : false;
+
+const hero = highlights.hero;
+const heroAlt = (en && hero.altEn) || hero.alt;
+const heroBrief = (en && hero.briefEn) || hero.brief;
+const bvdm = highlights.beerOfTheMonth;
+const tiles = highlights.tiles ?? [];
+
+const title = en
+  ? 'De Omgekeerde Wereld · brown cafe in Ghent'
+  : 'De Omgekeerde Wereld · bruine kroeg in Gent';
+
+const description = en
+  ? 'Old-school brown cafe opposite VIERNULVIER in Ghent. 69+ beers, lager €2,70, free pool, table football and free gigs. Open every day from 2pm until late.'
+  : 'Bruine kroeg rechtover VIERNULVIER in Gent. 69+ bierkes, pilske €2,70, gratis poolke, kickeren en gratis concertjes. Elke dag open van 14 uur tot laat.';
+
+/** Een paar sfeerbeelden onderaan. De briefing staat in public/images/README.md. */
+const gallery = [
+  {
+    src: '/images/toog-lachen.jpg',
+    alt: en
+      ? 'Two friends laughing with drinks in their hands at the bar.'
+      : 'Twee vriendinnen lachen met een glas in de hand aan de toog.',
+    brief: '',
+  },
+  {
+    src: '/images/poolke.jpg',
+    alt: en
+      ? 'Two people playing pool on the red-felt table at the back of the cafe.'
+      : 'Twee mensen poolen op de tafel met rood laken achteraan in het cafe.',
+    brief: '',
+  },
+  {
+    src: '/images/bierkes-tafel.jpg',
+    alt: en
+      ? 'A table covered in beer bottles around a burning candle, with friends around it.'
+      : 'Een tafel vol bierflesjes rond een brandende kaars, met vrienden eromheen.',
+    brief: '',
+  },
+  {
+    src: '/images/fiestje.jpg',
+    alt: en
+      ? 'A packed room with hands and bottles in the air during a party.'
+      : 'Een volle zaal met handen en flesjes in de lucht tijdens een fiestje.',
+    brief: '',
+  },
+];
+---
+
+<Base
+  title={title}
+  description={description}
+  lang={lang}
+  rawTitle
+  events={agenda.next ? [agenda.next] : []}
+>
+  <!-- ============================================================
+       HERO
+       ============================================================ -->
+  <section class="hero">
+    <div class="hero__shot">
+      {hero.image && <img class="hero__img" src={`/images/${hero.image}`} alt={heroAlt} fetchpriority="high" decoding="async" />}
+      <div class="hero__veil" aria-hidden="true"></div>
+    </div>
+
+    <div class="hero__inner">
+      <SunLogo size={64} class="hero__sun" />
+      <h1 class="hero__naam">De Omgekeerde Wereld</h1>
+      <p class="hero__anno">Anno 2014 · Sint-Pietersnieuwstraat 116, Gent</p>
+      <p class="hero__lead">{en ? hero.leadEn : hero.lead}</p>
+      <div class="hero__acties">
+        <a class="btn btn--primary" href={route("agenda", lang)}>
+          {en ? "What’s on?" : "Wa is’t er te doen?"}
+        </a>
+        <a class="btn btn--ghost" href={route("menu", lang)}>
+          {en ? "Show me the menu" : "Toon keer de kaart"}
+        </a>
+      </div>
+      <p class="hero__status">
+        <OpenStatus lang={lang} variant="line" />
+      </p>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       VANDAAG — het antwoord op "is het open, wat kost een pint,
+       en is er iets te doen", binnen de vijf seconden.
+       ============================================================ -->
+  <section class="today" aria-labelledby="vandaag-titel">
+    <div class="wrap wrap--wide">
+      <h2 id="vandaag-titel" class="visually-hidden">
+        {en ? 'Today at the bar' : 'Vandaag in den Omgekeerde'}
+      </h2>
+
+      <div class="today__grid">
+        <!-- Open of toe -->
+        <div class="today__cell">
+          <p class="today__label">
+            <Icon name="clock" size={16} />
+            {T.todayLabel}
+          </p>
+          {/* Via OpenStatus, want die werkt zichzelf elke minuut bij.
+              Zetten we hier status.label neer, dan bevriest die op het
+              moment van bouwen en spreekt hij het bolleke in de hero tegen. */}
+          <p class="today__value">
+            <OpenStatus lang={lang} variant="line" />
+          </p>
+          <p
+            class="today__note"
+            data-today-hours
+            data-lang={lang}
+            data-tpl={en ? 'Today {open} until {close}' : 'Vandaag van {open} tot {close}'}
+            data-closed-text={T.hoursNote}
+          >
+            {
+              status.today.closed
+                ? T.hoursNote
+                : en
+                  ? `Today ${status.today.open} until ${status.today.close}`
+                  : `Vandaag van ${status.today.open} tot ${status.today.close}`
+            }
+          </p>
+        </div>
+
+        <!-- Wat er te doen is -->
+        <div class="today__cell">
+          <p class="today__label">
+            <Icon name="music" size={16} />
+            {isTonight ? T.tonight : T.upcoming}
+          </p>
+          {
+            nextEvent ? (
+              <>
+                <p class="today__value">
+                  <a class="today__link" href={route('agenda', lang)}>
+                    {en && nextEvent.titleEn ? nextEvent.titleEn : nextEvent.title}
+                  </a>
+                </p>
+                <p class="today__note">
+                  {formatDate(nextEvent.start, lang)} · {formatTime(nextEvent.start)} ·{' '}
+                  {priceLabel(nextEvent.price, lang)} ·{' '}
+                  {EVENT_TYPE_LABELS[nextEvent.type]?.[lang] ?? nextEvent.type}
+                </p>
+              </>
+            ) : (
+              <>
+                <p class="today__value">
+                  {en ? 'Nothing planned' : 'Niks gepland'}
+                </p>
+                <p class="today__note">
+                  {
+                    en
+                      ? 'Which is also fine. The pool table is free.'
+                      : "Da's ook goed. De pooltafel staat er."
+                  }
+                </p>
+              </>
+            )
+          }
+        </div>
+
+        <!-- Bier van de maand -->
+        <div class="today__cell">
+          <p class="today__label">
+            <Icon name="beer" size={16} />
+            {T.beerOfTheMonth}
+          </p>
+          <p class="today__value">
+            <a class="today__link" href={route('menu', lang)}>{bvdm.name}</a>
+            {bvdm.price && <span class="today__price">{euro(bvdm.price)}</span>}
+          </p>
+          <p class="today__note">
+            {[bvdm.brewery, bvdm.style, bvdm.abv ? `${bvdm.abv}%` : null]
+              .filter(Boolean)
+              .join(' · ')}
+          </p>
+        </div>
+
+        <!-- Waar -->
+        <div class="today__cell">
+          <p class="today__label">
+            <Icon name="pin" size={16} />
+            {T.whereToFind}
+          </p>
+          <p class="today__value">
+            <a class="today__link" href={route('contact', lang)}>
+              Sint-Pietersnieuwstraat 116
+            </a>
+          </p>
+          <p class="today__note">
+            {
+              en
+                ? 'Straight across from VIERNULVIER.'
+                : 'Rechtover VIERNULVIER.'
+            }
+            {' '}
+            <a class="today__inline-link" href={site.maps.google} rel="noopener">
+              {T.route}
+            </a>
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       WAAROM GE HIER ZIJT
+       ============================================================ -->
+  <section class="section bord-sectie">
+    <div class="wrap wrap--wide bord">
+      <h2 class="bord__titel">{en ? "On the board" : "Op het bord"}</h2>
+      <ul class="bord__lijst" role="list">
+        {
+          tiles.map((tile) => (
+            <li class="bord__rij">
+              <span class="bord__naam">{en ? tile.labelEn : tile.label}</span>
+              <span class="bord__stippen" aria-hidden="true"></span>
+              <span class="bord__prijs">{en && tile.valueEn ? tile.valueEn : tile.value}</span>
+            </li>
+          ))
+        }
+      </ul>
+      <p class="bord__meer">
+        <a href={route("menu", lang)}>{en ? "The whole menu" : "Heel de kaart"} →</a>
+      </p>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       HET VERHAAL
+       ============================================================ -->
+  <section class="section story">
+    <div class="wrap wrap--wide story__grid">
+      <div class="story__text">
+        <h2>
+          {
+            en
+              ? 'Three friends and an empty building'
+              : 'Drie gasten en een leegstaand pand'
+          }
+        </h2>
+
+        {
+          en ? (
+            <>
+              <p>
+                Three enterprising friends rented an empty building opposite Vooruit on
+                Sint-Pietersnieuwstraat in Ghent. The name came straight out of what they
+                wanted: a place where young and old both feel at home. A place like the old
+                days, where customer and bartender are one. A place with prices everyone can
+                afford.
+              </p>
+              <p>
+                A few years on, den Omgekeerde has grown into a real meeting place. Sunny by
+                day, snug by candlelight at night, the way our grandparents' brown cafes
+                used to feel. Soul, funk and disco, jazz, blues and bossa nova, hip-hop,
+                house and rock 'n roll. The music follows the room.
+              </p>
+            </>
+          ) : (
+            <>
+              <p>
+                Drie ondernemende gasten huren een leegstaand pand, rechtover de Vooruit in
+                de Sint-Pietersnieuwstraat te Gent. De naam{' '}
+                <span class="story__flip">De Omgekeerde Wereld</span>{' '}
+                ontstaat uit onze doelstellingen: een plek creëren waar zowel jong als oud
+                zich thuis voelt. Een plek zoals vroeger, waar klant en barman één zijn. Een
+                plek met betaalbare prijzen voor iedereen.
+              </p>
+              <p>
+                Enkele jaren later is den omgekeerde uitgegroeid tot een echte
+                ontmoetingsplaats. Overdag zonnig, 's avonds gezellig bij kaarslicht, waarbij
+                het doet denken aan de bruine oude kroeg uit de tijd van onze grootouders. Soul,
+                funk en disco, jazz, blues en bossanova, hiphop, house en rock 'n roll. De
+                muziek past zich aan, aan de sfeer en aan het volk.
+              </p>
+            </>
+          )
+        }
+
+        <p class="story__more">
+          <a class="btn btn--ghost" href={route('about', lang)}>
+            {en ? 'Read the whole story' : 'Lees heel het verhaal'}
+            <Icon name="arrow" size={18} />
+          </a>
+        </p>
+      </div>
+
+      <Photo
+        class="story__photo"
+        src="/images/lange-tafel.jpg"
+        ratio="3 / 2"
+        alt={
+          en
+            ? 'A long table full of people laughing and toasting in the cafe.'
+            : 'Een lange tafel vol volk dat lacht en klinkt in het cafe.'
+        }
+        brief=""
+      />
+    </div>
+  </section>
+
+  <!-- ============================================================
+       SFEER
+       ============================================================ -->
+  <section class="mozaiek" aria-label={en ? "Photos from the bar" : "Beelden uit het cafe"}>
+    {
+      gallery.map((shot, i) => (
+        <img class={`mozaiek__img mozaiek__img--${i}`} src={shot.src} alt={shot.alt} loading="lazy" decoding="async" />
+      ))
+    }
+  </section>
+  <p class="wrap wrap--wide mozaiek__meer">
+    <a href={site.social.instagram} rel="me noopener">{en ? "More on Instagram" : "Meer op Instagram"} · {site.social.instagramHandle}</a>
+  </p>
+
+</Base>
+
+<style>
+  /* ---------------------------------------------------------- HERO */
+  /* ---------------------------------------------------------- HERO
+     Volvlakse gevel met een warme sluier erover, alles gecentreerd.
+     Zo doen 1806, GEM en Qissa het ook: de gevel is het beeldmerk. */
+  .hero {
+    position: relative;
+    display: grid;
+    place-items: center;
+    min-height: min(calc(100svh - 4.5rem), 46rem);
+    padding: var(--space-2xl) var(--gutter) var(--space-xl);
+    text-align: center;
+    overflow: hidden;
+  }
+
+  .hero__shot {
+    position: absolute;
+    inset: 0;
+  }
+
+  .hero__img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: 50% 38%;
+    /* De ballonnen zijn schreeuwerig en vechten met de letters. Iets minder
+       verzadiging en de foto wordt een achtergrond in plaats van een poster. */
+    filter: saturate(0.6) contrast(1.04) brightness(0.95);
+  }
+
+  .hero__veil {
+    position: absolute;
+    inset: 0;
+    background: var(--shot-veil);
+  }
+
+  .hero__inner {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-xs);
+    max-width: 44rem;
+  }
+
+  .hero__sun {
+    color: var(--accent);
+  }
+
+  .hero__naam {
+    font-size: var(--step-6);
+    font-weight: 400;
+    line-height: 1.05;
+    color: #f3ecdc;
+    margin: 0;
+  }
+
+  .hero__anno {
+    font-family: var(--font-body);
+    font-size: var(--step--2);
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--accent);
+  }
+
+  .hero__lead {
+    font-size: var(--step-1);
+    line-height: var(--leading-snug);
+    color: #e8dfcd;
+    max-width: 34ch;
+  }
+
+  .hero__acties {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: var(--space-2xs);
+    margin-block-start: var(--space-2xs);
+  }
+
+  .hero__acties .btn--ghost {
+    color: #f3ecdc;
+    border-color: rgb(243 236 220 / 0.45);
+  }
+
+  .hero__status {
+    margin-block-start: var(--space-2xs);
+    color: #e8dfcd;
+  }
+
+  @media (max-width: 30em) {
+    .hero__actions .btn {
+      flex: 1 1 100%;
+    }
+  }
+
+  /* --------------------------------------------------------- VANDAAG */
+  .today {
+    background: var(--bg-raised);
+    border-block: var(--border-hairline) solid var(--line);
+    padding-block: var(--space-m);
+    position: relative;
+    z-index: 2;
+  }
+
+  .today__grid {
+    display: grid;
+    gap: var(--space-m);
+    grid-template-columns: 1fr;
+  }
+
+  @media (min-width: 34em) {
+    .today__grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (min-width: 60em) {
+    .today__grid {
+      grid-template-columns: repeat(4, 1fr);
+      gap: var(--space-l);
+    }
+  }
+
+  .today__cell + .today__cell {
+    padding-block-start: var(--space-m);
+    border-block-start: var(--border-hairline) solid var(--line);
+  }
+
+  @media (min-width: 34em) {
+    .today__cell {
+      padding-block-start: 0 !important;
+      border-block-start: none !important;
+    }
+
+    .today__cell + .today__cell {
+      padding-inline-start: var(--space-m);
+      border-inline-start: var(--border-hairline) solid var(--line);
+    }
+
+    .today__cell:nth-child(3) {
+      padding-inline-start: 0;
+      border-inline-start: none;
+    }
+  }
+
+  @media (min-width: 60em) {
+    .today__cell:nth-child(3) {
+      padding-inline-start: var(--space-l);
+      border-inline-start: var(--border-hairline) solid var(--line);
+    }
+
+    .today__cell + .today__cell {
+      padding-inline-start: var(--space-l);
+    }
+  }
+
+  .today__label {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3xs);
+    font-size: var(--step--2);
+    font-weight: 700;
+    letter-spacing: var(--tracking-wider);
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    margin-block-end: var(--space-3xs);
+  }
+
+  .today__value {
+    font-family: var(--font-display);
+    font-size: var(--step-1);
+    font-weight: 700;
+    line-height: var(--leading-snug);
+  }
+
+  .today__link {
+    color: var(--ink);
+    text-decoration: none;
+    border-block-end: 2px solid var(--accent-text);
+  }
+
+  .today__link:hover {
+    color: var(--accent-text);
+  }
+
+  .today__price {
+    margin-inline-start: var(--space-3xs);
+    font-family: var(--font-body);
+    font-size: var(--step--1);
+    color: var(--accent-text);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .today__note {
+    margin-block-start: var(--space-3xs);
+    font-size: var(--step--1);
+    color: var(--ink-faint);
+  }
+
+  .today__inline-link {
+    color: var(--accent-text);
+  }
+
+  /* ----------------------------------------------------------- TEGELS */
+  .tiles__title {
+    margin-block: var(--space-2xs) var(--space-l);
+    max-width: 20ch;
+  }
+
+  .tiles {
+    display: grid;
+    gap: var(--space-2xs);
+    grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .tile__link {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-3xs);
+    height: 100%;
+    padding: var(--space-m);
+    background: var(--bg-raised);
+    border: var(--border-hairline) solid var(--line);
+    border-radius: var(--radius-m);
+    text-decoration: none;
+    color: var(--ink);
+    transition:
+      border-color var(--dur-fast) var(--ease-out),
+      background-color var(--dur-fast) var(--ease-out);
+  }
+
+  a.tile__link:hover {
+    border-color: var(--accent);
+    background: color-mix(in srgb, var(--accent) 6%, var(--bg-raised));
+  }
+
+  .tile__icon {
+    color: var(--accent-text);
+    margin-block-end: var(--space-3xs);
+  }
+
+  .tile__value {
+    font-family: var(--font-display);
+    font-size: var(--step-3);
+    font-weight: 800;
+    line-height: 1;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .tile__label {
+    font-weight: 700;
+    font-size: var(--step-0);
+  }
+
+  .tile__note {
+    font-size: var(--step--1);
+    color: var(--ink-faint);
+    line-height: var(--leading-snug);
+  }
+
+  /* ---------------------------------------------------------- VERHAAL */
+  .story__grid {
+    display: grid;
+    gap: var(--space-xl);
+    grid-template-columns: 1fr;
+    align-items: start;
+  }
+
+  @media (min-width: 56em) {
+    .story__grid {
+      grid-template-columns: 1.35fr 1fr;
+      gap: var(--space-2xl);
+    }
+  }
+
+  .story__text h2 {
+    margin-block: var(--space-2xs) var(--space-s);
+    max-width: 16ch;
+  }
+
+  .story__text p {
+    max-width: var(--measure);
+    color: var(--ink-soft);
+  }
+
+  .story__text p + p {
+    margin-block-start: var(--space-s);
+  }
+
+  /* De knipoog: de naam draait mee als ge erover gaat. */
+  .story__flip {
+    display: inline-block;
+    font-style: italic;
+    color: var(--ink);
+    transition: transform var(--dur-base) var(--ease-out);
+  }
+
+  .story__flip:hover {
+    transform: rotate(180deg);
+  }
+
+  .story__more {
+    margin-block-start: var(--space-m);
+  }
+
+  /* ------------------------------------------------------------ SFEER */
+  .gallery__head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: var(--space-s);
+    margin-block-end: var(--space-l);
+  }
+
+  .gallery__head h2 {
+    margin-block-start: var(--space-2xs);
+    max-width: 20ch;
+  }
+
+  .gallery {
+    display: grid;
+    gap: var(--space-2xs);
+    grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr));
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  /* -------------------------------------------------------- AFSLUITER */
+  .closing__box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-2xs);
+    padding: var(--space-xl) var(--space-m);
+    text-align: center;
+    background: var(--bg-raised);
+    border: var(--border-hairline) solid var(--line-strong);
+    border-radius: var(--radius-m);
+  }
+
+  .closing__title {
+    font-size: var(--step-3);
+  }
+
+  .closing__lead {
+    max-width: 40ch;
+    color: var(--ink-soft);
+  }
+
+  .closing__actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: var(--space-2xs);
+    margin-block-start: var(--space-2xs);
+  }
+
+  /* ------------------------------------------------ PRIJSBORD
+     Geen kaartjes met grote cijfers. Een lijst zoals op het krijtbord
+     naast de deur: naam, stippellijn, prijs. */
+  .bord__lijst,
+  .bord__titel {
+    max-width: 44rem;
+  }
+
+  .bord__titel {
+    font-size: var(--step-3);
+    margin-block-end: var(--space-m);
+  }
+
+  .bord__lijst {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .bord__rij {
+    display: flex;
+    align-items: baseline;
+    gap: var(--space-2xs);
+    padding-block: var(--space-xs);
+    font-size: var(--step-1);
+  }
+
+  .bord__stippen {
+    flex: 1;
+    border-block-end: 2px dotted var(--line-strong);
+    transform: translateY(-0.25em);
+  }
+
+  .bord__prijs {
+    font-weight: 700;
+    color: var(--accent-text);
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+  }
+
+  .bord__meer {
+    margin-block-start: var(--space-m);
+  }
+
+  .bord__meer a,
+  .mozaiek__meer a {
+    font-weight: 600;
+  }
+
+  /* ------------------------------------------------ MOZAIEK
+     De foto's zijn het sterkste wat dit cafe heeft. Groot en randloos. */
+  .mozaiek {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 4px;
+  }
+
+  .mozaiek__img {
+    width: 100%;
+    height: 100%;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+    display: block;
+  }
+
+  @media (min-width: 48em) {
+    .mozaiek {
+      grid-template-columns: 1.4fr 1fr 1fr;
+      grid-template-rows: repeat(2, minmax(0, 22rem));
+    }
+
+    .mozaiek__img {
+      aspect-ratio: auto;
+    }
+
+    .mozaiek__img--0 {
+      grid-row: span 2;
+    }
+
+    .mozaiek__img--3 {
+      grid-column: span 2;
+    }
+  }
+
+  .mozaiek__meer {
+    margin-block: var(--space-s) 0;
+    font-size: var(--step--1);
+  }
+</style>

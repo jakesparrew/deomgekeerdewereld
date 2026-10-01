@@ -1,0 +1,43 @@
+# ============================================================
+# OPENINGSUREN
+# ------------------------------------------------------------
+# Dit bestand bepaalt het "Nu open" bolleke op de site en de
+# uren in Google. Pas het gerust zelf aan.
+#
+# - Tijden in 24-uursnotatie: "14:00"
+# - Sluit je na middernacht? Schrijf gewoon "02:00". De site
+#   snapt dat dat de volgende ochtend is.
+# - Gesloten? Zet `closed: true` in plaats van open/close.
+# ============================================================
+
+# Vaste week
+week:
+  monday: { open: '14:00', close: '02:00' }
+  tuesday: { open: '14:00', close: '02:00' }
+  wednesday: { open: '14:00', close: '02:00' }
+  thursday: { open: '14:00', close: '03:00' }
+  friday: { open: '14:00', close: '04:00' }
+  saturday: { open: '14:00', close: '04:00' }
+  sunday: { open: '14:00', close: '02:00' }
+
+# Uitzonderingen: feestdagen, verlof, latere/vroegere sluiting.
+# Datum in YYYY-MM-DD. Verwijder gerust wat voorbij is.
+exceptions:
+  - date: '2026-12-24'
+    label: 'Kerstavond'
+    open: '14:00'
+    close: '20:00'
+  - date: '2026-12-25'
+    label: 'Kerstmis'
+    closed: true
+  - date: '2026-12-31'
+    label: 'Oudejaarsavond'
+    open: '14:00'
+    close: '05:00'
+  - date: '2027-01-01'
+    label: 'Nieuwjaar'
+    open: '18:00'
+    close: '03:00'
+
+# Kort zinnetje onder de uren op /contact.
+note: 'Openingstijden kunnen afwijken op feestdagen en tijdens events. Volg Instagram voor de laatste stand van zaken.'

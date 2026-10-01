@@ -1,0 +1,135 @@
+---
+/**
+ * Een foto, of — zolang die er nog niet is — een nette lege plek die
+ * vertelt welke foto er hoort te komen.
+ *
+ * Zet een bestand in /public/images/ en vul `src` in. Meer moet dat niet zijn.
+ * De `brief` is wat de fotograaf moet weten; die verdwijnt zodra er een foto is.
+ */
+interface Props {
+  src?: string;
+  alt: string;
+  /** Wat er op de foto moet staan. Enkel zichtbaar zolang src leeg is. */
+  brief: string;
+  /** Bijvoorbeeld "3 / 2", "4 / 5", "16 / 9". */
+  ratio?: string;
+  /** Bijschrift onder de foto. */
+  caption?: string;
+  class?: string;
+  loading?: 'lazy' | 'eager';
+  fetchpriority?: 'high' | 'low' | 'auto';
+  sizes?: string;
+}
+
+const {
+  src,
+  alt,
+  brief,
+  ratio = '3 / 2',
+  caption,
+  class: className = '',
+  loading = 'lazy',
+  fetchpriority = 'auto',
+  sizes,
+} = Astro.props;
+
+const hasImage = Boolean(src && src.trim());
+---
+
+<figure class:list={['photo', className]} style={`--ratio: ${ratio}`}>
+  {
+    hasImage ? (
+      <img
+        class="photo__img"
+        src={src}
+        alt={alt}
+        loading={loading}
+        fetchpriority={fetchpriority}
+        sizes={sizes}
+        decoding="async"
+      />
+    ) : (
+      <div class="photo__placeholder" role="img" aria-label={alt}>
+        <svg class="photo__mark" viewBox="0 0 24 24" aria-hidden="true">
+          <rect
+            x="2.5"
+            y="4.5"
+            width="19"
+            height="15"
+            rx="2"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.4"
+          />
+          <circle cx="8.5" cy="10" r="1.8" fill="currentColor" />
+          <path
+            d="m3.5 17 5-4.5 4 3.2 3.5-2.7 4.5 4"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.4"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
+        <p class="photo__brief">{brief}</p>
+      </div>
+    )
+  }
+
+  {caption && <figcaption class="photo__caption">{caption}</figcaption>}
+</figure>
+
+<style>
+  .photo {
+    margin: 0;
+  }
+
+  .photo__img,
+  .photo__placeholder {
+    width: 100%;
+    aspect-ratio: var(--ratio);
+    border-radius: var(--radius-m);
+  }
+
+  .photo__img {
+    object-fit: cover;
+    background: var(--bg-inset);
+  }
+
+  .photo__placeholder {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-2xs);
+    padding: var(--space-m);
+    text-align: center;
+    color: var(--ink-faint);
+    background: repeating-linear-gradient(
+      -45deg,
+      var(--bg-inset),
+      var(--bg-inset) 10px,
+      var(--bg-raised) 10px,
+      var(--bg-raised) 20px
+    );
+    border: 1px dashed var(--line-strong);
+  }
+
+  .photo__mark {
+    width: 2rem;
+    height: 2rem;
+    opacity: 0.7;
+  }
+
+  .photo__brief {
+    max-width: 34ch;
+    font-size: var(--step--1);
+    line-height: var(--leading-snug);
+  }
+
+  .photo__caption {
+    margin-block-start: var(--space-2xs);
+    font-size: var(--step--1);
+    color: var(--ink-faint);
+  }
+</style>

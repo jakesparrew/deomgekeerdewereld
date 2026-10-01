@@ -1,0 +1,833 @@
+---
+/**
+ * THE MENU — the English twin of /kaart/.
+ * Same structure, same MenuList, same class names: keep the two files diffable.
+ *
+ * Everything behind the bar on one page, in plain HTML. Search and filtering
+ * are extras: with JavaScript switched off the whole list is still there.
+ */
+import Base from '../../layouts/Base.astro';
+import Icon from '../../components/Icon.astro';
+import MenuList from '../../components/MenuList.astro';
+
+import { site } from '../../data/site';
+import {
+  BEER_STYLES,
+  BEER_STYLE_LABELS,
+  MENU_CATEGORIES,
+  MENU_CATEGORY_LABELS,
+  type MenuItem,
+} from '../../data/types';
+import { highlights, menu } from '../../lib/content';
+import { euro, euroMachine, parseLocalDateTime } from '../../lib/format';
+import { route, strings, type Lang } from '../../lib/i18n';
+
+const lang: Lang = 'en';
+const T = strings(lang);
+
+/* ---- The menu in parts, in the order of MENU_CATEGORIES ---- */
+interface Group {
+  key: string;
+  label: string;
+  items: MenuItem[];
+}
+
+const groups: Group[] = MENU_CATEGORIES.map((category) => ({
+  key: category as string,
+  label: MENU_CATEGORY_LABELS[category][lang],
+  items: menu.items.filter((item) => item.category === category),
+})).filter((group) => group.items.length > 0);
+
+/* An item with an unknown category must not quietly disappear. */
+const known = new Set<string>(MENU_CATEGORIES);
+const leftovers = menu.items.filter((item) => !known.has(item.category));
+if (leftovers.length > 0) {
+  groups.push({
+    key: 'andere',
+    label: lang === 'en' ? 'Also on the menu' : 'Nog van alles',
+    items: leftovers,
+  });
+}
+
+/* ---- Only the beer styles that are really on the menu ---- */
+const beerItems = menu.items.filter((item) => item.category === 'bier');
+const beerStyles = BEER_STYLES.filter((style) =>
+  beerItems.some((item) => item.style === style),
+);
+
+/* ---- Beer of the month ---- */
+const botm = highlights.beerOfTheMonth;
+const botmMeta = [
+  botm?.brewery,
+  botm?.style,
+  typeof botm?.abv === 'number' ? String(botm.abv).replace('.', ',') + '%' : undefined,
+]
+  .filter(Boolean)
+  .join(' · ');
+const botmBlurb = lang === 'en' ? (botm?.blurbEn ?? botm?.blurb) : botm?.blurb;
+const botmPrice =
+  typeof botm?.price === 'number'
+    ? '€ ' + botm.price.toFixed(2).replace('.', ',')
+    : undefined;
+
+/* ---- "Updated ..." ---- */
+const updatedLabel = menu.updated
+  ? new Intl.DateTimeFormat(lang === 'en' ? 'en-GB' : 'nl-BE', {
+      timeZone: 'UTC',
+      day: 'numeric',
+      month: 'long',
+      year: 'numeric',
+    }).format(parseLocalDateTime(menu.updated))
+  : undefined;
+
+const lead = menu.intro?.[lang] ?? T.menuLead;
+
+/* Notes are written in Dutch first; the English one wins when it exists. */
+const itemNote = (item: MenuItem): string | undefined =>
+  lang === 'en' ? (item.noteEn ?? item.note) : item.note;
+
+/* ---- Schema.org: this is how Google can show every beer on its own ---- */
+const menuUrl = site.url + route('menu', lang);
+const menuId = menuUrl + '#menu';
+
+const ldJson = JSON.stringify({
+  '@context': 'https://schema.org',
+  '@graph': [
+    { '@type': 'BarOrPub', '@id': site.url + '/#bar', hasMenu: { '@id': menuId } },
+    {
+      '@type': 'Menu',
+      '@id': menuId,
+      name: T.menuTitle,
+      url: menuUrl,
+      inLanguage: lang === 'en' ? 'en' : 'nl-BE',
+      hasMenuSection: groups.map((group) => ({
+        '@type': 'MenuSection',
+        name: group.label,
+        hasMenuItem: group.items.map((item) => {
+          const note = itemNote(item);
+          return {
+            '@type': 'MenuItem',
+            name: item.name,
+            ...(note ? { description: note } : {}),
+            ...(typeof item.price === 'number' && item.price > 0
+              ? {
+                  offers: {
+                    '@type': 'Offer',
+                    price: euroMachine(item.price),
+                    priceCurrency: 'EUR',
+                    availability:
+                      item.available === false
+                        ? 'https://schema.org/OutOfStock'
+                        : 'https://schema.org/InStock',
+                  },
+                }
+              : {}),
+          };
+        }),
+      })),
+    },
+  ],
+}).replace(/</g, '\\u003c');
+
+const breadcrumbs = [
+  { name: lang === 'en' ? 'Home' : 'Start', url: route('home', lang) },
+  { name: T.menuTitle, url: route('menu', lang) },
+];
+
+const description =
+  'The full beer menu of De Omgekeerde Wereld, a brown cafe in Ghent opposite ' +
+  'VIERNULVIER: 69+ beers, cheap pils at € 2,70, cocktails and bottomless ' +
+  'coffee at € 3,00. Every price on one page.';
+
+/**
+ * De prijsregel wordt UITGEREKEND uit content/menu.yaml, niet met de hand
+ * geschreven. Anders belooft deze zin na de eerste prijswijziging iets dat de
+ * kaart eronder tegenspreekt.
+ */
+const prijzen = menu.items.filter((i) => typeof i.price === 'number');
+const goedkoopste = (fn: (i: (typeof prijzen)[number]) => boolean) => {
+  const set = prijzen.filter(fn).map((i) => i.price as number);
+  return set.length ? Math.min(...set) : undefined;
+};
+const pils = goedkoopste((i) => i.style === 'pils');
+const speciaal = goedkoopste((i) => i.category === 'bier' && i.style !== 'pils');
+const cocktail = goedkoopste((i) => i.category === 'cocktails');
+const koffie = prijzen.find((i) => /volont/i.test(i.name))?.price;
+
+const priceLine = [
+  lang === 'en' ? `Lager ${euro(pils!)}` : `Pilske ${euro(pils!)}`,
+  lang === 'en'
+    ? `specialty beers from ${euro(speciaal!)}`
+    : `speciale bierkes vanaf ${euro(speciaal!)}`,
+  lang === 'en' ? `cocktails from ${euro(cocktail!)}` : `cocktails vanaf ${euro(cocktail!)}`,
+  koffie
+    ? lang === 'en'
+      ? `bottomless coffee ${euro(koffie)}`
+      : `koffie à volonté ${euro(koffie)}`
+    : null,
+]
+  .filter(Boolean)
+  .join(' · ');
+---
+
+<Base
+  title="Beer menu and prices"
+  description={description}
+  lang={lang}
+  active="menu"
+  breadcrumbs={breadcrumbs}
+>
+  <script type="application/ld+json" slot="head" is:inline set:html={ldJson} />
+
+  <div class="kaart" data-kaart>
+    <section class="section section--tight">
+      <div class="wrap">
+        <div class="kaart-hero">
+          <div class="kaart-hero__text">
+            <p class="eyebrow">{lang === 'en' ? 'The menu' : 'Bierkaart'}</p>
+            <h1>{lang === 'en' ? 'Have a look at the menu' : 'Toon keer de kaart'}</h1>
+            <p class="kaart-hero__lead">{lead}</p>
+            <p class="kaart-hero__prices">{priceLine}</p>
+            {
+              updatedLabel && (
+                <p class="kaart-hero__updated">
+                  {lang === 'en' ? 'Updated ' : 'Bijgewerkt op '}
+                  <time datetime={menu.updated}>{updatedLabel}</time>
+                </p>
+              )
+            }
+          </div>
+
+          {
+            botm?.name && (
+              <aside class="botm" aria-labelledby="botm-kop">
+                <p class="eyebrow" id="botm-kop">
+                  {T.beerOfTheMonth}
+                </p>
+                <p class="botm__name">
+                  <span>{botm.name}</span>
+                  {botmPrice && <span class="botm__price">{botmPrice}</span>}
+                </p>
+                {botmMeta && <p class="botm__meta">{botmMeta}</p>}
+                {botmBlurb && <p class="botm__blurb">{botmBlurb}</p>}
+              </aside>
+            )
+          }
+        </div>
+      </div>
+    </section>
+
+    <!-- Search is an extra: it only shows up once JavaScript joins in. -->
+    <div class="kaart-tools">
+      <div class="wrap">
+        <div class="menu-tools" hidden data-tools>
+          <div class="menu-search" role="search">
+            <label class="menu-search__label" for="kaart-zoek">{T.search}</label>
+            <div class="menu-search__field">
+              <input
+                class="menu-search__input"
+                id="kaart-zoek"
+                name="q"
+                type="search"
+                autocomplete="off"
+                spellcheck="false"
+                placeholder={T.searchPlaceholder}
+                data-search-input
+              />
+              <button class="menu-search__clear" type="button" hidden data-clear>
+                {T.clearSearch}
+              </button>
+            </div>
+          </div>
+
+          <p
+            class="menu-status"
+            role="status"
+            aria-live="polite"
+            data-status
+            data-none={T.noResults}
+            data-found={lang === 'en' ? '{n} found' : '{n} gevonden'}
+          >
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <nav
+      class="catbar"
+      aria-label={lang === 'en'
+        ? 'Jump to a part of the menu'
+        : 'Spring naar een stuk van de kaart'}
+    >
+      <ul class="catbar__scroller">
+        {
+          groups.map((group) => (
+            <li class="catbar__item" data-cat-chip={group.key}>
+              <a class="chip" href={'#cat-' + group.key}>
+                {group.label}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+
+    <section class="section">
+      <div class="wrap">
+        {
+          groups.map((group) => (
+            <section class="menu-cat" id={'cat-' + group.key} data-menu-section={group.key}>
+              <div class="menu-cat__head">
+                <h2 class="menu-cat__title" id={'kop-' + group.key}>
+                  {group.label}
+                </h2>
+                <p class="menu-cat__count">
+                  <span data-count-for={group.key}>{group.items.length}</span>
+                  {lang === 'en' ? ' on the menu' : ' op de kaart'}
+                </p>
+              </div>
+
+              {group.key === 'bier' && beerStyles.length > 0 && (
+                <div
+                  class="stylefilter"
+                  role="group"
+                  aria-labelledby="stijl-kop"
+                  hidden
+                  data-stylefilter
+                >
+                  <p class="stylefilter__legend" id="stijl-kop">
+                    {lang === 'en' ? 'Filter by style' : 'Filter op stijl'}
+                  </p>
+                  <button class="chip" type="button" aria-pressed="true" data-style-chip="">
+                    {T.allStyles}
+                  </button>
+                  {beerStyles.map((style) => (
+                    <button
+                      class="chip"
+                      type="button"
+                      aria-pressed="false"
+                      data-style-chip={style}
+                    >
+                      {BEER_STYLE_LABELS[style][lang]}
+                    </button>
+                  ))}
+                </div>
+              )}
+
+              <MenuList items={group.items} lang={lang} labelledBy={'kop-' + group.key} />
+            </section>
+          ))
+        }
+
+        <p class="menu-empty" hidden data-empty>{T.noResults}</p>
+      </div>
+    </section>
+
+    <section class="section section--tight">
+      <div class="wrap">
+        <div class="kaart-outro">
+          <p class="kaart-outro__note">{T.priceChangeNote}</p>
+          <a
+            class="btn btn--ghost"
+            href={site.orderbilly}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            {T.viewOnOrderbilly}
+            <Icon name="arrow" size={18} />
+            <span class="visually-hidden">
+              {lang === 'en' ? '(opens in a new tab)' : '(opent in een nieuw venster)'}
+            </span>
+          </a>
+        </div>
+      </div>
+    </section>
+  </div>
+</Base>
+
+<script>
+  /**
+   * Searching and filtering on the menu. It all happens inside the page:
+   * no network, no reload. Without this script the whole menu simply
+   * stays where it is.
+   */
+  const root = document.querySelector<HTMLElement>('[data-kaart]');
+
+  if (root) {
+    const tools = root.querySelector<HTMLElement>('[data-tools]');
+    const input = root.querySelector<HTMLInputElement>('[data-search-input]');
+    const clearBtn = root.querySelector<HTMLButtonElement>('[data-clear]');
+    const status = root.querySelector<HTMLElement>('[data-status]');
+    const empty = root.querySelector<HTMLElement>('[data-empty]');
+    const styleBox = root.querySelector<HTMLElement>('[data-stylefilter]');
+    const styleChips = Array.from(
+      root.querySelectorAll<HTMLButtonElement>('[data-style-chip]'),
+    );
+    const sections = Array.from(root.querySelectorAll<HTMLElement>('[data-menu-section]'));
+
+    const rows = Array.from(root.querySelectorAll<HTMLElement>('[data-menu-item]')).map(
+      (el) => ({
+        el,
+        search: el.dataset.search ?? '',
+        style: el.dataset.style ?? '',
+        category: el.dataset.category ?? '',
+        section: el.closest<HTMLElement>('[data-menu-section]')?.dataset.menuSection ?? '',
+      }),
+    );
+
+    const chipBySection = new Map<string, HTMLElement>();
+    root.querySelectorAll<HTMLElement>('[data-cat-chip]').forEach((chip) => {
+      chipBySection.set(chip.dataset.catChip ?? '', chip);
+    });
+
+    const countBySection = new Map<string, HTMLElement>();
+    root.querySelectorAll<HTMLElement>('[data-count-for]').forEach((el) => {
+      countBySection.set(el.dataset.countFor ?? '', el);
+    });
+
+    const noneText = status?.dataset.none ?? '';
+    const foundText = status?.dataset.found ?? '{n}';
+
+    const activeStyles = new Set<string>();
+    let query = '';
+
+    /* Accents out, everything lowercase: the same way the menu was built.
+       768 through 879 are the combining marks (U+0300 - U+036F). */
+    const plain = (value: string): string => {
+      let out = '';
+      for (const ch of value.normalize('NFD')) {
+        const code = ch.codePointAt(0) ?? 0;
+        if (code >= 768 && code <= 879) continue;
+        out += ch;
+      }
+      return out.toLowerCase().trim();
+    };
+
+    function apply(): void {
+      const filtering = query.length > 0 || activeStyles.size > 0;
+      const perSection = new Map<string, number>();
+      let visible = 0;
+
+      for (const row of rows) {
+        let show = true;
+        if (query && !row.search.includes(query)) show = false;
+        if (show && activeStyles.size > 0) {
+          show = row.category === 'bier' && row.style !== '' && activeStyles.has(row.style);
+        }
+        row.el.hidden = !show;
+        if (show) {
+          visible += 1;
+          perSection.set(row.section, (perSection.get(row.section) ?? 0) + 1);
+        }
+      }
+
+      for (const section of sections) {
+        const key = section.dataset.menuSection ?? '';
+        const found = perSection.get(key) ?? 0;
+        /* The style buttons live in the beer part: that has to stay reachable. */
+        const keepOpen = key === 'bier' && activeStyles.size > 0;
+        section.hidden = found === 0 && !keepOpen;
+
+        const count = countBySection.get(key);
+        if (count) count.textContent = String(found);
+
+        const chip = chipBySection.get(key);
+        if (chip) chip.hidden = section.hidden;
+      }
+
+      if (empty) empty.hidden = !(filtering && visible === 0);
+      if (clearBtn) clearBtn.hidden = query.length === 0;
+
+      if (status) {
+        if (!filtering) status.textContent = '';
+        else if (visible === 0) status.textContent = noneText;
+        else status.textContent = foundText.replace('{n}', String(visible));
+      }
+    }
+
+    function syncStyleChips(): void {
+      for (const chip of styleChips) {
+        const key = chip.dataset.styleChip ?? '';
+        const on = key === '' ? activeStyles.size === 0 : activeStyles.has(key);
+        chip.setAttribute('aria-pressed', on ? 'true' : 'false');
+      }
+    }
+
+    function resetSearch(): void {
+      if (input) input.value = '';
+      query = '';
+      apply();
+    }
+
+    if (input) {
+      input.addEventListener('input', () => {
+        query = plain(input.value);
+        apply();
+      });
+
+      input.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape' && input.value !== '') {
+          event.preventDefault();
+          resetSearch();
+        }
+      });
+    }
+
+    clearBtn?.addEventListener('click', () => {
+      resetSearch();
+      input?.focus();
+    });
+
+    for (const chip of styleChips) {
+      chip.addEventListener('click', () => {
+        const key = chip.dataset.styleChip ?? '';
+        if (key === '') {
+          activeStyles.clear();
+        } else if (activeStyles.has(key)) {
+          activeStyles.delete(key);
+        } else {
+          activeStyles.add(key);
+        }
+        syncStyleChips();
+        apply();
+      });
+    }
+
+    /* Only show it now: a search box is no use without script. */
+    tools?.removeAttribute('hidden');
+    styleBox?.removeAttribute('hidden');
+    syncStyleChips();
+    apply();
+  }
+</script>
+
+<style is:global>
+  /*
+    The menu has a second sticky bar under the header. Anchor links have to
+    land neatly below it. ":root" makes this more specific than the default
+    in global.css, without touching that file.
+  */
+  html:root {
+    --kaart-header-h: 4.5rem;
+    --kaart-catbar-h: 3.75rem;
+
+    scroll-padding-top: calc(
+      var(--kaart-header-h) + var(--kaart-catbar-h) + var(--space-s)
+    );
+  }
+</style>
+
+<style>
+  /* ---- Top of the page ---- */
+  .kaart-hero {
+    display: grid;
+    gap: var(--space-l);
+    align-items: start;
+  }
+
+  @media (min-width: 56em) {
+    .kaart-hero {
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: var(--space-2xl);
+    }
+  }
+
+  .kaart-hero__text > * + * {
+    margin-block-start: var(--space-s);
+  }
+
+  .kaart-hero__lead {
+    max-width: var(--measure);
+    font-size: var(--step-1);
+    color: var(--ink-soft);
+  }
+
+  .kaart-hero__prices {
+    max-width: var(--measure);
+    font-size: var(--step--1);
+    color: var(--ink-faint);
+  }
+
+  .kaart-hero__updated {
+    font-size: var(--step--2);
+    letter-spacing: var(--tracking-wide);
+    text-transform: uppercase;
+    color: var(--ink-faint);
+  }
+
+  /* ---- Beer of the month ---- */
+  .botm {
+    padding: var(--space-m);
+    background: color-mix(in srgb, var(--amber) 8%, var(--bg-raised));
+    border: var(--border-hairline) solid color-mix(in srgb, var(--amber) 35%, var(--line));
+    border-radius: var(--radius-m);
+  }
+
+  .botm > * + * {
+    margin-block-start: var(--space-2xs);
+  }
+
+  .botm__name {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--space-s);
+    font-family: var(--font-display);
+    font-size: var(--step-2);
+    font-weight: 700;
+    line-height: var(--leading-snug);
+    letter-spacing: var(--tracking-tight);
+  }
+
+  .botm__price {
+    flex: none;
+    font-family: var(--font-body);
+    font-size: var(--step-0);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .botm__meta {
+    font-size: var(--step--1);
+    color: var(--ink-soft);
+  }
+
+  .botm__blurb {
+    max-width: var(--measure);
+    color: var(--ink-soft);
+  }
+
+  /* ---- Search ---- */
+  .kaart-tools {
+    padding-block-end: var(--space-m);
+  }
+
+  .menu-tools {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    gap: var(--space-s) var(--space-m);
+  }
+
+  .menu-tools[hidden] {
+    display: none;
+  }
+
+  .menu-search {
+    flex: 1 1 22rem;
+  }
+
+  .menu-search__label {
+    display: block;
+    margin-block-end: var(--space-3xs);
+    font-size: var(--step--2);
+    font-weight: 600;
+    letter-spacing: var(--tracking-wider);
+    text-transform: uppercase;
+    color: var(--ink-faint);
+  }
+
+  .menu-search__field {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2xs);
+    padding-inline: var(--space-s);
+    background: var(--bg-raised);
+    border: var(--border-hairline) solid var(--line-strong);
+    border-radius: var(--radius-s);
+  }
+
+  .menu-search__field:focus-within {
+    border-color: var(--accent);
+  }
+
+  .menu-search__input {
+    flex: 1 1 auto;
+    min-width: 0;
+    min-height: var(--tap-min);
+    background: none;
+    border: none;
+    color: var(--ink);
+  }
+
+  .menu-search__input::placeholder {
+    color: var(--ink-faint);
+    opacity: 1;
+  }
+
+  /* We have our own clear button, with a word on it. */
+  .menu-search__input::-webkit-search-cancel-button {
+    display: none;
+  }
+
+  .menu-search__clear {
+    flex: none;
+    min-height: var(--tap-min);
+    padding-inline: var(--space-2xs);
+    font-size: var(--step--1);
+    font-weight: 600;
+    color: var(--ink-soft);
+  }
+
+  .menu-search__clear:hover {
+    color: var(--accent-text);
+  }
+
+  .menu-status {
+    flex: 0 1 auto;
+    display: flex;
+    align-items: center;
+    min-height: var(--tap-min);
+    font-size: var(--step--1);
+    font-variant-numeric: tabular-nums;
+    color: var(--ink-soft);
+  }
+
+  /* ---- Sticky bar with the parts of the menu ---- */
+  .catbar {
+    position: sticky;
+    top: var(--kaart-header-h);
+    z-index: 20;
+    background: color-mix(in srgb, var(--bg) 92%, transparent);
+    backdrop-filter: blur(10px);
+    border-block: var(--border-hairline) solid var(--line);
+  }
+
+  .catbar__scroller {
+    display: flex;
+    gap: var(--space-2xs);
+    list-style: none;
+    margin: 0;
+    padding-block: var(--space-2xs);
+    padding-inline: max(var(--gutter), calc((100% - var(--width-page)) / 2));
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scrollbar-width: thin;
+    scrollbar-color: var(--line-strong) transparent;
+  }
+
+  .catbar__item {
+    flex: none;
+  }
+
+  .catbar__item[hidden] {
+    display: none;
+  }
+
+  /* ---- Chips: the anchors and the style buttons ---- */
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    min-height: var(--tap-min);
+    padding-inline: var(--space-s);
+    background: var(--bg-raised);
+    border: var(--border-hairline) solid var(--line-strong);
+    border-radius: var(--radius-s);
+    color: var(--ink);
+    font-size: var(--step--1);
+    font-weight: 600;
+    letter-spacing: var(--tracking-wide);
+    text-decoration: none;
+    white-space: nowrap;
+    transition:
+      background-color var(--dur-fast) var(--ease-out),
+      border-color var(--dur-fast) var(--ease-out),
+      color var(--dur-fast) var(--ease-out);
+  }
+
+  .chip:hover {
+    border-color: var(--accent);
+    color: var(--accent-text);
+  }
+
+  .chip[aria-pressed='true'] {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: var(--accent-ink);
+  }
+
+  .chip[aria-pressed='true']:hover {
+    background: var(--accent-dim);
+    border-color: var(--accent-dim);
+    color: var(--accent-ink);
+  }
+
+  /* ---- The parts themselves ---- */
+  .menu-cat + .menu-cat {
+    margin-block-start: var(--space-2xl);
+  }
+
+  .menu-cat[hidden] {
+    display: none;
+  }
+
+  .menu-cat__head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: var(--space-s);
+    padding-block-end: var(--space-2xs);
+    margin-block-end: var(--space-m);
+    border-block-end: var(--border-hairline) solid var(--line);
+  }
+
+  .menu-cat__title {
+    font-size: var(--step-3);
+  }
+
+  .menu-cat__count {
+    font-size: var(--step--2);
+    letter-spacing: var(--tracking-wide);
+    text-transform: uppercase;
+    font-variant-numeric: tabular-nums;
+    color: var(--ink-faint);
+  }
+
+  .stylefilter {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-2xs);
+    margin-block-end: var(--space-l);
+  }
+
+  .stylefilter[hidden] {
+    display: none;
+  }
+
+  .stylefilter__legend {
+    flex: 1 0 100%;
+    font-size: var(--step--2);
+    font-weight: 600;
+    letter-spacing: var(--tracking-wider);
+    text-transform: uppercase;
+    color: var(--ink-faint);
+  }
+
+  .menu-empty {
+    margin-block-start: var(--space-xl);
+    font-family: var(--font-display);
+    font-size: var(--step-2);
+    color: var(--ink-soft);
+  }
+
+  .menu-empty[hidden] {
+    display: none;
+  }
+
+  /* ---- Last word ---- */
+  .kaart-outro {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-m);
+    padding-block-start: var(--space-l);
+    border-block-start: var(--border-hairline) solid var(--line);
+  }
+
+  .kaart-outro__note {
+    max-width: var(--measure);
+    font-size: var(--step--1);
+    color: var(--ink-soft);
+  }
+</style>

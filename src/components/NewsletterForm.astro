@@ -1,0 +1,162 @@
+---
+/**
+ * Nieuwsbriefformulier. Werkt out of the box met Netlify Forms.
+ * Wil je Brevo rechtstreeks? Zet de endpoint in src/data/site.ts.
+ * Er is altijd een honeypot; Turnstile komt erbij zodra je een sleutel invult.
+ */
+import { site } from '../data/site';
+import { route, strings, type Lang } from '../lib/i18n';
+
+interface Props {
+  lang: Lang;
+  compact?: boolean;
+}
+
+const { lang, compact = false } = Astro.props;
+const T = strings(lang);
+
+const action = site.forms.newsletterEndpoint || undefined;
+const useNetlify = !action;
+---
+
+<form
+  class:list={['newsletter', compact && 'newsletter--compact']}
+  name="nieuwsbrief"
+  method="POST"
+  action={action}
+  data-netlify={useNetlify ? 'true' : undefined}
+  netlify-honeypot={useNetlify ? 'bedankt-bot' : undefined}
+>
+  {useNetlify && <input type="hidden" name="form-name" value="nieuwsbrief" />}
+
+  <p class="newsletter__honey" aria-hidden="true">
+    <label>
+      Laat dit veld leeg
+      <input type="text" name="bedankt-bot" tabindex="-1" autocomplete="off" />
+    </label>
+  </p>
+
+  <div class="newsletter__row">
+    <div class="newsletter__field">
+      <label class="newsletter__label" for="nieuwsbrief-email">{T.email}</label>
+      <input
+        class="newsletter__input"
+        id="nieuwsbrief-email"
+        type="email"
+        name="email"
+        required
+        autocomplete="email"
+        inputmode="email"
+        placeholder={lang === 'en' ? 'yourname@example.com' : 'uwnaam@voorbeeld.be'}
+      />
+    </div>
+    <button class="btn btn--primary newsletter__submit" type="submit">
+      {T.newsletterCta}
+    </button>
+  </div>
+
+  <label class="newsletter__consent">
+    <input type="checkbox" name="toestemming" required />
+    <span>
+      {T.newsletterConsent}{' '}
+      <a href={route('privacy', lang)}>{T.privacyPolicy}</a>.
+    </span>
+  </label>
+
+  {
+    site.forms.turnstileSiteKey && (
+      <>
+        <div class="cf-turnstile" data-sitekey={site.forms.turnstileSiteKey} />
+        <script is:inline defer src="https://challenges.cloudflare.com/turnstile/v0/api.js" />
+      </>
+    )
+  }
+</form>
+
+<style>
+  .newsletter {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xs);
+  }
+
+  .newsletter__honey {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
+  .newsletter__row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2xs);
+    align-items: flex-end;
+  }
+
+  .newsletter__field {
+    flex: 1 1 14rem;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3xs);
+  }
+
+  .newsletter__label {
+    font-size: var(--step--2);
+    font-weight: 600;
+    letter-spacing: var(--tracking-wide);
+    text-transform: uppercase;
+    color: var(--ink-faint);
+  }
+
+  .newsletter__input {
+    min-height: var(--tap-min);
+    padding: var(--space-2xs) var(--space-xs);
+    background: var(--bg-inset);
+    color: var(--ink);
+    border: var(--border-hairline) solid var(--line-strong);
+    border-radius: var(--radius-s);
+  }
+
+  .newsletter__input::placeholder {
+    color: var(--ink-faint);
+  }
+
+  .newsletter__input:focus-visible {
+    border-color: var(--accent);
+  }
+
+  .newsletter__submit {
+    flex: 0 0 auto;
+  }
+
+  .newsletter__consent {
+    display: flex;
+    gap: var(--space-2xs);
+    align-items: flex-start;
+    font-size: var(--step--1);
+    line-height: var(--leading-snug);
+    color: var(--ink-faint);
+  }
+
+  .newsletter__consent {
+    /* Genoeg hoogte om er met een duim op te mikken. */
+    min-block-size: 2.25rem;
+    align-items: center;
+  }
+
+  .newsletter__consent input {
+    /* In rem, niet in em: anders krimpt het vinkje mee met de compacte tekst
+       en blijft er een doelwit van 12 bij 12 pixels over. */
+    inline-size: 1.25rem;
+    block-size: 1.25rem;
+    accent-color: var(--accent);
+    flex: none;
+  }
+
+  .newsletter--compact .newsletter__consent {
+    font-size: var(--step--2);
+  }
+</style>

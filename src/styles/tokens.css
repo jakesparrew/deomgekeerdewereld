@@ -1,0 +1,193 @@
+/* ============================================================
+   DE OMGEKEERDE WERELD — design tokens
+   ------------------------------------------------------------
+   One place, two worlds. "Nacht" (default) is the candlelit bar.
+   "Dag" is the sunny terrace. Every colour pair below is checked
+   against WCAG AA (>= 4.5:1 for body text, >= 3:1 for large text
+   and UI borders).
+   ============================================================ */
+
+:root {
+  /* ---- Type families (only two, ever) ---- */
+  /* Garamond, zoals het logotype en de geschilderde letters boven de deur.
+     Inter dient enkel nog voor klein bedieningswerk: knoppen, labels, uren. */
+  --font-display: 'EB Garamond Variable', 'EB Garamond', Garamond, Georgia, serif;
+  --font-text: 'EB Garamond Variable', 'EB Garamond', Garamond, Georgia, serif;
+  --font-body: 'Inter Variable', 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+
+  /* ---- Fluid type scale (1.25 ratio, 320px -> 1240px) ---- */
+  --step--2: clamp(0.69rem, 0.67rem + 0.11vw, 0.75rem);
+  --step--1: clamp(0.83rem, 0.79rem + 0.22vw, 0.94rem);
+  --step-0: clamp(1rem, 0.95rem + 0.24vw, 1.125rem);
+  --step-1: clamp(1.2rem, 1.11rem + 0.44vw, 1.44rem);
+  --step-2: clamp(1.44rem, 1.29rem + 0.76vw, 1.84rem);
+  --step-3: clamp(1.73rem, 1.49rem + 1.2vw, 2.36rem);
+  --step-4: clamp(1.9rem, 1.55rem + 1.7vw, 2.9rem);
+  --step-5: clamp(2.3rem, 1.8rem + 2.6vw, 3.7rem);
+  --step-6: clamp(2.7rem, 2rem + 3.6vw, 4.6rem);
+
+  --leading-tight: 1.06;
+  --leading-snug: 1.25;
+  --leading-normal: 1.6;
+  --leading-loose: 1.75;
+
+  --tracking-tight: -0.01em;
+  --tracking-normal: 0;
+  --tracking-wide: 0.06em;
+  --tracking-wider: 0.14em;
+
+  /* ---- Spacing scale (4px base) ---- */
+  --space-3xs: 0.25rem;
+  --space-2xs: 0.5rem;
+  --space-xs: 0.75rem;
+  --space-s: 1rem;
+  --space-m: 1.5rem;
+  --space-l: 2rem;
+  --space-xl: 3rem;
+  --space-2xl: 4rem;
+  --space-3xl: 6rem;
+  --space-4xl: 8rem;
+
+  /* ---- Layout ---- */
+  --measure: 62ch;
+  --width-wide: 78rem;
+  --width-page: 68rem;
+  --width-text: 42rem;
+  --gutter: clamp(1rem, 4vw, 2.5rem);
+
+  /* ---- Radii: a brown cafe is not a rounded SaaS app ---- */
+  --radius-xs: 2px;
+  --radius-s: 4px;
+  --radius-m: 8px;
+  --radius-pill: 999px;
+
+  /* ---- Motion ---- */
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --dur-fast: 120ms;
+  --dur-base: 220ms;
+  --dur-slow: 420ms;
+
+  /* ---- Elevation (warm shadows, never neutral grey) ---- */
+  --shadow-s: 0 1px 2px rgb(42 28 16 / 0.12);
+  --shadow-m: 0 4px 16px -4px rgb(42 28 16 / 0.18);
+  --shadow-l: 0 18px 48px -12px rgb(42 28 16 / 0.28);
+
+  --border-hairline: 1px;
+  --focus-ring-width: 3px;
+  --tap-min: 44px;
+}
+
+/* ============================================================
+   DAG — standaard: crème papier, bruine inkt, goud
+   ------------------------------------------------------------
+   De kleuren komen van de gevel en van binnen: crème pleister,
+   de gouden zon boven de deur, donker hout, het rode poollaken.
+   De logobestanden van het huis heten niet voor niks zwart_goud.
+   ============================================================ */
+:root[data-theme='dag'] {
+  color-scheme: light;
+
+  --bg: #f3ecdc;
+  --bg-raised: #faf5e9;
+  --bg-sunk: #e9dfcb;
+  --bg-inset: #eee6d3;
+
+  --ink: #2a1c10;
+  --ink-soft: #4f3d2b;
+  --ink-faint: #6b5741;
+
+  --accent: #c4912b;
+  --accent-text: #7a5210;
+  --accent-ink: #21160b;
+  --accent-dim: #a97a1f;
+
+  --amber: #96490a;
+  --amber-ink: #fff8ec;
+
+  --rose: #8a1a2b;
+  --rose-deep: #8a1a2b;
+
+  --wood: #6b4a2a;
+  --wood-soft: #d9cdb4;
+
+  --line: #ddd2bb;
+  --line-strong: #8c7a5c;
+
+  --focus-ring: #2a1c10;
+  --selection-bg: #c4912b;
+  --selection-ink: #21160b;
+
+  --open-dot: #1a7f37;
+  --closed-dot: #8a1a2b;
+
+  --hero-scrim: linear-gradient(180deg, rgb(243 236 220 / 0.2) 0%, rgb(243 236 220 / 0.92) 100%);
+  --hero-scrim-side: linear-gradient(100deg, rgb(243 236 220 / 0.88) 0%, rgb(243 236 220 / 0.18) 72%);
+  --grain-opacity: 0.05;
+}
+
+/* ============================================================
+   NACHT — notenhout en kaarslicht, geen zwart en geen neon
+   ============================================================ */
+:root,
+:root[data-theme='nacht'] {
+  color-scheme: dark;
+
+  --bg: #17100a;
+  --bg-raised: #221710;
+  --bg-sunk: #0f0a06;
+  --bg-inset: #2e2116;
+
+  --ink: #f3ecdc;
+  --ink-soft: #cfc3ac;
+  --ink-faint: #a39580;
+
+  --accent: #d9a93f;
+  --accent-text: #e0b352;
+  --accent-ink: #1c140d;
+  --accent-dim: #b98c2c;
+
+  --amber: #ffb347;
+  --amber-ink: #241703;
+
+  --rose: #ff8fa3;
+  --rose-deep: #8a1a2b;
+
+  --wood: #6b4a2a;
+  --wood-soft: #3a2817;
+
+  --line: #33261a;
+  --line-strong: #85705a;
+
+  --focus-ring: #e0b352;
+  --selection-bg: #d9a93f;
+  --selection-ink: #1c140d;
+
+  --open-dot: #6ee787;
+  --closed-dot: #ff8fa3;
+
+  --hero-scrim: linear-gradient(180deg, rgb(28 20 13 / 0.35) 0%, rgb(28 20 13 / 0.95) 100%);
+  --hero-scrim-side: linear-gradient(100deg, rgb(28 20 13 / 0.8) 0%, rgb(28 20 13 / 0.12) 72%);
+  --grain-opacity: 0.05;
+}
+
+/* De sluier over de gevelfoto. Warm en diep, zodat de letters erop leesbaar
+   zijn zonder dat de foto verdwijnt. Precies wat 1806, GEM en Qissa doen. */
+:root {
+  --shot-veil: linear-gradient(
+      180deg,
+      rgb(23 16 10 / 0.62) 0%,
+      rgb(23 16 10 / 0.72) 45%,
+      rgb(23 16 10 / 0.94) 100%
+    ),
+    linear-gradient(0deg, rgb(64 34 12 / 0.35), rgb(64 34 12 / 0.35));
+}
+
+:root[data-theme='dag'] {
+  --shot-veil: linear-gradient(
+      180deg,
+      rgb(20 13 8 / 0.42) 0%,
+      rgb(20 13 8 / 0.55) 45%,
+      rgb(20 13 8 / 0.8) 100%
+    ),
+    linear-gradient(0deg, rgb(64 34 12 / 0.2), rgb(64 34 12 / 0.2));
+}

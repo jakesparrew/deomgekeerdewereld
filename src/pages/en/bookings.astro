@@ -1,0 +1,445 @@
+---
+/**
+ * Bookings — English twin of /reserveren/.
+ * Den Omgekeerde does not hold tables. This page is for groups,
+ * birthdays, student clubs, concerts and collaborations.
+ */
+import Base from '../../layouts/Base.astro';
+import Icon from '../../components/Icon.astro';
+import Photo from '../../components/Photo.astro';
+import ReservationForm from '../../components/ReservationForm.astro';
+import ReserveButton from '../../components/ReserveButton.astro';
+
+import { site } from '../../data/site';
+import { euro } from '../../lib/format';
+import { route, strings } from '../../lib/i18n';
+
+const lang = 'en' as const;
+const T = strings(lang);
+
+const breadcrumbs = [
+  { name: 'Home', url: route('home', lang) },
+  { name: 'Bookings', url: route('reserve', lang) },
+];
+
+const kinds = [
+  {
+    icon: 'beer',
+    title: 'A crowd or a birthday',
+    body:
+      'Coming with ten, twenty or thirty to celebrate something? Let us know and we will keep you in mind and make sure there is enough cold behind the bar.',
+  },
+  {
+    icon: 'pils',
+    title: 'Student club night',
+    body:
+      'A club night, the tail end of a cantus, or an initiation that needs somewhere to land. Tell us how many of you and when, and we will work out what is possible.',
+  },
+  {
+    icon: 'music',
+    title: 'Concert or DJ set',
+    body:
+      'Do you play, or do you spin records? Concerts and parties here are free for the room. Send a link to your music along with your message.',
+  },
+  {
+    icon: 'coffee',
+    title: 'Collaboration or partnership',
+    body:
+      'An idea with a student society, a festival or the neighbours across the street? Drop by for a coffee, or write it down here first.',
+  },
+];
+
+const goodToKnow = [
+  'Open every day from 2pm until late. Thursday, Friday and Saturday a good bit later.',
+  `A pils costs ${euro(2.7)}, there are more than 69 beers on the list and coffee is bottomless at ${euro(3)}.`,
+  `Pool is free, table football costs ${euro(0.5)} and there is a chess board around somewhere.`,
+  'Concerts and parties are free. Aper’Omer is on the first Friday of every month.',
+  'The music runs from soul, funk and disco through jazz, blues and bossa nova to hip-hop, house and rock ’n roll.',
+  'The bigger the group, the earlier you should tell us. A week ahead is nice, a month ahead is better.',
+];
+---
+
+<Base
+  title="Bookings"
+  description="You never need to book a table at De Omgekeerde Wereld for a beer. Coming with a group, celebrating something, or got an idea for a concert or a collaboration? Tell us here."
+  lang={lang}
+  active="reserve"
+  breadcrumbs={breadcrumbs}
+>
+  <section class="section">
+    <div class="wrap">
+      <p class="eyebrow">Bookings</p>
+      <h1>{T.reserveTitle}</h1>
+
+      <div class="intro">
+        <div class="prose stack">
+          <p class="lead">
+            First things first: you do not need to book anything for a beer. You
+            walk in, you find a spot, and if it is full someone will shuffle up.
+            That is how we have done it since 2014.
+          </p>
+          <p>
+            If you would rather be certain of a table, you can reserve one.
+          </p>
+          <p class="reserve-cta">
+            <ReserveButton lang={lang} variant="primary" />
+          </p>
+          <p>
+            What we do like to know in advance: that a whole crowd of you is
+            coming, that someone has a birthday, that your student club is
+            looking for a night, that you want to play or DJ, or that you have an
+            idea for something we could do together. Fill in what you have in
+            mind below and it lands straight with the right person.
+          </p>
+        </div>
+
+        <aside class="walkin" aria-labelledby="walkin-title">
+          <h2 class="walkin__title" id="walkin-title">
+            <Icon name="clock" size={20} />
+            Just coming for a drink?
+          </h2>
+          <p class="walkin__body">
+            Then there is nothing to fill in. We are open every day from 2pm
+            until late and the door is open to everyone — student, neighbour or
+            passer-by.
+          </p>
+          <p class="walkin__links">
+            <a href={route('contact', lang)}>{T.whereToFind}</a>
+            <span aria-hidden="true">·</span>
+            <a href={route('agenda', lang)}>{T.agendaTitle}</a>
+          </p>
+        </aside>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--tight">
+    <div class="wrap">
+      <p class="eyebrow">What we do want to know</p>
+      <h2>Give us a heads-up for these</h2>
+
+      <ul class="kinds" role="list">
+        {
+          kinds.map((kind) => (
+            <li class="card kind">
+              <span class="kind__icon" aria-hidden="true">
+                <Icon name={kind.icon} size={22} />
+              </span>
+              <h3 class="kind__title">{kind.title}</h3>
+              <p class="kind__body">{kind.body}</p>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <section class="section section--tight" id="request">
+    <div class="wrap">
+      <p class="eyebrow">Drop us a line</p>
+      <h2>Tell us what you are planning</h2>
+
+      <div class="request">
+        <div class="request__form">
+          <ReservationForm lang={lang} />
+        </div>
+
+        <aside class="request__aside" aria-labelledby="good-to-know-title">
+          <div class="card">
+            <h3 id="good-to-know-title">Good to know</h3>
+            <ul class="notes" role="list">
+              {goodToKnow.map((note) => <li>{note}</li>)}
+            </ul>
+          </div>
+
+          <Photo
+            alt="A busy bar at De Omgekeerde Wereld, with a group of friends raising their glasses under the lamps."
+            brief="Group night at the bar: eight to ten people toasting, glasses in the air, warm candlelight and the mirror behind the bar. Landscape, no flash, grain is fine."
+            ratio="4 / 3"
+            caption="A crowd in den Omgekeerde, on some Thursday or other."
+          />
+        </aside>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--tight">
+    <div class="wrap">
+      <p class="eyebrow">Rather go direct</p>
+      <h2>Call or email, whatever suits</h2>
+
+      <div class="direct">
+        <div class="card direct__card">
+          <h3 class="direct__title">
+            <Icon name="phone" size={20} />
+            {T.callUs}
+          </h3>
+          <p>
+            <a class="direct__big" href={`tel:${site.phoneHref}`}>{site.phone}</a>
+          </p>
+          <p class="direct__note">
+            It is not always quiet behind the bar. If nobody picks up, try again
+            later in the evening or send an email instead.
+          </p>
+        </div>
+
+        <div class="card direct__card">
+          <h3 class="direct__title">
+            <Icon name="mail" size={20} />
+            Email us directly
+          </h3>
+          <ul class="direct__mails" role="list">
+            <li>
+              <a href={`mailto:${site.email.events}`}>{site.email.events}</a>
+              <span class="direct__who">Tristan — events, groups and bookings</span>
+            </li>
+            <li>
+              <a href={`mailto:${site.email.partnerships}`}>{site.email.partnerships}</a>
+              <span class="direct__who">Ran — collaborations and partnerships</span>
+            </li>
+            <li>
+              <a href={`mailto:${site.email.general}`}>{site.email.general}</a>
+              <span class="direct__who">Everything else</span>
+            </li>
+          </ul>
+        </div>
+
+        <div class="card direct__card">
+          <h3 class="direct__title">
+            <Icon name="clock" size={20} />
+            When do we answer?
+          </h3>
+          <p class="direct__note">
+            We read everything ourselves, in between pouring. Usually you will
+            hear back within two days. If a weekend got in the way, give us a
+            little longer. In a hurry? Just call.
+          </p>
+          <p class="direct__note">
+            You can also find us on Instagram —{' '}
+            <a href={site.social.instagram} rel="me noopener">
+              {site.social.instagramHandle}
+            </a>. That is where most of what is on gets posted.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  /* ---- Intro ---- */
+  .intro {
+    display: grid;
+    gap: var(--space-l);
+    margin-block-start: var(--space-m);
+  }
+
+  @media (min-width: 56em) {
+    .intro {
+      grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr);
+      align-items: start;
+      gap: var(--space-xl);
+    }
+  }
+
+  .reserve-cta {
+    margin-block-start: var(--space-m);
+  }
+
+  .lead {
+    font-size: var(--step-1);
+    line-height: var(--leading-snug);
+    color: var(--ink);
+  }
+
+  .walkin {
+    background: var(--bg-raised);
+    border: var(--border-hairline) solid var(--line);
+    border-inline-start: 3px solid var(--accent-text);
+    border-radius: var(--radius-s);
+    padding: var(--space-m);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2xs);
+  }
+
+  .walkin__title {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2xs);
+    font-size: var(--step-1);
+    color: var(--ink);
+  }
+
+  .walkin__body {
+    font-size: var(--step--1);
+    line-height: var(--leading-normal);
+    color: var(--ink-soft);
+  }
+
+  .walkin__links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2xs);
+    font-size: var(--step--1);
+    font-weight: 600;
+  }
+
+  .walkin__links span {
+    color: var(--ink-faint);
+  }
+
+  /* ---- What to tell us ---- */
+  .kinds {
+    list-style: none;
+    padding: 0;
+    margin-block-start: var(--space-m);
+    display: grid;
+    gap: var(--space-s);
+  }
+
+  @media (min-width: 42em) {
+    .kinds {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  .kind {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2xs);
+  }
+
+  .kind__icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.5rem;
+    height: 2.5rem;
+    color: var(--accent-text);
+    background: var(--bg-inset);
+    border: var(--border-hairline) solid var(--line);
+    border-radius: var(--radius-s);
+  }
+
+  .kind__title {
+    font-size: var(--step-1);
+  }
+
+  .kind__body {
+    font-size: var(--step--1);
+    line-height: var(--leading-normal);
+    color: var(--ink-soft);
+  }
+
+  /* ---- The form ---- */
+  .request {
+    display: grid;
+    gap: var(--space-xl);
+    margin-block-start: var(--space-m);
+  }
+
+  @media (min-width: 60em) {
+    .request {
+      grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr);
+      align-items: start;
+      gap: var(--space-2xl);
+    }
+  }
+
+  .request__aside {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-m);
+  }
+
+  .notes {
+    list-style: none;
+    padding: 0;
+    margin-block-start: var(--space-2xs);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2xs);
+    font-size: var(--step--1);
+    line-height: var(--leading-snug);
+    color: var(--ink-soft);
+  }
+
+  .notes li {
+    padding-inline-start: var(--space-s);
+    position: relative;
+  }
+
+  .notes li::before {
+    content: '';
+    position: absolute;
+    inset-block-start: 0.6em;
+    inset-inline-start: 0;
+    width: var(--space-2xs);
+    height: 2px;
+    background: var(--accent-text);
+  }
+
+  /* ---- Call or email ---- */
+  .direct {
+    display: grid;
+    gap: var(--space-s);
+    margin-block-start: var(--space-m);
+  }
+
+  @media (min-width: 52em) {
+    .direct {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+
+  .direct__card {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2xs);
+  }
+
+  .direct__title {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2xs);
+    font-size: var(--step-1);
+  }
+
+  .direct__big {
+    font-family: var(--font-display);
+    font-size: var(--step-2);
+    font-weight: 700;
+    letter-spacing: var(--tracking-tight);
+    text-decoration: none;
+  }
+
+  .direct__note {
+    font-size: var(--step--1);
+    line-height: var(--leading-normal);
+    color: var(--ink-soft);
+  }
+
+  .direct__mails {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2xs);
+  }
+
+  .direct__mails li {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .direct__mails a {
+    font-weight: 600;
+    word-break: break-word;
+  }
+
+  .direct__who {
+    font-size: var(--step--2);
+    color: var(--ink-faint);
+  }
+</style>

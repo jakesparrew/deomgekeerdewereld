@@ -1,0 +1,260 @@
+# ============================================================
+# BEHEERSCHERM (Decap CMS)
+# ------------------------------------------------------------
+# Hiermee kunnen jullie de kaart, de agenda, de uren en het bier
+# van de maand aanpassen zonder ooit een bestand te openen.
+#
+# Instellen: zie het hoofdstuk "Het beheerscherm" in de README.
+# Werkt dit nog niet? Ge kunt de YAML-bestanden in de map content/
+# altijd rechtstreeks aanpassen. Dat is precies hetzelfde.
+# ============================================================
+
+backend:
+  name: git-gateway
+  branch: main
+  commit_messages:
+    create: 'Nieuw item in {{collection}}'
+    update: '{{collection}} aangepast'
+    delete: 'Item uit {{collection}} verwijderd'
+    uploadMedia: 'Foto toegevoegd: {{path}}'
+    deleteMedia: 'Foto verwijderd: {{path}}'
+
+locale: nl
+publish_mode: simple
+
+media_folder: 'public/images'
+public_folder: '/images'
+
+site_url: https://deomgekeerdewereld.be
+display_url: https://deomgekeerdewereld.be
+logo_url: https://deomgekeerdewereld.be/favicon.svg
+
+collections:
+  # ----------------------------------------------------------
+  - name: homepagina
+    label: 'Homepagina & bier van de maand'
+    description: 'Het bier van de maand, de grote foto bovenaan en de zes tegels.'
+    files:
+      - name: highlights
+        label: 'Homepagina'
+        file: 'content/highlights.yaml'
+        fields:
+          - name: hero
+            label: 'Grote foto bovenaan'
+            widget: object
+            fields:
+              - { name: image, label: 'Foto', widget: image, required: false }
+              - { name: alt, label: 'Wat staat er op de foto? (voor blinden en Google)', widget: string }
+              - { name: brief, label: 'Opdracht voor de fotograaf', widget: text, required: false }
+              - { name: headline, label: 'Titel (NL)', widget: string }
+              - { name: headlineEn, label: 'Titel (EN)', widget: string }
+              - { name: lead, label: 'Inleiding (NL)', widget: text }
+              - { name: leadEn, label: 'Inleiding (EN)', widget: text }
+
+          - name: beerOfTheMonth
+            label: 'Bier van de maand'
+            widget: object
+            fields:
+              - { name: name, label: 'Naam', widget: string }
+              - { name: brewery, label: 'Brouwerij', widget: string, required: false }
+              - { name: style, label: 'Stijl', widget: string, required: false }
+              - { name: abv, label: 'Alcohol (%)', widget: number, required: false, value_type: float }
+              - { name: price, label: 'Prijs (€)', widget: number, required: false, value_type: float }
+              - { name: month, label: 'Maand (JJJJ-MM)', widget: string, required: false }
+              - { name: blurb, label: 'Tekstje (NL)', widget: text, required: false }
+              - { name: blurbEn, label: 'Tekstje (EN)', widget: text, required: false }
+
+          - name: tiles
+            label: 'De zes tegels'
+            widget: list
+            summary: '{{fields.label}} — {{fields.value}}'
+            fields:
+              - name: icon
+                label: 'Tekeningetje'
+                widget: select
+                options: [beer, pils, pool, foosball, music, coffee, chess, terrace, cocktail]
+              - { name: label, label: 'Label (NL)', widget: string }
+              - { name: labelEn, label: 'Label (EN)', widget: string }
+              - { name: value, label: 'Grote tekst (NL)', widget: string }
+              - { name: valueEn, label: 'Grote tekst (EN)', widget: string, required: false }
+              - { name: note, label: 'Regeltje eronder (NL)', widget: string, required: false }
+              - { name: noteEn, label: 'Regeltje eronder (EN)', widget: string, required: false }
+              - { name: href, label: 'Link (optioneel)', widget: string, required: false }
+
+  # ----------------------------------------------------------
+  - name: agenda
+    label: 'Agenda'
+    description: 'Concertjes, fiestjes, quizzen. Voorbije events verhuizen vanzelf naar het archief.'
+    files:
+      - name: events
+        label: 'Events'
+        file: 'content/events.yaml'
+        fields:
+          - name: recurring
+            label: 'Elke maand opnieuw'
+            widget: list
+            required: false
+            summary: '{{fields.title}}'
+            fields:
+              - { name: id, label: 'Sleutel (kleine letters, geen spaties)', widget: string }
+              - { name: title, label: 'Titel (NL)', widget: string }
+              - { name: titleEn, label: 'Titel (EN)', widget: string, required: false }
+              - name: type
+                label: 'Soort'
+                widget: select
+                options: [concert, dj, quiz, aperomer, feest, open-air, andere]
+              - { name: rule, label: 'Regel', widget: hidden, default: 'monthly-weekday' }
+              - name: weekday
+                label: 'Welke dag'
+                widget: select
+                options:
+                  - { label: 'Zondag', value: 0 }
+                  - { label: 'Maandag', value: 1 }
+                  - { label: 'Dinsdag', value: 2 }
+                  - { label: 'Woensdag', value: 3 }
+                  - { label: 'Donderdag', value: 4 }
+                  - { label: 'Vrijdag', value: 5 }
+                  - { label: 'Zaterdag', value: 6 }
+              - name: ordinal
+                label: 'De hoeveelste'
+                widget: select
+                options:
+                  - { label: 'Eerste van de maand', value: 1 }
+                  - { label: 'Tweede van de maand', value: 2 }
+                  - { label: 'Derde van de maand', value: 3 }
+                  - { label: 'Laatste van de maand', value: -1 }
+              - { name: time, label: 'Uur (bv. 17:00)', widget: string }
+              - { name: price, label: 'Prijs (€, leeg = gratis)', widget: number, required: false, value_type: float }
+              - { name: description, label: 'Beschrijving (NL)', widget: text, required: false }
+              - { name: descriptionEn, label: 'Beschrijving (EN)', widget: text, required: false }
+              - { name: link, label: 'Link naar Facebook of Instagram', widget: string, required: false }
+
+          - name: events
+            label: 'Losse events'
+            widget: list
+            summary: '{{fields.start}} — {{fields.title}}'
+            fields:
+              - { name: id, label: 'Sleutel (kleine letters, geen spaties)', widget: string }
+              - { name: title, label: 'Titel (NL)', widget: string }
+              - { name: titleEn, label: 'Titel (EN)', widget: string, required: false }
+              - name: start
+                label: 'Begin'
+                widget: datetime
+                date_format: 'YYYY-MM-DD'
+                time_format: 'HH:mm'
+                format: "YYYY-MM-DD[T]HH:mm"
+                picker_utc: true
+              - name: end
+                label: 'Einde'
+                widget: datetime
+                required: false
+                date_format: 'YYYY-MM-DD'
+                time_format: 'HH:mm'
+                format: "YYYY-MM-DD[T]HH:mm"
+                picker_utc: true
+              - name: type
+                label: 'Soort'
+                widget: select
+                options: [concert, dj, quiz, aperomer, feest, open-air, andere]
+              - { name: price, label: 'Prijs (€, leeg of 0 = gratis)', widget: number, required: false, value_type: float }
+              - { name: description, label: 'Beschrijving (NL)', widget: text, required: false }
+              - { name: descriptionEn, label: 'Beschrijving (EN)', widget: text, required: false }
+              - { name: link, label: 'Link naar Facebook of Instagram', widget: string, required: false }
+              - { name: image, label: 'Foto', widget: image, required: false }
+              - { name: imageAlt, label: 'Wat staat er op de foto?', widget: string, required: false }
+
+  # ----------------------------------------------------------
+  - name: uren
+    label: 'Openingsuren'
+    description: 'Bepaalt het "Nu open" bolleke op de site.'
+    files:
+      - name: hours
+        label: 'Uren'
+        file: 'content/hours.yaml'
+        fields:
+          - name: week
+            label: 'Vaste week'
+            widget: object
+            fields:
+              - { name: monday, label: 'Maandag', widget: object, fields: [{ name: open, label: 'Open om', widget: string, required: false }, { name: close, label: 'Toe om', widget: string, required: false }, { name: closed, label: 'Gesloten', widget: boolean, required: false, default: false }] }
+              - { name: tuesday, label: 'Dinsdag', widget: object, fields: [{ name: open, label: 'Open om', widget: string, required: false }, { name: close, label: 'Toe om', widget: string, required: false }, { name: closed, label: 'Gesloten', widget: boolean, required: false, default: false }] }
+              - { name: wednesday, label: 'Woensdag', widget: object, fields: [{ name: open, label: 'Open om', widget: string, required: false }, { name: close, label: 'Toe om', widget: string, required: false }, { name: closed, label: 'Gesloten', widget: boolean, required: false, default: false }] }
+              - { name: thursday, label: 'Donderdag', widget: object, fields: [{ name: open, label: 'Open om', widget: string, required: false }, { name: close, label: 'Toe om', widget: string, required: false }, { name: closed, label: 'Gesloten', widget: boolean, required: false, default: false }] }
+              - { name: friday, label: 'Vrijdag', widget: object, fields: [{ name: open, label: 'Open om', widget: string, required: false }, { name: close, label: 'Toe om', widget: string, required: false }, { name: closed, label: 'Gesloten', widget: boolean, required: false, default: false }] }
+              - { name: saturday, label: 'Zaterdag', widget: object, fields: [{ name: open, label: 'Open om', widget: string, required: false }, { name: close, label: 'Toe om', widget: string, required: false }, { name: closed, label: 'Gesloten', widget: boolean, required: false, default: false }] }
+              - { name: sunday, label: 'Zondag', widget: object, fields: [{ name: open, label: 'Open om', widget: string, required: false }, { name: close, label: 'Toe om', widget: string, required: false }, { name: closed, label: 'Gesloten', widget: boolean, required: false, default: false }] }
+
+          - name: exceptions
+            label: 'Uitzonderingen (feestdagen, verlof)'
+            widget: list
+            required: false
+            summary: '{{fields.date}} — {{fields.label}}'
+            fields:
+              - { name: date, label: 'Datum', widget: datetime, date_format: 'YYYY-MM-DD', time_format: false, format: 'YYYY-MM-DD', picker_utc: true }
+              - { name: label, label: 'Naam (bv. Kerstavond)', widget: string, required: false }
+              - { name: open, label: 'Open om', widget: string, required: false }
+              - { name: close, label: 'Toe om', widget: string, required: false }
+              - { name: closed, label: 'Helemaal gesloten', widget: boolean, required: false, default: false }
+
+          - { name: note, label: 'Zinnetje onder de uren', widget: text, required: false }
+
+  # ----------------------------------------------------------
+  - name: kaart
+    label: 'De kaart'
+    description: 'Alle dranken en hapjes. Let op: elke sleutel moet uniek blijven.'
+    files:
+      - name: menu
+        label: 'Kaart'
+        file: 'content/menu.yaml'
+        fields:
+          - name: intro
+            label: 'Zinnetje bovenaan de kaart'
+            widget: object
+            required: false
+            fields:
+              - { name: nl, label: 'Nederlands', widget: text }
+              - { name: en, label: 'Engels', widget: text }
+          - { name: updated, label: 'Laatst bijgewerkt (JJJJ-MM-DD)', widget: string, required: false }
+          - name: items
+            label: 'Items'
+            widget: list
+            summary: '{{fields.name}} — {{fields.category}}'
+            fields:
+              - { name: id, label: 'Sleutel (uniek, kleine letters met streepjes)', widget: string }
+              - { name: name, label: 'Naam', widget: string }
+              - name: category
+                label: 'Categorie'
+                widget: select
+                options:
+                  - lokaal
+                  - promo
+                  - favos
+                  - bier
+                  - alcoholvrij
+                  - frisdrank
+                  - warm
+                  - spritz
+                  - apero
+                  - cocktails
+                  - rum
+                  - spirits
+                  - shots
+                  - eten
+              - { name: price, label: 'Prijs (€)', widget: number, required: false, value_type: float }
+              - { name: priceLabel, label: 'Of een tekst i.p.v. een prijs', widget: string, required: false }
+              - name: style
+                label: 'Bierstijl'
+                widget: select
+                required: false
+                options: [pils, blond, tripel, trappist, ipa, bruin, wit, fruit, geuze, stout, cider, amber]
+              - { name: abv, label: 'Alcohol (%)', widget: number, required: false, value_type: float }
+              - { name: brewery, label: 'Brouwerij', widget: string, required: false }
+              - { name: note, label: 'Toelichting (NL)', widget: string, required: false }
+              - { name: noteEn, label: 'Toelichting (EN)', widget: string, required: false }
+              - name: tags
+                label: 'Labels'
+                widget: select
+                multiple: true
+                required: false
+                options: [lokaal, promo, favo, trappist, alcoholvrij, op-tap, gents, bier-van-de-maand]
+              - { name: available, label: 'Op voorraad', widget: boolean, required: false, default: true }

@@ -1,0 +1,142 @@
+---
+/**
+ * De duimbalk onderaan op gsm. Vier dingen die iemand op straat nodig heeft:
+ * de kaart, wat er te doen is, de weg, en de telefoon.
+ */
+import { site } from '../data/site';
+import { route, type Lang, type RouteKey } from '../lib/i18n';
+
+interface Props {
+  lang: Lang;
+  active?: RouteKey;
+}
+
+const { lang, active } = Astro.props;
+
+const items = [
+  {
+    key: 'menu' as RouteKey,
+    href: route('menu', lang),
+    label: lang === 'en' ? 'Menu' : 'Kaart',
+    icon: 'glass',
+  },
+  {
+    key: 'agenda' as RouteKey,
+    href: route('agenda', lang),
+    label: lang === 'en' ? "What's on" : 'Agenda',
+    icon: 'note',
+  },
+  {
+    key: null,
+    href: site.maps.google,
+    label: lang === 'en' ? 'Directions' : 'Route',
+    icon: 'pin',
+    external: true,
+  },
+  {
+    key: null,
+    href: `tel:${site.phoneHref}`,
+    label: lang === 'en' ? 'Call' : 'Bellen',
+    icon: 'phone',
+  },
+];
+---
+
+<nav class="dock" aria-label={lang === 'en' ? 'Quick actions' : 'Snelle acties'}>
+  <ul class="dock__list">
+    {
+      items.map((item) => (
+        <li>
+          <a
+            href={item.href}
+            class:list={['dock__link', item.key && active === item.key && 'is-active']}
+            aria-current={item.key && active === item.key ? 'page' : undefined}
+            {...(item.external ? { rel: 'noopener', target: '_blank' } : {})}
+          >
+            <svg class="dock__icon" viewBox="0 0 24 24" aria-hidden="true">
+              {item.icon === 'glass' && (
+                <path
+                  d="M6 3h12l-1.2 5.4A5 5 0 0 1 13 12.2V19h3v2H8v-2h3v-6.8a5 5 0 0 1-3.8-3.8Z"
+                  fill="currentColor"
+                />
+              )}
+              {item.icon === 'note' && (
+                <path
+                  d="M19 3v11.2a3.2 3.2 0 1 1-2-2.97V7.2l-7 1.5v7.5a3.2 3.2 0 1 1-2-2.97V6.1l11-2.4Z"
+                  fill="currentColor"
+                />
+              )}
+              {item.icon === 'pin' && (
+                <path
+                  d="M12 2a7 7 0 0 1 7 7c0 5-7 13-7 13S5 14 5 9a7 7 0 0 1 7-7Zm0 4.6A2.4 2.4 0 1 0 12 11.4 2.4 2.4 0 0 0 12 6.6Z"
+                  fill="currentColor"
+                />
+              )}
+              {item.icon === 'phone' && (
+                <path
+                  d="M7.6 3c.6 0 1.1.4 1.3 1l.9 3a1.4 1.4 0 0 1-.4 1.5L8 9.8a11.6 11.6 0 0 0 6.2 6.2l1.3-1.4a1.4 1.4 0 0 1 1.5-.4l3 .9c.6.2 1 .7 1 1.3V19a2 2 0 0 1-2.2 2A17.5 17.5 0 0 1 3 5.2 2 2 0 0 1 5 3Z"
+                  fill="currentColor"
+                />
+              )}
+            </svg>
+            <span class="dock__label">{item.label}</span>
+          </a>
+        </li>
+      ))
+    }
+  </ul>
+</nav>
+
+<style>
+  .dock {
+    position: fixed;
+    inset-inline: 0;
+    inset-block-end: 0;
+    z-index: 45;
+    background: color-mix(in srgb, var(--bg-raised) 94%, transparent);
+    backdrop-filter: blur(12px);
+    border-block-start: var(--border-hairline) solid var(--line);
+    padding-block-end: env(safe-area-inset-bottom, 0px);
+  }
+
+  @media (min-width: 48em) {
+    .dock {
+      display: none;
+    }
+  }
+
+  .dock__list {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .dock__link {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+    min-height: calc(var(--tap-min) + 0.75rem);
+    padding-block: var(--space-3xs);
+    color: var(--ink-soft);
+    text-decoration: none;
+    font-size: var(--step--2);
+    font-weight: 600;
+  }
+
+  .dock__link.is-active {
+    color: var(--accent-text);
+  }
+
+  .dock__icon {
+    width: 1.35rem;
+    height: 1.35rem;
+  }
+
+  .dock__label {
+    line-height: 1;
+  }
+</style>

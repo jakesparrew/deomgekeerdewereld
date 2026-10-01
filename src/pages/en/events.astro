@@ -1,0 +1,441 @@
+---
+/**
+ * What's on — the English twin of /agenda/.
+ * Same structure, same EventCard, same class names: keep the two files diffable.
+ * The next night out sits at the top. If nothing is planned, we say why
+ * you should drop in anyway.
+ */
+import Base from '../../layouts/Base.astro';
+import EventCard from '../../components/EventCard.astro';
+import Icon from '../../components/Icon.astro';
+import Photo from '../../components/Photo.astro';
+
+import { site } from '../../data/site';
+import { events } from '../../lib/content';
+import { buildAgenda } from '../../lib/events';
+import { euro } from '../../lib/format';
+import { route, strings, type Lang } from '../../lib/i18n';
+
+const lang: Lang = 'en';
+const T = strings(lang);
+
+const { upcoming, past, next, today } = buildAgenda(events, new Date());
+
+const rest = next ? upcoming.slice(1) : upcoming;
+const pastShown = past.slice(0, 12);
+const todayIds = new Set(today.map((e) => e.id));
+
+const description =
+  "What's on in Ghent? Free concerts, DJ nights, quizzes and the Aper’Omer at " +
+  'De Omgekeerde Wereld, right opposite VIERNULVIER. See what is coming up — ' +
+  'open every day from 2pm until late.';
+
+const breadcrumbs = [
+  { name: 'Home', url: route('home', lang) },
+  { name: "What's on", url: route('agenda', lang) },
+];
+
+/** Reasons to drop in when nothing is planned. */
+const reasons = [
+  {
+    icon: 'beer',
+    title: '69 beers and then some',
+    text: `From a pils at ${euro(2.7)} to something you have never tasted before.`,
+  },
+  {
+    icon: 'pool',
+    title: 'Pool on the house',
+    text: `The table costs nothing. Table football is ${euro(0.5)}, chess you play for the honour.`,
+  },
+  {
+    icon: 'music',
+    title: 'Music from the good old days',
+    text: 'Soul, funk, disco, jazz and the odd bit of rock ’n roll. Rarely quiet.',
+  },
+];
+---
+
+<Base
+  title="What's on"
+  description={description}
+  lang={lang}
+  active="agenda"
+  events={upcoming}
+  breadcrumbs={breadcrumbs}
+>
+  <!-- ============ Header ============ -->
+  <section class="section section--tight">
+    <div class="wrap">
+      <p class="eyebrow">Calendar</p>
+      <h1>{T.agendaTitle}</h1>
+      <div class="lede prose">
+        <p>
+          Concerts, DJs, quizzes and the Aper&#8217;Omer: getting in is almost always
+          free and the line-up is rarely predictable. Everything that is already
+          fixed is listed below.
+        </p>
+        <p class="lede__note">
+          Anything that turns up last minute, Tristan puts on Instagram first.
+          Follow us there if you would rather not miss it.
+        </p>
+      </div>
+
+      <p class="lede__actions">
+        <a
+          class="btn btn--primary"
+          href={site.social.instagram}
+          target="_blank"
+          rel="noopener"
+        >
+          {site.social.instagramHandle}
+          <span class="visually-hidden"> on Instagram (opens in a new window)</span>
+        </a>
+        <a class="btn btn--ghost" href={route('menu', lang)}>{T.menuTitle}</a>
+      </p>
+    </div>
+  </section>
+
+  <!-- ============ Coming up ============ -->
+  <section class="section" aria-labelledby="coming-up">
+    <div class="wrap">
+      <p class="eyebrow">On the bill</p>
+      <h2 id="coming-up">{T.upcoming}</h2>
+
+      {
+        next ? (
+          <div class="agenda">
+            <EventCard
+              event={next}
+              lang={lang}
+              variant="featured"
+              isToday={todayIds.has(next.id)}
+            />
+
+            {rest.length > 0 && (
+              <ul class="agenda__list" role="list">
+                {rest.map((event) => (
+                  <li class="agenda__item">
+                    <EventCard event={event} lang={lang} isToday={todayIds.has(event.id)} />
+                  </li>
+                ))}
+              </ul>
+            )}
+
+            <p class="agenda__note">
+              The calendar button opens Google Calendar in a new window. If that does
+              not work, write it on a beer mat &#8212; that has worked for years.
+            </p>
+          </div>
+        ) : (
+          <div class="leeg">
+            <p class="leeg__lead">{T.noEvents}</p>
+
+            <ul class="leeg__reasons" role="list">
+              {reasons.map((reason) => (
+                <li class="leeg__reason">
+                  <span class="leeg__icon">
+                    <Icon name={reason.icon} size={22} />
+                  </span>
+                  <span>
+                    <strong class="leeg__title">{reason.title}</strong>
+                    <span class="leeg__text">{reason.text}</span>
+                  </span>
+                </li>
+              ))}
+            </ul>
+
+            <p class="leeg__actions">
+              <a class="btn btn--primary" href={route('menu', lang)}>
+                {T.menuTitle}
+              </a>
+              <a
+                class="btn btn--ghost"
+                href={site.social.instagram}
+                target="_blank"
+                rel="noopener"
+              >
+                {T.followUs} on Instagram
+                <span class="visually-hidden"> (opens in a new window)</span>
+              </a>
+            </p>
+
+            <Photo
+              alt="The bar at De Omgekeerde Wereld on a quiet evening, with people at the pool table."
+              brief="Atmosphere shot with no event on: the bar by candlelight, someone at the pool table, half-empty glasses. Landscape, warm light."
+              ratio="16 / 9"
+              loading="lazy"
+            />
+          </div>
+        )
+      }
+    </div>
+  </section>
+
+  <!-- ============ Instagram ============ -->
+  <section class="section section--tight" aria-labelledby="insta">
+    <div class="wrap">
+      <div class="insta">
+        <div class="insta__body">
+          <h2 id="insta" class="insta__title">{T.followUs} on Instagram</h2>
+          <p>
+            {T.agendaTitle}? The quickest answer is on Instagram. That is where the
+            posters go up, the last-minute DJs get announced and last night&#8217;s
+            photos end up.
+          </p>
+        </div>
+        <p class="insta__actions">
+          <a
+            class="btn btn--solid"
+            href={site.social.instagram}
+            target="_blank"
+            rel="noopener"
+          >
+            {site.social.instagramHandle}
+            <span class="visually-hidden"> on Instagram (opens in a new window)</span>
+          </a>
+          <a class="btn btn--ghost" href={`mailto:${site.email.events}`}>
+            Want to put something on?
+          </a>
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ Past events ============ -->
+  {
+    pastShown.length > 0 && (
+      <section class="section" aria-labelledby="past-events">
+        <div class="wrap">
+          <p class="eyebrow">The archive</p>
+          <h2 id="past-events">{T.pastEvents}</h2>
+          <p class="verleden__lead">
+            Missed one? That&#8217;s a pity. They usually come back around.
+          </p>
+
+          <details class="verleden">
+            <summary class="verleden__summary">
+              <span>
+                Show what has been ({pastShown.length})
+              </span>
+            </summary>
+
+            <ul class="verleden__list" role="list">
+              {pastShown.map((event) => (
+                <li>
+                  <EventCard event={event} lang={lang} variant="past" />
+                </li>
+              ))}
+            </ul>
+          </details>
+        </div>
+      </section>
+    )
+  }
+</Base>
+
+<style>
+  /* ---- Header ---- */
+  .lede {
+    margin-block-start: var(--space-s);
+    color: var(--ink-soft);
+  }
+
+  .lede__note {
+    color: var(--ink-faint);
+  }
+
+  .lede__actions,
+  .leeg__actions,
+  .insta__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2xs) var(--space-s);
+    margin-block-start: var(--space-m);
+  }
+
+  /* ---- Coming up ---- */
+  .agenda {
+    margin-block-start: var(--space-l);
+  }
+
+  .agenda__list {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-m);
+    margin-block-start: var(--space-m);
+    padding: 0;
+    list-style: none;
+  }
+
+  @media (min-width: 52em) {
+    .agenda__list {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  .agenda__item {
+    display: flex;
+  }
+
+  .agenda__item > :global(*) {
+    width: 100%;
+  }
+
+  .agenda__note {
+    max-width: var(--measure);
+    margin-block-start: var(--space-m);
+    font-size: var(--step--1);
+    color: var(--ink-faint);
+  }
+
+  /* ---- Nothing planned ---- */
+  .leeg {
+    margin-block-start: var(--space-l);
+    padding: var(--space-l);
+    background: var(--bg-raised);
+    border: var(--border-hairline) solid var(--line);
+    border-radius: var(--radius-m);
+  }
+
+  .leeg__lead {
+    max-width: var(--measure);
+    font-family: var(--font-display);
+    font-size: var(--step-2);
+    line-height: var(--leading-snug);
+    letter-spacing: var(--tracking-tight);
+  }
+
+  .leeg__reasons {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-m);
+    margin-block-start: var(--space-l);
+    padding: 0;
+    list-style: none;
+  }
+
+  @media (min-width: 46em) {
+    .leeg__reasons {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  .leeg__reason {
+    display: flex;
+    gap: var(--space-xs);
+    align-items: flex-start;
+  }
+
+  .leeg__icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex: none;
+    width: 2.75rem;
+    height: 2.75rem;
+    color: var(--accent-text);
+    background: var(--bg-inset);
+    border: var(--border-hairline) solid var(--line-strong);
+    border-radius: var(--radius-s);
+  }
+
+  .leeg__title {
+    display: block;
+    font-family: var(--font-display);
+    font-size: var(--step-1);
+    line-height: var(--leading-snug);
+  }
+
+  .leeg__text {
+    display: block;
+    margin-block-start: var(--space-3xs);
+    font-size: var(--step--1);
+    color: var(--ink-soft);
+  }
+
+  /* Photo renders its own <figure>; hence :global. */
+  .leeg :global(.photo) {
+    margin-block-start: var(--space-l);
+  }
+
+  /* ---- Instagram ---- */
+  .insta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-m);
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--space-l);
+    background: var(--bg-inset);
+    border: var(--border-hairline) solid var(--line-strong);
+    border-radius: var(--radius-m);
+  }
+
+  .insta__body {
+    max-width: var(--measure);
+    color: var(--ink-soft);
+  }
+
+  .insta__title {
+    margin-block-end: var(--space-2xs);
+    font-size: var(--step-2);
+    color: var(--ink);
+  }
+
+  .insta__actions {
+    margin-block-start: 0;
+  }
+
+  /* ---- Past events ---- */
+  .verleden__lead {
+    margin-block-start: var(--space-2xs);
+    color: var(--ink-faint);
+  }
+
+  .verleden {
+    margin-block-start: var(--space-m);
+    border-block-start: var(--border-hairline) solid var(--line);
+  }
+
+  .verleden__summary {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2xs);
+    min-height: var(--tap-min);
+    font-size: var(--step--1);
+    font-weight: 700;
+    letter-spacing: var(--tracking-wide);
+    text-transform: uppercase;
+    color: var(--accent-text);
+    cursor: pointer;
+    list-style: none;
+  }
+
+  .verleden__summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .verleden__summary::after {
+    content: '';
+    width: 0.5rem;
+    height: 0.5rem;
+    border-right: 2px solid currentColor;
+    border-bottom: 2px solid currentColor;
+    transform: translateY(-2px) rotate(45deg);
+    transition: transform var(--dur-fast) var(--ease-out);
+  }
+
+  .verleden[open] .verleden__summary::after {
+    transform: translateY(2px) rotate(225deg);
+  }
+
+  .verleden__summary:hover {
+    color: var(--ink);
+  }
+
+  .verleden__list {
+    margin-block-start: var(--space-xs);
+    padding: 0;
+    list-style: none;
+  }
+</style>

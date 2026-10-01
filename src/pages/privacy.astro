@@ -1,0 +1,583 @@
+---
+/**
+ * Privacybeleid. Nederlandstalig, gedeeld door beide taalversies
+ * (route('privacy', lang) geeft /privacy/ voor zowel nl als en).
+ *
+ * Alles wat hier staat moet waar zijn. Wat nog niet bevestigd is, staat als
+ * HTML-commentaar in de code en niet op de pagina: de hostingpartij, de
+ * formulierpartij en de camera's. Zie AANLEVEREN.md, blok 3.
+ */
+import Base from '../layouts/Base.astro';
+import { site, addressLine } from '../data/site';
+import { route } from '../lib/i18n';
+
+const lang = 'nl' as const;
+
+const updated = '10 september 2026';
+const updatedIso = '2026-09-10';
+
+const mailGeneral = site.email.general;
+const mailEvents = site.email.events;
+const mailPartners = site.email.partnerships;
+
+const toc = [
+  { id: 'wie', label: 'Wie houdt hier gegevens bij?' },
+  { id: 'wat', label: 'Wat houden we bij, en waarom?' },
+  { id: 'bewaren', label: 'Hoe lang houden we het bij?' },
+  { id: 'niet', label: 'Wat we niet doen' },
+  { id: 'derden', label: 'Links naar anderen' },
+  { id: 'rechten', label: 'Uw rechten' },
+  { id: 'klacht', label: 'Niet akkoord? Klacht indienen' },
+  { id: 'wijzigingen', label: 'Wijzigingen aan deze tekst' },
+];
+
+const breadcrumbs = [
+  { name: 'Start', url: route('home', lang) },
+  { name: 'Privacybeleid', url: route('privacy', lang) },
+];
+
+const mailtoGeneral = `mailto:${mailGeneral}`;
+const mailtoEvents = `mailto:${mailEvents}`;
+const mailtoPartners = `mailto:${mailPartners}`;
+const telHref = `tel:${site.phoneHref}`;
+---
+
+<Base
+  title="Privacybeleid"
+  description="Wat den Omgekeerde met uw gegevens doet, en vooral wat niet. Geen cookiebanner, geen advertentietrackers, geen doorverkoop."
+  lang={lang}
+  active="privacy"
+  noindex={false}
+  breadcrumbs={breadcrumbs}
+>
+  <section class="section">
+    <div class="wrap wrap--text prose">
+      <nav class="crumbs" aria-label="Kruimelpad">
+        <ol>
+          <li><a href={route('home', lang)}>Start</a></li>
+          <li aria-current="page">Privacybeleid</li>
+        </ol>
+      </nav>
+
+      <p class="eyebrow">Het kleine lettertje</p>
+      <h1>Privacybeleid</h1>
+
+      <p class="lead">
+        Wij zijn een café, geen datakantoor. We houden zo weinig mogelijk bij, en
+        wat we bijhouden staat hieronder. In gewone taal, zodat ge het aan de toog
+        kunt navertellen.
+      </p>
+
+      <p class="note-en" lang="en">
+        <strong>In English?</strong> This page is in Dutch. An English version is available
+        on request — send a mail to <a href={mailtoGeneral}>{mailGeneral}</a> and we
+        will send it over.
+      </p>
+
+      <p class="updated">
+        Laatst bijgewerkt op <time datetime={updatedIso}>{updated}</time>.
+      </p>
+
+      <nav class="toc" aria-labelledby="toc-titel">
+        <h2 id="toc-titel" class="toc__title">Op deze pagina</h2>
+        <ol>
+          {
+            toc.map((item) => (
+              <li>
+                <a href={`#${item.id}`}>{item.label}</a>
+              </li>
+            ))
+          }
+        </ol>
+      </nav>
+
+      <h2 id="wie">Wie houdt hier gegevens bij?</h2>
+      <p>
+        De verwerkingsverantwoordelijke — degene die beslist wat er met uw gegevens
+        gebeurt en er ook op aanspreekbaar is — is:
+      </p>
+      <address class="ident">
+        <strong>{site.legalName}</strong><br />
+        {addressLine}, {site.address.countryName}<br />
+        btw {site.vat}<br />
+        <a href={mailtoGeneral}>{mailGeneral}</a><br />
+        <a href={telHref}>{site.phone}</a>
+      </address>
+      <p>
+        We hebben geen functionaris voor gegevensbescherming (DPO). Dat is voor een
+        zaak van onze grootte niet verplicht. Al uw vragen over privacy komen dus
+        gewoon binnen op <a href={mailtoGeneral}>{mailGeneral}</a>.
+      </p>
+
+      <h2 id="wat">Wat houden we bij, en waarom?</h2>
+      <p>
+        Vier dingen. Meer niet. Per stuk staat er wat we krijgen, waarom we het
+        mogen hebben, en wie het nog te zien krijgt.
+      </p>
+
+      <h3 id="wat-nieuwsbrief">1. De nieuwsbrief</h3>
+      <ul>
+        <li>
+          <strong>Wat:</strong> uw e-mailadres, en het moment waarop ge u inschreef —
+          de datum en het uur van uw toestemming. Meer niet: geen naam, geen leeftijd,
+          geen adres.
+        </li>
+        <li>
+          <strong>Waarom:</strong> om u af en toe te laten weten wat er te doen is.
+        </li>
+        <li>
+          <strong>Rechtsgrond:</strong> uw toestemming — artikel 6.1.a van de AVG
+          (GDPR). Ge geeft ze zelf door het vakje aan te vinken, en ge kunt ze op elk
+          moment weer intrekken.
+        </li>
+        <li>
+          <strong>Wie helpt ons:</strong> Brevo (vroeger Sendinblue), gevestigd in
+          Parijs, Frankrijk. Zij versturen de mails in onze opdracht en zitten dus
+          binnen de Europese Unie. Zij mogen uw adres nergens anders voor gebruiken.
+        </li>
+        <li>
+          <strong>Hoe lang:</strong> tot ge u uitschrijft. Daarna gaat uw adres eruit.
+        </li>
+        <li>
+          <strong>Uitschrijven:</strong> onderaan elke mail staat een uitschrijflink.
+          Eén klik en het is gedaan. Ge kunt ook gewoon mailen naar
+          <a href={mailtoGeneral}>{mailGeneral}</a>.
+        </li>
+      </ul>
+
+      <h3 id="wat-formulier">2. Het reservatie- en samenwerkingsformulier</h3>
+      <ul>
+        <li>
+          <strong>Wat:</strong> uw naam, uw e-mailadres, en als ge ze invult ook uw
+          telefoonnummer, de datum die ge in gedachten hebt, met hoeveel ge zijt, en
+          uw bericht. De velden die niet verplicht zijn, moet ge echt niet invullen.
+        </li>
+        <li>
+          <strong>Waarom:</strong> om u te kunnen antwoorden en om uw feestje,
+          verjaardag, concert of voorstel geregeld te krijgen.
+        </li>
+        <li>
+          <strong>Rechtsgrond:</strong> voor een reservatie of een boeking is dat
+          artikel 6.1.b van de AVG — maatregelen die we op uw eigen verzoek nemen vóór
+          er een afspraak is. Voor vragen over samenwerkingen is het ons
+          gerechtvaardigd belang (artikel 6.1.f): wie ons een voorstel stuurt, verwacht
+          een antwoord.
+        </li>
+        <li>
+          <strong>Wie leest het:</strong> de zaakvoerders. Boekingen en events komen
+          binnen bij <a href={mailtoEvents}>{mailEvents}</a>, voorstellen voor
+          samenwerking bij <a href={mailtoPartners}>{mailPartners}</a>.
+        </li>
+        <li>
+          <strong>Hoe lang:</strong> niet langer dan 12 maanden na het event, of na het
+          laatste contact als er geen event van gekomen is.
+        </li>
+      </ul>
+      <!--
+        NOG IN TE VULLEN. Vervang de zin hieronder door de naam en de
+        vestigingsplaats van de partij die het formulier afhandelt, bijvoorbeeld:
+        "Het formulier wordt technisch afgehandeld door Netlify, Inc. Die partij
+        verwerkt de gegevens buiten de Europese Economische Ruimte, op basis van
+        de standaardcontractbepalingen van de Europese Commissie."
+        Zie AANLEVEREN.md, blok 3.
+      -->
+      <p>
+        Het formulier wordt technisch afgehandeld door de partij die deze website host
+        en de berichten doorstuurt. Wie dat is en waar die gevestigd is, kunt ge bij ons
+        opvragen via <a href={`mailto:${site.email.general}`}>{site.email.general}</a>.
+      </p>
+
+      <h3 id="wat-statistieken">3. De bezoekcijfers van deze website</h3>
+      <ul>
+        <li>
+          <strong>Wat:</strong> we gebruiken Plausible Analytics. Plausible zegt van
+          zichzelf dat het geen cookies zet, geen persoonsgegevens opslaat, niemand
+          over verschillende websites heen volgt, en enkel geaggregeerde cijfers
+          toont: hoeveel mensen op de agenda kijken, van welke pagina ze kwamen. De
+          servers van Plausible staan in de Europese Unie.
+        </li>
+        <li>
+          <strong>Waarom:</strong> om te weten welke pagina's gelezen worden en welke
+          niemand vindt. Anders schrijven we in het ijle.
+        </li>
+        <li>
+          <strong>Rechtsgrond:</strong> ons gerechtvaardigd belang — artikel 6.1.f van
+          de AVG.
+        </li>
+      </ul>
+      <p>
+        <strong>En dit is precies waarom ge hier geen cookiepopup krijgt.</strong> Een
+        toestemmingsbanner is nodig zodra een site cookies plaatst of persoonsgegevens
+        opslaat om bezoek te meten. Hier gebeurt geen van beide. Dus vragen we u niets
+        en moet ge niets wegklikken. Meer daarover op de
+        <a href={route('cookies', lang)}>cookiepagina</a>.
+      </p>
+
+      <h3 id="wat-hosting">4. De server waar deze site op staat</h3>
+      <ul>
+        <li>
+          <strong>Wat:</strong> deze website bestaat uit vaste bestanden die door een
+          hostingpartij worden uitgeserveerd. Zoals elke webserver houdt die
+          kortstondig technische logs bij: uw IP-adres, welke browser ge gebruikt, het
+          tijdstip, en welke pagina ge opvroeg.
+        </li>
+        <li>
+          <strong>Waarom:</strong> om de site recht te houden, storingen te vinden en
+          misbruik tegen te gaan. Wij kijken daar niet in om te zien wie er langskomt.
+        </li>
+        <li>
+          <strong>Rechtsgrond:</strong> gerechtvaardigd belang — artikel 6.1.f van de
+          AVG, namelijk de veiligheid van de site.
+        </li>
+      </ul>
+      <!--
+        NOG IN TE VULLEN. Zet hier de naam en de vestigingsplaats van de
+        hostingpartij en hoe lang die haar serverlogs bewaart. Dat staat in het
+        contract of in de verwerkersovereenkomst. Zie AANLEVEREN.md, blok 3.
+      -->
+      <p>
+        Die logs worden kort bijgehouden en daarna gewist. Wilt ge weten wie deze site
+        host en hoe lang die partij haar logs bewaart, vraag het gerust via
+        <a href={`mailto:${site.email.general}`}>{site.email.general}</a>.
+      </p>
+
+      <h2 id="bewaren">Hoe lang houden we het bij?</h2>
+      <div class="table-scroll">
+        <table>
+          <caption class="visually-hidden">Bewaartermijnen per soort gegeven</caption>
+          <thead>
+            <tr>
+              <th scope="col">Wat</th>
+              <th scope="col">Hoe lang</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th scope="row">E-mailadres voor de nieuwsbrief</th>
+              <td>Tot ge u uitschrijft</td>
+            </tr>
+            <tr>
+              <th scope="row">Bericht via het formulier</th>
+              <td>Max. 12 maanden na het event of na het laatste contact</td>
+            </tr>
+            <tr>
+              <th scope="row">Technische serverlogs</th>
+              <td>Kort, bij de hostingpartij — zie hierboven</td>
+            </tr>
+            <tr>
+              <th scope="row">Bezoekcijfers</th>
+              <td>Enkel als geaggregeerd cijfer, niet te herleiden tot een persoon</td>
+            </tr>
+            <tr>
+              <th scope="row">Camerabeelden, als die er zijn</th>
+              <td>Max. 1 maand — zie hieronder</td>
+            </tr>
+            <tr>
+              <th scope="row">Facturen en boekhouding</th>
+              <td>7 jaar, omdat de fiscus dat zo wil</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h2 id="niet">Wat we niet doen</h2>
+      <p>Dit is even belangrijk als de rest, dus we schrijven het uit:</p>
+      <ul>
+        <li>Geen advertentiecookies. Geen enkele.</li>
+        <li>Geen profielen van bezoekers, geen scores, geen gis naar wie ge zijt.</li>
+        <li>
+          Geen verkoop of doorgeven van uw gegevens. Aan niemand. Zeker niet aan
+          adverteerders of datahandelaars.
+        </li>
+        <li>
+          Geen trackingpixels van sociale media — geen Meta Pixel, geen Google
+          Analytics, geen TikTok-pixel.
+        </li>
+        <li>Geen beslissingen over u die een computer alleen neemt.</li>
+        <li>Geen nieuwsbrief naar iemand die er zelf niet om gevraagd heeft.</li>
+      </ul>
+
+      <h2 id="derden">Links naar anderen</h2>
+      <p>
+        Op deze site staan links en knoppen die u bij iemand anders brengen. Vanaf dat
+        ge doorklikt geldt hun privacybeleid, en niet meer het onze:
+      </p>
+      <ul>
+        <li><strong>OrderBilly</strong> — de bestelkaart met de volledige prijzen.</li>
+        <li>
+          <strong>Instagram</strong> en <strong>Facebook</strong> (Meta) — daar kondigen
+          we onze events aan.
+        </li>
+        <li><strong>OpenStreetMap</strong> — het kaartje bij ons adres.</li>
+        <li>
+          <strong>SuperHoreca</strong> — het boekingsvenster waarin ge een tafel
+          vastlegt.
+        </li>
+        <li><strong>De hostingpartij</strong> — die het formulier ontvangt en doorstuurt.</li>
+      </ul>
+      <p>
+        <strong>Over dat reserveren.</strong> Net als bij het kaartje wordt er niks van
+        SuperHoreca geladen zolang ge er niet op klikt. Duwt ge op
+        <em>Reserveer een tafel</em>, dan halen we op dat moment pas hun script op en
+        opent hun boekingsvenster. Wat ge daarin invult — uw naam, uw e-mailadres, het
+        aantal personen en het uur — gaat rechtstreeks naar SuperHoreca, die de
+        reservatie voor ons bijhoudt. Wij zien enkel de reservatie zelf. Vanaf dat ge
+        dat venster opent, geldt ook hun privacybeleid. Wilt ge liever niets online
+        invullen, bel dan gewoon naar <a href={telHref}>{site.phone}</a>.
+      </p>
+      <p>
+        <strong>Over dat kaartje.</strong> De kaart wordt niet geladen wanneer ge de pagina
+        opent. Ge ziet een stilstaand beeld met een knop erop. Pas als ge zelf op die
+        knop klikt, wordt er contact gelegd met OpenStreetMap, en ziet die de gegevens
+        die uw browser altijd meestuurt, zoals uw IP-adres. Klikt ge niet, dan gaat er
+        niks naar OpenStreetMap. Wilt ge helemaal geen kaart, gebruik dan de knop
+        Route — die opent uw eigen kaartenapp.
+      </p>
+
+      <!--
+        ============================================================
+        CAMERA'S — BEWUST NIET GEPUBLICEERD
+        ------------------------------------------------------------
+        Hangen er bewakingscamera's in de zaak? Dan MOET dat hier staan,
+        en moet het kopje ook terug in de inhoudsopgave bovenaan (het item
+        met id 'cameras'). Hangen er geen, laat dan alles zoals het nu is.
+        Wij beweren liever niets dan iets dat niet klopt.
+
+        Kant-en-klare tekst, enkel te controleren op juistheid:
+
+        <h2 id="cameras">Camera-bewaking in de zaak</h2>
+        <p>
+          Er hangen bewakingscamera's in het café. Aan de deur hangt het wettelijke
+          pictogram, zodat ge het weet vóór ge binnenkomt. De beelden dienen enkel
+          voor de veiligheid van klanten en personeel, en om diefstal of vandalisme
+          vast te stellen. Ze worden niet gebruikt om personeel te controleren, en ze
+          komen nooit op sociale media. Enkel de zaakvoerders kunnen ze bekijken.
+          Volgens de Belgische camerawet van 21 maart 2007 worden de beelden maximaal
+          één maand bewaard, tenzij ze nodig zijn als bewijs bij een misdrijf of een
+          incident. De camera's zijn aangegeven bij de politie via het aangifteloket
+          van de overheid. Wilt ge weten of ge op beeld staat, mail dan naar
+          algemeen@deomgekeerdewereld.be met de dag en het uur waarop ge hier waart.
+        </p>
+
+        Zie AANLEVEREN.md, blok 3.
+        ============================================================
+      -->
+
+      <h2 id="rechten">Uw rechten</h2>
+      <p>
+        De AVG geeft u een pak rechten, en die gelden ook tegenover een café. Ge hebt
+        recht op:
+      </p>
+      <ul>
+        <li><strong>Inzage</strong> — vragen welke gegevens we van u hebben.</li>
+        <li>
+          <strong>Verbetering</strong> — een verkeerd geschreven naam of een oud
+          e-mailadres laten rechtzetten.
+        </li>
+        <li>
+          <strong>Wissen</strong> — vragen dat we alles verwijderen, tenzij de wet ons
+          verplicht het te bewaren, zoals bij facturen.
+        </li>
+        <li>
+          <strong>Beperking</strong> — vragen dat we uw gegevens even laten liggen,
+          bijvoorbeeld terwijl er discussie is over de juistheid.
+        </li>
+        <li>
+          <strong>Bezwaar</strong> — u verzetten tegen verwerking die op ons
+          gerechtvaardigd belang steunt.
+        </li>
+        <li>
+          <strong>Overdraagbaarheid</strong> — de gegevens die ge ons zelf gaf in een
+          gangbaar bestand krijgen.
+        </li>
+        <li>
+          <strong>Toestemming intrekken</strong> — op elk moment, zonder uitleg. Wat we
+          daarvóór met uw toestemming deden blijft geldig, maar we stoppen ermee.
+        </li>
+      </ul>
+      <p>
+        <strong>Hoe doet ge dat?</strong> Eén mail naar
+        <a href={mailtoGeneral}>{mailGeneral}</a> volstaat. Schrijf erbij wat ge wilt en
+        welk e-mailadres of welke naam we moeten zoeken. We antwoorden binnen de maand.
+        Is uw vraag ingewikkeld, dan mogen we die termijn met twee maanden verlengen,
+        maar dan laten we u dat binnen die eerste maand weten. Soms moeten we zeker
+        weten dat gij het zijt — dan vragen we iets kleins ter controle, nooit meer dan
+        nodig. Het kost u niets.
+      </p>
+
+      <h2 id="klacht">Niet akkoord? Klacht indienen</h2>
+      <p>
+        Vindt ge dat we het verkeerd aanpakken, zeg het ons gerust eerst — dat is
+        meestal het snelst opgelost. Maar ge hebt altijd het recht om rechtstreeks
+        klacht in te dienen bij de Belgische toezichthouder:
+      </p>
+      <address class="ident">
+        <strong>Gegevensbeschermingsautoriteit</strong><br />
+        Drukpersstraat 35, 1000 Brussel<br />
+        <a href="mailto:contact@apd-gba.be">contact@apd-gba.be</a><br />
+        <a href="https://www.gegevensbeschermingsautoriteit.be" rel="noopener noreferrer"
+          >www.gegevensbeschermingsautoriteit.be</a
+        >
+      </address>
+
+      <h2 id="wijzigingen">Wijzigingen aan deze tekst</h2>
+      <p>
+        Verandert er iets aan wat we bijhouden, of aan wie ons daarbij helpt, dan
+        passen we deze pagina aan en zetten we er een nieuwe datum bij. Gaat het over
+        iets waarvoor ge ons toestemming gaf, dan vragen we die opnieuw. We doen niet
+        aan stille aanpassingen.
+      </p>
+
+      <p class="updated updated--foot">
+        Laatst bijgewerkt op <time datetime={updatedIso}>{updated}</time>. Vragen?
+        <a href={mailtoGeneral}>{mailGeneral}</a> of <a href={telHref}>{site.phone}</a>.
+      </p>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .crumbs {
+    font-size: var(--step--1);
+    color: var(--ink-faint);
+    margin-block-end: var(--space-m);
+  }
+
+  .crumbs ol {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2xs);
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .crumbs li + li::before {
+    content: '/';
+    margin-inline-end: var(--space-2xs);
+    color: var(--line-strong);
+  }
+
+  .lead {
+    font-size: var(--step-1);
+    line-height: var(--leading-snug);
+    color: var(--ink-soft);
+    margin-block-start: var(--space-s);
+  }
+
+  .note-en {
+    margin-block-start: var(--space-m);
+    padding: var(--space-s);
+    border-inline-start: 3px solid var(--line-strong);
+    background: var(--bg-raised);
+    border-radius: var(--radius-s);
+    font-size: var(--step--1);
+    color: var(--ink-soft);
+  }
+
+  .updated {
+    margin-block-start: var(--space-m);
+    font-size: var(--step--1);
+    color: var(--ink-faint);
+  }
+
+  .updated--foot {
+    margin-block-start: var(--space-xl);
+    padding-block-start: var(--space-s);
+    border-block-start: var(--border-hairline) solid var(--line);
+  }
+
+  .toc {
+    margin-block-start: var(--space-l);
+    padding: var(--space-m);
+    background: var(--bg-raised);
+    border: var(--border-hairline) solid var(--line);
+    border-radius: var(--radius-m);
+  }
+
+  .toc__title {
+    font-size: var(--step-1);
+    margin: 0 0 var(--space-2xs);
+  }
+
+  .toc ol {
+    margin: 0;
+    padding-inline-start: var(--space-m);
+    font-size: var(--step--1);
+  }
+
+  .toc a {
+    display: inline-flex;
+    align-items: center;
+    min-height: var(--tap-min);
+    padding-block: var(--space-3xs);
+  }
+
+  .ident {
+    margin-block: var(--space-s);
+    padding: var(--space-s);
+    border-inline-start: 3px solid var(--accent-text);
+    background: var(--bg-inset);
+    border-radius: var(--radius-s);
+    font-style: normal;
+    line-height: var(--leading-loose);
+  }
+
+  .placeholder {
+    margin-block: var(--space-s);
+    padding: var(--space-s);
+    border: 2px dashed var(--amber);
+    border-radius: var(--radius-s);
+    background: var(--bg-inset);
+    color: var(--ink-soft);
+    font-size: var(--step--1);
+  }
+
+  .placeholder strong {
+    color: var(--amber);
+  }
+
+  .table-scroll {
+    overflow-x: auto;
+    margin-block: var(--space-m);
+    border: var(--border-hairline) solid var(--line);
+    border-radius: var(--radius-m);
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: var(--step--1);
+  }
+
+  th,
+  td {
+    padding: var(--space-2xs) var(--space-s);
+    border-block-end: var(--border-hairline) solid var(--line);
+    vertical-align: top;
+    text-align: start;
+  }
+
+  thead th {
+    background: var(--bg-inset);
+    font-size: var(--step--2);
+    font-weight: 600;
+    letter-spacing: var(--tracking-wide);
+    text-transform: uppercase;
+    color: var(--ink-soft);
+  }
+
+  tbody tr:last-child th,
+  tbody tr:last-child td {
+    border-block-end: 0;
+  }
+
+  tbody th {
+    font-weight: 600;
+    color: var(--ink);
+  }
+
+  tbody td {
+    color: var(--ink-soft);
+  }
+</style>
