@@ -81,7 +81,7 @@ export const site = {
    *      toont de site geen reserveerknop maar gewoon telefoon en mail.
    */
   reservations: {
-    embed: 'http://localhost:3000/embed/omgekeerde-wereld-bv',
+    embed: 'https://superhoreca.app/embed/omgekeerde-wereld-bv',
     orgName: 'Omgekeerde Wereld BV',
   },
 
