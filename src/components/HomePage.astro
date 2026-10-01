@@ -327,7 +327,7 @@ const weekday = (start: string) => formatDate(start, lang).split(' ')[0];
   }
 
   .hero__body {
-    padding-block: var(--space-xl) var(--space-l);
+    padding-block: var(--space-l) var(--space-l);
   }
 
   .hero__kicker {
@@ -345,7 +345,9 @@ const weekday = (start: string) => formatDate(start, lang).split(' ')[0];
 
   .hero__title {
     margin: 0;
-    font-size: clamp(3.4rem, 15.5vw, 16rem);
+    /* Begrensd door breedte én hoogte: drie regels mogen nooit hoger worden
+       dan het scherm, anders vallen de knoppen eronder. */
+    font-size: clamp(3.4rem, min(15.5vw, 17svh), 16rem);
     font-stretch: var(--stretch-poster);
     font-weight: 900;
     line-height: 0.82;

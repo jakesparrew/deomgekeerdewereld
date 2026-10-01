@@ -22,8 +22,8 @@ const otherUrl = alternateUrl(pathname, otherLang);
 <header class="site-header" data-site-header>
   <div class="wrap wrap--wide site-header__inner">
     <a class="brand" href={route('home', lang)}>
-      <SunLogo size={36} />
-      <span class="brand__naam">De Omgekeerde Wereld</span>
+      <SunLogo size={40} />
+      <span class="brand__naam" role="img" aria-label="De Omgekeerde Wereld"></span>
     </a>
 
     <button
@@ -161,13 +161,14 @@ const otherUrl = alternateUrl(pathname, otherLang);
     flex: none;
   }
 
+  /* Het echte logotype, in de schreefletter van het huis. */
   .brand__naam {
-    font-size: 1.05rem;
-    font-stretch: 68%;
-    font-weight: 900;
-    letter-spacing: 0.01em;
-    text-transform: uppercase;
-    line-height: 1;
+    display: block;
+    height: 2.6rem;
+    aspect-ratio: 544 / 211;
+    background: var(--amber);
+    -webkit-mask: url('/images/wordmark.png') no-repeat left center / contain;
+    mask: url('/images/wordmark.png') no-repeat left center / contain;
   }
 
   @media (max-width: 22em) {
