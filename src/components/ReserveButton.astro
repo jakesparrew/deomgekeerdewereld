@@ -26,9 +26,13 @@ interface Props {
   class?: string;
   /** 'table' = tafel reserveren, 'event' = event of bovenzaal aanvragen */
   kind?: 'table' | 'event';
+  /** Zonder de uitlegregel eronder, voor op een gekleurd vlak. */
+  bare?: boolean;
+  /** Vervangt de standaard knopkleur. */
+  buttonClass?: string;
 }
 
-const { lang, variant = 'primary', label, class: className = '', kind = 'table' } = Astro.props;
+const { lang, variant = 'primary', label, class: className = '', kind = 'table', bare = false, buttonClass } = Astro.props;
 const en = lang === 'en';
 
 const isEvent = kind === 'event';
@@ -47,7 +51,7 @@ const fallback = isEvent ? `mailto:${site.email.events}` : `tel:${site.phoneHref
     <span class:list={['reserve', className]}>
       <button
         type="button"
-        class:list={['btn', variant === 'primary' ? 'btn--primary' : 'btn--ghost']}
+        class:list={['btn', buttonClass ?? (variant === 'primary' ? 'btn--primary' : 'btn--ghost')]}
         data-supershift-book
         data-embed={embed}
         data-api={isEvent ? 'SuperHorecaEnquiry' : 'SuperHoreca'}
@@ -57,7 +61,7 @@ const fallback = isEvent ? `mailto:${site.email.events}` : `tel:${site.phoneHref
         <Icon name={isEvent ? 'music' : 'clock'} size={18} />
         <span data-reserve-label>{text}</span>
       </button>
-      <span class="reserve__note">
+      <span class="reserve__note" hidden={bare}>
         {
           en
             ? `Opens a ${isEvent ? 'request form' : 'booking window'} from SuperHoreca. Nothing is loaded until you click.`
@@ -68,13 +72,13 @@ const fallback = isEvent ? `mailto:${site.email.events}` : `tel:${site.phoneHref
   ) : (
     <span class:list={['reserve', className]}>
       <a
-        class:list={['btn', variant === 'primary' ? 'btn--primary' : 'btn--ghost']}
+        class:list={['btn', buttonClass ?? (variant === 'primary' ? 'btn--primary' : 'btn--ghost')]}
         href={`tel:${site.phoneHref}`}
       >
         <Icon name="phone" size={18} />
         {en ? 'Call to book' : 'Bel om te reserveren'}
       </a>
-      <span class="reserve__note">
+      <span class="reserve__note" hidden={bare}>
         {
           en
             ? 'Online booking is not switched on yet. Ring us and we will sort it out.'

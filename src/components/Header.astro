@@ -107,7 +107,7 @@ const otherUrl = alternateUrl(pathname, otherLang);
   });
 
   // Sluit het paneel zodra het scherm breed genoeg is voor de gewone balk.
-  const wide = window.matchMedia('(min-width: 60em)');
+  const wide = window.matchMedia('(min-width: 75em)');
   wide.addEventListener('change', (e) => {
     if (e.matches) setOpen(false);
   });
@@ -179,7 +179,7 @@ const otherUrl = alternateUrl(pathname, otherLang);
 
   /* ---- Navigatie ---- */
   /* nav-een-rij: links en knoppen naast elkaar, niet onder elkaar. */
-  @media (min-width: 60em) {
+  @media (min-width: 75em) {
     .nav {
       display: flex;
       align-items: center;
@@ -199,6 +199,7 @@ const otherUrl = alternateUrl(pathname, otherLang);
 
   .nav__link {
     display: inline-block;
+    white-space: nowrap;
     padding: var(--space-3xs) var(--space-2xs);
     font-family: var(--font-body);
     font-size: 0.72rem;
@@ -290,7 +291,7 @@ const otherUrl = alternateUrl(pathname, otherLang);
   }
 
   /* ---- Klein scherm ---- */
-  @media (max-width: 59.99em) {
+  @media (max-width: 74.99em) {
     /* MET JavaScript: een knop die een paneel opent.
        ZONDER JavaScript: de navigatie staat er gewoon, uitgeklapt.
        Vandaar dat alles wat verbergt achter [data-js] hangt. */

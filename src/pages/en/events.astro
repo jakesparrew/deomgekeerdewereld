@@ -6,6 +6,7 @@
  * you should drop in anyway.
  */
 import Base from '../../layouts/Base.astro';
+import ReserveButton from '../../components/ReserveButton.astro';
 import EventCard from '../../components/EventCard.astro';
 import Icon from '../../components/Icon.astro';
 import Photo from '../../components/Photo.astro';
@@ -168,6 +169,15 @@ const reasons = [
           </div>
         )
       }
+    </div>
+  </section>
+
+  <!-- ============ Zelf een event ============ -->
+  <section class="section section--tight zelf-event">
+    <div class="wrap zelf-event__inner">
+      <h2 class="zelf-event__titel">Hosting something yourself?</h2>
+      <p class="zelf-event__tekst">Birthday, club night or party: request your date for the upstairs or the bar.</p>
+      <ReserveButton lang={lang} kind="event" bare />
     </div>
   </section>
 
@@ -437,5 +447,23 @@ const reasons = [
     margin-block-start: var(--space-xs);
     padding: 0;
     list-style: none;
+  }
+
+  .zelf-event__inner {
+    display: grid;
+    gap: var(--space-s);
+    justify-items: start;
+    padding: var(--space-l);
+    border: 2px solid var(--accent);
+    border-radius: var(--radius-m);
+  }
+
+  .zelf-event__titel {
+    margin: 0;
+  }
+
+  .zelf-event__tekst {
+    font-size: var(--step-1);
+    max-width: 40ch;
   }
 </style>

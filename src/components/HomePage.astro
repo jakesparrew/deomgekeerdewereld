@@ -8,6 +8,7 @@
  */
 import Base from '../layouts/Base.astro';
 import OpenStatus from './OpenStatus.astro';
+import ReserveButton from './ReserveButton.astro';
 
 import { site } from '../data/site';
 import { highlights, events, menu } from '../lib/content';
@@ -275,9 +276,10 @@ const weekday = (start: string) => formatDate(start, lang).split(' ')[0];
               : 'Tweede verdiep, eigen pooltafel en kicker. Voor verjaardagen, clubavonden en kleine fuiven.'
           }
         </p>
-        <a class="btn boven__btn" href={route('upstairs', lang)}>
-          {en ? 'Ask for a date' : 'Vraag een datum aan'}
-        </a>
+        <div class="boven__knoppen">
+          <ReserveButton lang={lang} kind="event" bare buttonClass="boven__btn" />
+          <a class="boven__meer" href={route('upstairs', lang)}>{en ? 'About the upstairs' : 'Meer over de bovenzaal'} →</a>
+        </div>
       </div>
     </div>
   </section>
@@ -820,13 +822,25 @@ const weekday = (start: string) => formatDate(start, lang).split(' ')[0];
     max-width: 34ch;
   }
 
-  .boven__btn {
+  .boven__knoppen {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-s);
+  }
+
+  .boven__meer {
+    font-weight: 700;
+    color: var(--amber-ink);
+  }
+
+  :global(.boven__btn) {
     background: var(--amber-ink);
     color: var(--amber);
     border-color: var(--amber-ink);
   }
 
-  .boven__btn:hover {
+  :global(.boven__btn:hover) {
     background: transparent;
     color: var(--amber-ink);
   }
