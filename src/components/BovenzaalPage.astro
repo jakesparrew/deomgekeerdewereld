@@ -9,7 +9,7 @@
 import Base from '../layouts/Base.astro';
 import Icon from './Icon.astro';
 import Photo from './Photo.astro';
-import ReservationForm from './ReservationForm.astro';
+import ReserveButton from './ReserveButton.astro';
 
 import { site } from '../data/site';
 import { bovenzaal } from '../lib/content';
@@ -238,13 +238,13 @@ const toonPrijs = prijs.toon && typeof prijs.vanaf === 'number';
       <p class="aanvraag__lead">
         {
           en
-            ? 'This goes straight to Tristan. Say which date, roughly how many of you, and what you have in mind.'
-            : 'Dit gaat rechtstreeks naar Tristan. Zeg welke datum, ongeveer met hoeveel ge zijt, en wat ge van plan zijt.'
+            ? 'Pick a date, say roughly how many of you there are and what you have in mind. We get back to you.'
+            : 'Kies een datum, zeg ongeveer met hoeveel ge zijt en wat ge van plan zijt. Wij laten iets weten.'
         }
       </p>
 
       <div class="aanvraag">
-        <ReservationForm lang={lang} preselect="bovenzaal" />
+        <ReserveButton lang={lang} kind="event" />
       </div>
     </div>
   </section>

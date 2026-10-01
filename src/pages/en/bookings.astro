@@ -139,6 +139,11 @@ const goodToKnow = [
       <p class="eyebrow">Drop us a line</p>
       <h2>Tell us what you are planning</h2>
 
+      <div class="event-cta">
+        <p class="event-cta__tekst">A birthday, club night or party with us? Request it directly.</p>
+        <ReserveButton lang={lang} kind="event" />
+      </div>
+
       <div class="request">
         <div class="request__form">
           <ReservationForm lang={lang} />
@@ -244,6 +249,20 @@ const goodToKnow = [
 
   .reserve-cta {
     margin-block-start: var(--space-m);
+  }
+
+  .event-cta {
+    display: grid;
+    gap: var(--space-s);
+    margin-block: var(--space-m) var(--space-l);
+    padding: var(--space-m);
+    border: 2px solid var(--accent);
+    border-radius: var(--radius-m);
+  }
+
+  .event-cta__tekst {
+    font-size: var(--step-1);
+    font-weight: 600;
   }
 
   .lead {

@@ -82,6 +82,8 @@ export const site = {
    */
   reservations: {
     embed: 'https://superhoreca.app/embed/omgekeerde-wereld-bv',
+    /** Aanvraagformulier voor events en het huren van de bovenzaal. */
+    enquiry: 'https://superhoreca.app/embed/omgekeerde-wereld-bv/enquiry',
     orgName: 'Omgekeerde Wereld BV',
   },
 

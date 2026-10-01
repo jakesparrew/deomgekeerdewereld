@@ -24,13 +24,22 @@ interface Props {
   variant?: 'primary' | 'ghost';
   label?: string;
   class?: string;
+  /** 'table' = tafel reserveren, 'event' = event of bovenzaal aanvragen */
+  kind?: 'table' | 'event';
 }
 
-const { lang, variant = 'primary', label, class: className = '' } = Astro.props;
+const { lang, variant = 'primary', label, class: className = '', kind = 'table' } = Astro.props;
 const en = lang === 'en';
 
-const ready = reservationsReady();
-const text = label ?? (en ? 'Book a table' : 'Reserveer een tafel');
+const isEvent = kind === 'event';
+const ready = isEvent ? Boolean(site.reservations.enquiry) : reservationsReady();
+const text =
+  label ??
+  (isEvent
+    ? en ? 'Plan your event here' : 'Vraag uw event aan'
+    : en ? 'Book a table' : 'Reserveer een tafel');
+const embed = isEvent ? site.reservations.enquiry : site.reservations.embed;
+const fallback = isEvent ? `mailto:${site.email.events}` : `tel:${site.phoneHref}`;
 ---
 
 {
@@ -40,18 +49,19 @@ const text = label ?? (en ? 'Book a table' : 'Reserveer een tafel');
         type="button"
         class:list={['btn', variant === 'primary' ? 'btn--primary' : 'btn--ghost']}
         data-supershift-book
-        data-embed={site.reservations.embed}
-        data-fallback={`tel:${site.phoneHref}`}
+        data-embed={embed}
+        data-api={isEvent ? 'SuperHorecaEnquiry' : 'SuperHoreca'}
+        data-fallback={fallback}
         data-busy-label={en ? 'One moment…' : 'Momentje…'}
       >
-        <Icon name="clock" size={18} />
+        <Icon name={isEvent ? 'music' : 'clock'} size={18} />
         <span data-reserve-label>{text}</span>
       </button>
       <span class="reserve__note">
         {
           en
-            ? 'Opens a booking window from SuperHoreca. Nothing is loaded until you click.'
-            : 'Opent een boekingsvenster van SuperHoreca. Er wordt niks geladen tot ge klikt.'
+            ? `Opens a ${isEvent ? 'request form' : 'booking window'} from SuperHoreca. Nothing is loaded until you click.`
+            : `Opent een ${isEvent ? 'aanvraagformulier' : 'boekingsvenster'} van SuperHoreca. Er wordt niks geladen tot ge klikt.`
         }
       </span>
     </span>
@@ -85,19 +95,19 @@ const text = label ?? (en ? 'Book a table' : 'Reserveer een tafel');
     close: () => void;
   }
 
-  declare global {
-    interface Window {
-      SuperHoreca?: SuperHorecaApi;
-    }
-  }
+  type ApiName = 'SuperHoreca' | 'SuperHorecaEnquiry';
+  const apiOf = (name: ApiName) =>
+    (window as unknown as Record<string, SuperHorecaApi | undefined>)[name];
 
-  let loading: Promise<SuperHorecaApi> | null = null;
+  const loading = new Map<string, Promise<SuperHorecaApi>>();
 
-  function loadEmbed(src: string): Promise<SuperHorecaApi> {
-    if (window.SuperHoreca) return Promise.resolve(window.SuperHoreca);
-    if (loading) return loading;
+  function loadEmbed(src: string, name: ApiName): Promise<SuperHorecaApi> {
+    const ready = apiOf(name);
+    if (ready) return Promise.resolve(ready);
+    const busy = loading.get(src);
+    if (busy) return busy;
 
-    loading = new Promise((resolve, reject) => {
+    const promise: Promise<SuperHorecaApi> = new Promise((resolve, reject) => {
       const script = document.createElement('script');
       script.src = src;
       script.async = true;
@@ -109,7 +119,8 @@ const text = label ?? (en ? 'Book a table' : 'Reserveer een tafel');
 
       script.addEventListener('load', () => {
         window.clearTimeout(timer);
-        if (window.SuperHoreca) resolve(window.SuperHoreca);
+        const api = apiOf(name);
+        if (api) resolve(api);
         else reject(new Error('SuperHoreca heeft zich niet aangemeld'));
       });
 
@@ -121,7 +132,9 @@ const text = label ?? (en ? 'Book a table' : 'Reserveer een tafel');
       document.head.appendChild(script);
     });
 
-    return loading;
+    loading.set(src, promise);
+    promise.catch(() => loading.delete(src));
+    return promise;
   }
 
   for (const button of document.querySelectorAll<HTMLButtonElement>(
@@ -139,7 +152,8 @@ const text = label ?? (en ? 'Book a table' : 'Reserveer een tafel');
       if (labelEl) labelEl.textContent = busy;
 
       try {
-        const api = await loadEmbed(src);
+        const name = (button.dataset.api as ApiName) ?? 'SuperHoreca';
+        const api = await loadEmbed(src, name);
         api.open();
       } catch (error) {
         // Niet stilvallen: stuur ze naar de telefoon.
