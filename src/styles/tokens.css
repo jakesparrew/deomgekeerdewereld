@@ -1,42 +1,48 @@
 /* ============================================================
    DE OMGEKEERDE WERELD — design tokens
    ------------------------------------------------------------
-   One place, two worlds. "Nacht" (default) is the candlelit bar.
-   "Dag" is the sunny terrace. Every colour pair below is checked
-   against WCAG AA (>= 4.5:1 for body text, >= 3:1 for large text
-   and UI borders).
+   Een studentencafé dat 's nachts leeft. De kleuren komen uit de
+   foto's: zwarte nacht, het rode neon van de Duvel boven de deur,
+   het roze clublicht, en het gele zonnetje dat overal hangt.
+
+   Eén letterfamilie, Archivo, met een breedte-as. Smal en zwaar
+   voor de affiche-titels, gewoon voor de lopende tekst. Zo doen
+   venues als Paradiso, Elsewhere en Charlatan het ook: grote
+   smalle kapitalen, één luide kleur, het programma vooraan.
    ============================================================ */
 
 :root {
-  /* ---- Type families (only two, ever) ---- */
-  /* Garamond, zoals het logotype en de geschilderde letters boven de deur.
-     Inter dient enkel nog voor klein bedieningswerk: knoppen, labels, uren. */
-  --font-display: 'EB Garamond Variable', 'EB Garamond', Garamond, Georgia, serif;
-  --font-text: 'EB Garamond Variable', 'EB Garamond', Garamond, Georgia, serif;
-  --font-body: 'Inter Variable', 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  /* ---- Letters ---- */
+  --font-display: 'Archivo Variable', 'Archivo', 'Arial Narrow', system-ui, sans-serif;
+  --font-text: 'Archivo Variable', 'Archivo', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-body: 'Archivo Variable', 'Archivo', system-ui, -apple-system, 'Segoe UI', sans-serif;
 
-  /* ---- Fluid type scale (1.25 ratio, 320px -> 1240px) ---- */
-  --step--2: clamp(0.69rem, 0.67rem + 0.11vw, 0.75rem);
-  --step--1: clamp(0.83rem, 0.79rem + 0.22vw, 0.94rem);
-  --step-0: clamp(1rem, 0.95rem + 0.24vw, 1.125rem);
-  --step-1: clamp(1.2rem, 1.11rem + 0.44vw, 1.44rem);
-  --step-2: clamp(1.44rem, 1.29rem + 0.76vw, 1.84rem);
-  --step-3: clamp(1.73rem, 1.49rem + 1.2vw, 2.36rem);
-  --step-4: clamp(1.9rem, 1.55rem + 1.7vw, 2.9rem);
-  --step-5: clamp(2.3rem, 1.8rem + 2.6vw, 3.7rem);
-  --step-6: clamp(2.7rem, 2rem + 3.6vw, 4.6rem);
+  /* Breedte van de affiche-letters: 62% is het smalste wat Archivo kan. */
+  --stretch-poster: 62%;
+  --stretch-head: 72%;
 
-  --leading-tight: 1.06;
+  /* ---- Schaal ---- */
+  --step--2: clamp(0.72rem, 0.7rem + 0.1vw, 0.78rem);
+  --step--1: clamp(0.84rem, 0.8rem + 0.2vw, 0.94rem);
+  --step-0: clamp(1rem, 0.96rem + 0.2vw, 1.1rem);
+  --step-1: clamp(1.2rem, 1.1rem + 0.5vw, 1.45rem);
+  --step-2: clamp(1.5rem, 1.3rem + 1vw, 2.1rem);
+  --step-3: clamp(2rem, 1.6rem + 2vw, 3.2rem);
+  --step-4: clamp(2.6rem, 2rem + 3vw, 4.6rem);
+  --step-5: clamp(3.2rem, 2.3rem + 4.5vw, 6.5rem);
+  --step-6: clamp(4rem, 2.6rem + 7vw, 9.5rem);
+
+  --leading-tight: 0.88;
   --leading-snug: 1.25;
-  --leading-normal: 1.6;
-  --leading-loose: 1.75;
+  --leading-normal: 1.55;
+  --leading-loose: 1.7;
 
   --tracking-tight: -0.01em;
   --tracking-normal: 0;
-  --tracking-wide: 0.06em;
-  --tracking-wider: 0.14em;
+  --tracking-wide: 0.08em;
+  --tracking-wider: 0.16em;
 
-  /* ---- Spacing scale (4px base) ---- */
+  /* ---- Ruimte ---- */
   --space-3xs: 0.25rem;
   --space-2xs: 0.5rem;
   --space-xs: 0.75rem;
@@ -44,33 +50,29 @@
   --space-m: 1.5rem;
   --space-l: 2rem;
   --space-xl: 3rem;
-  --space-2xl: 4rem;
-  --space-3xl: 6rem;
-  --space-4xl: 8rem;
+  --space-2xl: 4.5rem;
+  --space-3xl: 6.5rem;
+  --space-4xl: 9rem;
 
-  /* ---- Layout ---- */
-  --measure: 62ch;
-  --width-wide: 78rem;
-  --width-page: 68rem;
+  --measure: 60ch;
+  --width-wide: 90rem;
+  --width-page: 72rem;
   --width-text: 42rem;
-  --gutter: clamp(1rem, 4vw, 2.5rem);
+  --gutter: clamp(1rem, 4vw, 3rem);
 
-  /* ---- Radii: a brown cafe is not a rounded SaaS app ---- */
   --radius-xs: 2px;
   --radius-s: 4px;
   --radius-m: 8px;
   --radius-pill: 999px;
 
-  /* ---- Motion ---- */
   --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
   --dur-fast: 120ms;
   --dur-base: 220ms;
   --dur-slow: 420ms;
 
-  /* ---- Elevation (warm shadows, never neutral grey) ---- */
-  --shadow-s: 0 1px 2px rgb(42 28 16 / 0.12);
-  --shadow-m: 0 4px 16px -4px rgb(42 28 16 / 0.18);
-  --shadow-l: 0 18px 48px -12px rgb(42 28 16 / 0.28);
+  --shadow-s: 0 1px 2px rgb(0 0 0 / 0.5);
+  --shadow-m: 0 6px 20px -6px rgb(0 0 0 / 0.6);
+  --shadow-l: 0 24px 60px -16px rgb(0 0 0 / 0.75);
 
   --border-hairline: 1px;
   --focus-ring-width: 3px;
@@ -78,116 +80,94 @@
 }
 
 /* ============================================================
-   DAG — standaard: crème papier, bruine inkt, goud
-   ------------------------------------------------------------
-   De kleuren komen van de gevel en van binnen: crème pleister,
-   de gouden zon boven de deur, donker hout, het rode poollaken.
-   De logobestanden van het huis heten niet voor niks zwart_goud.
-   ============================================================ */
-:root[data-theme='dag'] {
-  color-scheme: light;
-
-  --bg: #f3ecdc;
-  --bg-raised: #faf5e9;
-  --bg-sunk: #e9dfcb;
-  --bg-inset: #eee6d3;
-
-  --ink: #2a1c10;
-  --ink-soft: #4f3d2b;
-  --ink-faint: #6b5741;
-
-  --accent: #c4912b;
-  --accent-text: #7a5210;
-  --accent-ink: #21160b;
-  --accent-dim: #a97a1f;
-
-  --amber: #96490a;
-  --amber-ink: #fff8ec;
-
-  --rose: #8a1a2b;
-  --rose-deep: #8a1a2b;
-
-  --wood: #6b4a2a;
-  --wood-soft: #d9cdb4;
-
-  --line: #ddd2bb;
-  --line-strong: #8c7a5c;
-
-  --focus-ring: #2a1c10;
-  --selection-bg: #c4912b;
-  --selection-ink: #21160b;
-
-  --open-dot: #1a7f37;
-  --closed-dot: #8a1a2b;
-
-  --hero-scrim: linear-gradient(180deg, rgb(243 236 220 / 0.2) 0%, rgb(243 236 220 / 0.92) 100%);
-  --hero-scrim-side: linear-gradient(100deg, rgb(243 236 220 / 0.88) 0%, rgb(243 236 220 / 0.18) 72%);
-  --grain-opacity: 0.05;
-}
-
-/* ============================================================
-   NACHT — notenhout en kaarslicht, geen zwart en geen neon
+   NACHT — de enige echte. Zwart, neon, zon.
    ============================================================ */
 :root,
 :root[data-theme='nacht'] {
   color-scheme: dark;
 
-  --bg: #17100a;
-  --bg-raised: #221710;
-  --bg-sunk: #0f0a06;
-  --bg-inset: #2e2116;
+  --bg: #0c0a09;
+  --bg-raised: #171311;
+  --bg-sunk: #070605;
+  --bg-inset: #1f1a17;
 
-  --ink: #f3ecdc;
-  --ink-soft: #cfc3ac;
-  --ink-faint: #a39580;
+  --ink: #f6f0e6;
+  --ink-soft: #cfc6b8;
+  --ink-faint: #9b9183;
 
-  --accent: #d9a93f;
-  --accent-text: #e0b352;
-  --accent-ink: #1c140d;
-  --accent-dim: #b98c2c;
+  /* Het neon: tussen het Duvel-rood en het roze clublicht. */
+  --accent: #ff3d5a;
+  --accent-text: #ff5a73;
+  --accent-ink: #0c0a09;
+  --accent-dim: #e8264a;
 
-  --amber: #ffb347;
-  --amber-ink: #241703;
+  /* Het zonnetje. */
+  --amber: #ffd23f;
+  --amber-ink: #0c0a09;
 
   --rose: #ff8fa3;
-  --rose-deep: #8a1a2b;
+  --rose-deep: #ff3d5a;
 
   --wood: #6b4a2a;
-  --wood-soft: #3a2817;
+  --wood-soft: #2a211b;
 
-  --line: #33261a;
-  --line-strong: #85705a;
+  --line: #2a2420;
+  --line-strong: #7d7168;
 
-  --focus-ring: #e0b352;
-  --selection-bg: #d9a93f;
-  --selection-ink: #1c140d;
+  --focus-ring: #ffd23f;
+  --selection-bg: #ff3d5a;
+  --selection-ink: #0c0a09;
 
-  --open-dot: #6ee787;
-  --closed-dot: #ff8fa3;
+  --open-dot: #4ade80;
+  --closed-dot: #ff5a73;
 
-  --hero-scrim: linear-gradient(180deg, rgb(28 20 13 / 0.35) 0%, rgb(28 20 13 / 0.95) 100%);
-  --hero-scrim-side: linear-gradient(100deg, rgb(28 20 13 / 0.8) 0%, rgb(28 20 13 / 0.12) 72%);
-  --grain-opacity: 0.05;
+  --hero-scrim: linear-gradient(180deg, rgb(12 10 9 / 0.1) 0%, rgb(12 10 9 / 0.92) 100%);
+  --hero-scrim-side: linear-gradient(90deg, rgb(12 10 9 / 0.6) 0%, rgb(12 10 9 / 0) 70%);
+  --shot-veil: linear-gradient(180deg, rgb(12 10 9 / 0.15) 0%, rgb(12 10 9 / 0.35) 50%, rgb(12 10 9 / 0.95) 100%);
+  --grain-opacity: 0.06;
 }
 
-/* De sluier over de gevelfoto. Warm en diep, zodat de letters erop leesbaar
-   zijn zonder dat de foto verdwijnt. Precies wat 1806, GEM en Qissa doen. */
-:root {
-  --shot-veil: linear-gradient(
-      180deg,
-      rgb(23 16 10 / 0.62) 0%,
-      rgb(23 16 10 / 0.72) 45%,
-      rgb(23 16 10 / 0.94) 100%
-    ),
-    linear-gradient(0deg, rgb(64 34 12 / 0.35), rgb(64 34 12 / 0.35));
-}
-
+/* ============================================================
+   DAG — lichte variant, voor wie ze aanzet. Zelfde neon, op papier.
+   ============================================================ */
 :root[data-theme='dag'] {
-  --shot-veil: linear-gradient(
-      180deg,
-      rgb(20 13 8 / 0.42) 0%,
-      rgb(20 13 8 / 0.55) 45%,
-      rgb(20 13 8 / 0.8) 100%
-    ),
-    linear-gradient(0deg, rgb(64 34 12 / 0.2), rgb(64 34 12 / 0.2));
+  color-scheme: light;
+
+  --bg: #f6f0e6;
+  --bg-raised: #fffaf2;
+  --bg-sunk: #ebe3d5;
+  --bg-inset: #efe8dc;
+
+  --ink: #0c0a09;
+  --ink-soft: #3a332d;
+  --ink-faint: #5f564d;
+
+  --accent: #d1123a;
+  --accent-text: #b30f32;
+  --accent-ink: #ffffff;
+  --accent-dim: #a80d2e;
+
+  --amber: #8a6400;
+  --amber-ink: #ffffff;
+
+  --rose: #a3134a;
+  --rose-deep: #d1123a;
+
+  --wood: #6b4a2a;
+  --wood-soft: #d9cdb4;
+
+  --line: #d8cfc0;
+  --line-strong: #857868;
+
+  --focus-ring: #0c0a09;
+  --selection-bg: #d1123a;
+  --selection-ink: #ffffff;
+
+  --open-dot: #1a7f37;
+  --closed-dot: #b30f32;
+
+  --hero-scrim: linear-gradient(180deg, rgb(12 10 9 / 0.1) 0%, rgb(12 10 9 / 0.92) 100%);
+  --hero-scrim-side: linear-gradient(90deg, rgb(12 10 9 / 0.6) 0%, rgb(12 10 9 / 0) 70%);
+  --shot-veil: linear-gradient(180deg, rgb(12 10 9 / 0.15) 0%, rgb(12 10 9 / 0.35) 50%, rgb(12 10 9 / 0.95) 100%);
+  --grain-opacity: 0.04;
 }

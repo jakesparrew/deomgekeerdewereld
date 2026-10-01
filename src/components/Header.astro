@@ -1,7 +1,6 @@
 ---
 import SunLogo from './SunLogo.astro';
 import OpenStatus from './OpenStatus.astro';
-import ThemeToggle from './ThemeToggle.astro';
 import { site } from '../data/site';
 import { NAV, route, alternateUrl, strings, type Lang, type RouteKey } from '../lib/i18n';
 
@@ -23,8 +22,8 @@ const otherUrl = alternateUrl(pathname, otherLang);
 <header class="site-header" data-site-header>
   <div class="wrap wrap--wide site-header__inner">
     <a class="brand" href={route('home', lang)}>
-      <SunLogo size={44} />
-      <span class="visually-hidden">De Omgekeerde Wereld</span>
+      <SunLogo size={36} />
+      <span class="brand__naam">De Omgekeerde Wereld</span>
     </a>
 
     <button
@@ -57,7 +56,6 @@ const otherUrl = alternateUrl(pathname, otherLang);
 
       <div class="nav__aside">
         <OpenStatus lang={lang} variant="pill" class="nav__status" />
-        <ThemeToggle lang={lang} />
         <a class="nav__lang" href={otherUrl} hreflang={otherLang} lang={otherLang}>
           {otherLang === 'en' ? 'EN' : 'NL'}
         </a>
@@ -161,6 +159,21 @@ const otherUrl = alternateUrl(pathname, otherLang);
     text-decoration: none;
     color: var(--ink);
     flex: none;
+  }
+
+  .brand__naam {
+    font-size: 1.05rem;
+    font-stretch: 68%;
+    font-weight: 900;
+    letter-spacing: 0.01em;
+    text-transform: uppercase;
+    line-height: 1;
+  }
+
+  @media (max-width: 22em) {
+    .brand__naam {
+      display: none;
+    }
   }
 
   /* ---- Navigatie ---- */
