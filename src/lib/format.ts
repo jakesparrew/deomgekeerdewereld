@@ -130,11 +130,12 @@ export function toIsoWithBrusselsOffset(value: string): string {
   return `${stamp}${normalised}`;
 }
 
-/** "gratis" of "€ 5,00" */
+/** "gratis" of "€ 5,00". Leeg als de prijs niet gekend is (`null`). */
 export function priceLabel(
-  price: number | undefined,
+  price: number | null | undefined,
   lang: 'nl' | 'en',
 ): string {
+  if (price === null) return '';
   if (!price) return lang === 'en' ? 'Free' : 'Gratis';
   return euro(price);
 }

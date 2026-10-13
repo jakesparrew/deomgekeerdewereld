@@ -1,0 +1,36 @@
+# Bouwt de site elk uur opnieuw, zodat nieuwe events uit SuperHoreca vanzelf
+# op de agenda verschijnen. Dat gaat via een "deploy hook" van Vercel.
+#
+# Eén keer instellen:
+#   1. Vercel → het project → Settings → Git → Deploy Hooks:
+#      maak er een aan (naam "superhoreca", branch "main") en kopieer de URL.
+#   2. GitHub → het project → Settings → Secrets and variables → Actions →
+#      New repository secret: naam VERCEL_DEPLOY_HOOK, waarde de URL van stap 1.
+#
+# Zolang dat geheim er niet is, doet deze taak niets.
+# Meteen opnieuw bouwen kan ook: Actions → SuperHoreca-agenda → Run workflow.
+
+name: SuperHoreca-agenda
+
+on:
+  schedule:
+    - cron: '7 * * * *'
+  workflow_dispatch:
+
+permissions: {}
+
+jobs:
+  rebuild:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Site opnieuw laten bouwen
+        env:
+          HOOK: ${{ secrets.VERCEL_DEPLOY_HOOK }}
+        run: |
+          if [ -z "$HOOK" ]; then
+            echo "::notice::Geen VERCEL_DEPLOY_HOOK ingesteld; er wordt niets gebouwd."
+            exit 0
+          fi
+          curl --fail --silent --show-error -X POST "$HOOK" > /dev/null
+          echo "Nieuwe build aangevraagd."

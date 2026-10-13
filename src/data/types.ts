@@ -141,6 +141,7 @@ export const EVENT_TYPES = [
   'aperomer',
   'feest',
   'open-air',
+  'sport',
   'andere',
 ] as const;
 
@@ -153,6 +154,7 @@ export const EVENT_TYPE_LABELS: Record<EventType, { nl: string; en: string }> = 
   aperomer: { nl: "Aper'Omer", en: "Aper'Omer" },
   feest: { nl: 'Fiestje', en: 'Party' },
   'open-air': { nl: 'Open air', en: 'Open air' },
+  sport: { nl: 'Sport', en: 'Sport' },
   andere: { nl: 'Andere', en: 'Other' },
 };
 
@@ -164,8 +166,11 @@ export interface EventEntry {
   start: string;
   end?: string;
   type: EventType;
-  /** Prijs in euro. 0 of weglaten = gratis. */
-  price?: number;
+  /**
+   * Prijs in euro. 0 of weglaten = gratis.
+   * `null` = niet gekend (events uit SuperHoreca): dan toont de site geen prijs.
+   */
+  price?: number | null;
   description?: string;
   descriptionEn?: string;
   /** Facebook-event of Instagram-post. */

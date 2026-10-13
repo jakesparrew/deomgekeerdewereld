@@ -144,9 +144,13 @@ const newWindowNote =
 
     <p class="ec__tags">
       <span class="ec__pill">{typeLabel}</span>
-      <span class:list={['ec__pill', 'ec__pill--price', isFree && 'ec__pill--free']}>
-        {price}
-      </span>
+      {
+        price && (
+          <span class:list={['ec__pill', 'ec__pill--price', isFree && 'ec__pill--free']}>
+            {price}
+          </span>
+        )
+      }
       {
         isToday && variant !== 'featured' && (
           <span class="ec__pill ec__pill--now">{todayLabel}</span>

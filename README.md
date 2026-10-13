@@ -94,6 +94,20 @@ de maand, tot in het oneindige. Ge moet die dus nooit opnieuw invoeren. Wilt ge 
 zo één, kopieer dan dat blok en pas `weekday` (0 = zondag, 5 = vrijdag) en `ordinal`
 (1 = de eerste, -1 = de laatste) aan.
 
+### Events uit SuperHoreca
+
+Alles wat in SuperHoreca op de publieke agenda staat, komt vanzelf mee op de site. Ge moet
+het dus niet nog eens in `events.yaml` zetten. De site haalt die lijst op wanneer ze
+bouwt, en een geplande taak laat ze elk uur opnieuw bouwen. Een nieuw event staat er dus
+binnen het uur.
+
+SuperHoreca kent geen prijs en geen Engelse tekst, dus die tonen we niet. Wilt ge dat wel,
+zet het event dan ook in `events.yaml`, met dezelfde datum en exact dezelfde titel. Dan
+wint de versie uit `events.yaml`.
+
+Het elk uur bouwen moet één keer aangezet worden. Hoe, staat bovenaan in
+`.github/workflows/superhoreca-sync.yml`.
+
 ---
 
 ## Het bier van de maand veranderen

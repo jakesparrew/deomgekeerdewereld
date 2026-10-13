@@ -101,7 +101,11 @@ export function buildAgenda(data: EventsData, now: Date): AgendaSplit {
   const generated = (data.recurring ?? []).flatMap((r) => expandRecurring(r, now));
 
   // Een handmatig event wint altijd van een gegenereerd event op dezelfde dag.
-  const manualDays = new Set(manual.map((e) => e.start.slice(0, 10)));
+  // Events uit SuperHoreca niet: een voetbalmatch op de eerste vrijdag mag
+  // Aper'Omer niet van de agenda duwen.
+  const manualDays = new Set(
+    manual.filter((e) => !e.id.startsWith('superhoreca-')).map((e) => e.start.slice(0, 10)),
+  );
   const all = [
     ...manual,
     ...generated.filter((g) => !manualDays.has(g.start.slice(0, 10))),

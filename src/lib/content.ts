@@ -13,6 +13,7 @@ import eventsRaw from '../../content/events.yaml?raw';
 import highlightsRaw from '../../content/highlights.yaml?raw';
 import bovenzaalRaw from '../../content/bovenzaal.yaml?raw';
 
+import { superhorecaEvents } from './superhoreca';
 import type { HoursConfig } from './hours';
 import type { BovenzaalData, EventsData, HighlightsData, MenuData } from '../data/types';
 
@@ -34,7 +35,7 @@ function parse<T>(raw: string, name: string): T {
 
 export const hours = parse<HoursConfig>(hoursRaw, 'hours');
 export const menu = parse<MenuData>(menuRaw, 'menu');
-export const events = parse<EventsData>(eventsRaw, 'events');
+const eventsYaml = parse<EventsData>(eventsRaw, 'events');
 export const highlights = parse<HighlightsData>(highlightsRaw, 'highlights');
 export const bovenzaal = parse<BovenzaalData>(bovenzaalRaw, 'bovenzaal');
 
@@ -57,12 +58,12 @@ for (const item of menu.items) {
   }
 }
 
-if (!Array.isArray(events.events)) {
+if (!Array.isArray(eventsYaml.events)) {
   throw new Error('content/events.yaml mist de lijst "events".');
 }
 
 const seenEventIds = new Set<string>();
-for (const entry of events.events) {
+for (const entry of eventsYaml.events) {
   if (!entry.id) throw new Error(`Event zonder id: ${entry.title ?? '???'}`);
   if (seenEventIds.has(entry.id)) {
     throw new Error(`Dubbele id in content/events.yaml: "${entry.id}"`);
@@ -74,3 +75,19 @@ for (const entry of events.events) {
     );
   }
 }
+
+/* ---- Events uit SuperHoreca erbij ----
+   Staat hetzelfde event (zelfde dag, zelfde titel) al in events.yaml, dan wint
+   dat van events.yaml: daar staan de prijs, de Engelse tekst en de foto. */
+
+const sameEvent = (start: string, title: string) =>
+  `${start.slice(0, 10)}|${title.trim().toLowerCase()}`;
+const yamlKeys = new Set(eventsYaml.events.map((e) => sameEvent(e.start, e.title)));
+
+export const events: EventsData = {
+  ...eventsYaml,
+  events: [
+    ...eventsYaml.events,
+    ...superhorecaEvents.filter((e) => !yamlKeys.has(sameEvent(e.start, e.title))),
+  ],
+};

@@ -84,6 +84,11 @@ export const site = {
     embed: 'https://superhoreca.app/embed/omgekeerde-wereld-bv',
     /** Aanvraagformulier voor events en het huren van de bovenzaal. */
     enquiry: 'https://superhoreca.app/embed/omgekeerde-wereld-bv/enquiry',
+    /**
+     * Publieke agenda-feed. De site haalt die op bij het bouwen en zet de events
+     * mee in de agenda (zie src/lib/superhoreca.ts). Leeg = enkel events.yaml.
+     */
+    agenda: 'https://superhoreca.app/api/public/agenda/omgekeerde-wereld-bv',
     orgName: 'Omgekeerde Wereld BV',
   },
 

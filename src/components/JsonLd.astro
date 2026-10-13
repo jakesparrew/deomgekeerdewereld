@@ -93,13 +93,18 @@ const eventNodes = events.slice(0, 25).map((event) => ({
     },
   },
   organizer: { '@id': businessId },
-  offers: {
-    '@type': 'Offer',
-    price: euroMachine(event.price ?? 0),
-    priceCurrency: 'EUR',
-    availability: 'https://schema.org/InStock',
-    url: event.link || `${site.url}${route('agenda', lang)}`,
-  },
+  // Geen prijs gekend (events uit SuperHoreca): dan ook geen aanbod verzinnen.
+  ...(event.price === null
+    ? {}
+    : {
+        offers: {
+          '@type': 'Offer',
+          price: euroMachine(event.price ?? 0),
+          priceCurrency: 'EUR',
+          availability: 'https://schema.org/InStock',
+          url: event.link || `${site.url}${route('agenda', lang)}`,
+        },
+      }),
 }));
 
 const breadcrumbNode = breadcrumbs?.length

@@ -142,7 +142,9 @@ const weekday = (start: string) => formatDate(start, lang).split(' ')[0];
                       </span>
                       <span class="event__titel">{en && e.titleEn ? e.titleEn : e.title}</span>
                       <span class="event__meta">
-                        {weekday(e.start)} · {formatTime(e.start)} · {priceLabel(e.price, lang)}
+                        {[weekday(e.start), formatTime(e.start), priceLabel(e.price, lang)]
+                          .filter(Boolean)
+                          .join(' · ')}
                       </span>
                     </span>
                     <span class="event__pijl" aria-hidden="true">→</span>
