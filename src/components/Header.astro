@@ -126,10 +126,21 @@ const otherUrl = alternateUrl(pathname, otherLang);
     font-family: var(--font-body);
     top: 0;
     z-index: 50;
-    background: color-mix(in srgb, var(--bg) 88%, transparent);
-    backdrop-filter: blur(10px);
     border-block-end: var(--border-hairline) solid transparent;
     transition: border-color var(--dur-base) var(--ease-out);
+  }
+
+  /* De waas zit op een aparte laag, niet op de header zelf. Een backdrop-filter
+     maakt van zijn element het kader voor alles wat erin `position: fixed`
+     staat: dan zou het menupaneel niet tot onderaan het scherm reiken, maar
+     enkel zo hoog als de balk. */
+  .site-header::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: color-mix(in srgb, var(--bg) 88%, transparent);
+    backdrop-filter: blur(10px);
   }
 
   .site-header[data-scrolled] {
