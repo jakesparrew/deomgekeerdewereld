@@ -95,18 +95,18 @@
   --ink-soft: #cfc6b8;
   --ink-faint: #9b9183;
 
-  /* Het neon: tussen het Duvel-rood en het roze clublicht. */
-  --accent: #ff3d5a;
-  --accent-text: #ff5a73;
+  /* Het neon: het geel van het zonnetje. */
+  --accent: #ffd23f;
+  --accent-text: #ffd23f;
   --accent-ink: #0c0a09;
-  --accent-dim: #e8264a;
+  --accent-dim: #e6b800;
 
   /* Het zonnetje. */
   --amber: #ffd23f;
   --amber-ink: #0c0a09;
 
-  --rose: #ff8fa3;
-  --rose-deep: #ff3d5a;
+  --rose: #ffe27a;
+  --rose-deep: #ffd23f;
 
   --wood: #6b4a2a;
   --wood-soft: #2a211b;
@@ -115,7 +115,7 @@
   --line-strong: #7d7168;
 
   --focus-ring: #ffd23f;
-  --selection-bg: #ff3d5a;
+  --selection-bg: #ffd23f;
   --selection-ink: #0c0a09;
 
   --open-dot: #4ade80;
@@ -142,16 +142,18 @@
   --ink-soft: #3a332d;
   --ink-faint: #5f564d;
 
-  --accent: #d1123a;
-  --accent-text: #b30f32;
-  --accent-ink: #ffffff;
-  --accent-dim: #a80d2e;
+  /* Geel als vlak, met zwarte tekst erop. Als tekst wordt het donkergoud:
+     geel op crème is niet leesbaar. */
+  --accent: #f2b705;
+  --accent-text: #7a5800;
+  --accent-ink: #0c0a09;
+  --accent-dim: #d9a300;
 
   --amber: #8a6400;
   --amber-ink: #ffffff;
 
-  --rose: #a3134a;
-  --rose-deep: #d1123a;
+  --rose: #7a5800;
+  --rose-deep: #f2b705;
 
   --wood: #6b4a2a;
   --wood-soft: #d9cdb4;
@@ -160,8 +162,8 @@
   --line-strong: #857868;
 
   --focus-ring: #0c0a09;
-  --selection-bg: #d1123a;
-  --selection-ink: #ffffff;
+  --selection-bg: #f2b705;
+  --selection-ink: #0c0a09;
 
   --open-dot: #1a7f37;
   --closed-dot: #b30f32;
