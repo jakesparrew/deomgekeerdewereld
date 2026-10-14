@@ -34,48 +34,22 @@ recurring:
       From five o'clock until the keg runs dry.
 
 # ---- Losse events ----
-events:
-  - id: soulnight-oktober
-    title: 'Soul Night met DJ Bompa'
-    titleEn: 'Soul Night with DJ Bompa'
-    start: '2026-10-17T21:00'
-    end: '2026-10-18T02:00'
-    type: dj
-    price: 0
-    description: >-
-      Northern soul, funk en een pak vinyl uit den ouwen doos.
-      Geen inkom, wel dansende voeten.
-    descriptionEn: >-
-      Northern soul, funk and a stack of vinyl from the good old days.
-      No cover charge, just dancing feet.
-    image: ''
-    imageAlt: ''
-
-  - id: kroegquiz-november
-    title: 'De Omgekeerde Kroegquiz'
-    titleEn: 'The Upside-Down Pub Quiz'
-    start: '2026-11-12T20:00'
-    end: '2026-11-12T23:30'
-    type: quiz
-    price: 5
-    description: >-
-      Ploegen van maximum vier. Inschrijven aan de toog of via mail.
-      De winnaar drinkt de rest van de avond op ons.
-    descriptionEn: >-
-      Teams of four at most. Sign up at the bar or by email.
-      The winners drink on us for the rest of the night.
-    link: ''
-
-  - id: keizerfest-2027
-    title: 'Keizerfest open air'
-    titleEn: 'Keizerfest open air'
-    start: '2027-05-14T14:00'
-    end: '2027-05-16T23:00'
-    type: open-air
-    price: 0
-    description: >-
-      Drie dagen live muziek op het Keizerpark, samen met de buren.
-      Gratis, zoals het hoort.
-    descriptionEn: >-
-      Three days of live music at Keizerpark, together with the neighbours.
-      Free, as it should be.
+# ---- Losse events ----
+# Events uit SuperHoreca komen er vanzelf bij; die moet ge hier niet zetten.
+# Hier enkel wat niet in SuperHoreca staat, of een SuperHoreca-event dat ge
+# een prijs, Engelse tekst of foto wilt geven (zelfde datum, exact dezelfde titel).
+#
+# Voorbeeld (haal de # weg en zet "events: []" hieronder op "events:"):
+#
+#  - id: soulnight-december
+#    title: 'Soul Night met DJ Bompa'
+#    titleEn: 'Soul Night with DJ Bompa'
+#    start: '2026-12-19T21:00'
+#    end: '2026-12-20T02:00'
+#    type: dj
+#    price: 0
+#    description: >-
+#      Northern soul, funk en een pak vinyl uit den ouwen doos.
+#    descriptionEn: >-
+#      Northern soul, funk and a stack of vinyl from the good old days.
+events: []
