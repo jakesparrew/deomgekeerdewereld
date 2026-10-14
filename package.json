@@ -16,7 +16,8 @@
     "typecheck": "astro check",
     "test": "node scripts/test-hours.mjs",
     "check:i18n": "node scripts/check-i18n.mjs",
-    "check:contrast": "node scripts/check-contrast.mjs"
+    "check:contrast": "node scripts/check-contrast.mjs",
+    "sync:kaart": "node scripts/sync-orderbilly.mjs"
   },
   "dependencies": {
     "@astrojs/sitemap": "^3.7.4",

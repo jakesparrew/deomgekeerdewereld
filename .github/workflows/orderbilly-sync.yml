@@ -1,0 +1,66 @@
+# Neemt elke maandagochtend de kaart over van OrderBilly en zet ze online.
+#
+# Het script (scripts/sync-orderbilly.mjs) past prijzen, "even op", nieuwe en
+# verdwenen producten en het bier van de maand aan in content/menu.yaml en
+# content/highlights.yaml. Daarna draait de volledige controle (npm run verify).
+# Enkel als die groen is, wordt er gepusht, en bouwt Vercel de site opnieuw.
+#
+# Er moet niets ingesteld worden. Meteen draaien kan ook:
+# Actions → OrderBilly-kaart → Run workflow.
+
+name: OrderBilly-kaart
+
+on:
+  schedule:
+    # Maandag 05:17 UTC, dat is 06:17 of 07:17 in Gent.
+    - cron: '17 5 * * 1'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: orderbilly-sync
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      - name: Kaart ophalen van OrderBilly
+        id: sync
+        run: |
+          node scripts/sync-orderbilly.mjs | tee sync.log
+          if git diff --quiet -- content/; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Alles nakijken
+        if: steps.sync.outputs.changed == 'true'
+        run: npm run verify
+
+      - name: Pushen
+        if: steps.sync.outputs.changed == 'true'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add content/menu.yaml content/highlights.yaml
+          {
+            echo "Kaart bijgewerkt vanaf OrderBilly"
+            echo
+            grep '^  - ' sync.log || true
+          } > commit.txt
+          git commit -F commit.txt
+          git push

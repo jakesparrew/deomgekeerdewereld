@@ -70,7 +70,7 @@ intro:
     Everything behind the bar is on this list — and if something looks
     off, just ask us at the bar.
 
-updated: '2026-09-10'
+updated: '2026-10-14'
 
 items:
   # ------------------------------------------------------------------
@@ -87,24 +87,10 @@ items:
   # De 1+1-bonnetjes van Guido Gids staan hier, met de bonprijs.
   # BVDM = bier van de maand; die prijs geldt zolang dat bier loopt.
   # ------------------------------------------------------------------
-  - id: bvdm-tripel-danvers
-    name: Tripel D'Anvers
-    category: promo
-    price: 3.50
-    # Stond op OrderBilly als "BVDM": een maandpromo. Bevestig of die nog loopt.
-    note: Maandpromo, zolang het vat meegaat.
-    noteEn: Monthly deal, while the keg lasts.
-    tags: [promo]
-  - id: bvdm-tripel-lefort
-    name: Tripel LeFort
-    category: promo
-    price: 3.50
-    # Stond op OrderBilly als "BVDM": een maandpromo. Bevestig of die nog loopt.
-    note: Maandpromo, zolang het vat meegaat.
-    noteEn: Monthly deal, while the keg lasts.
-    tags: [promo, favo]
   - id: aperomer
     name: Aper'Omer
+    # Staat niet op OrderBilly, hoort bij de maandelijkse Aper'Omer. Blijft staan.
+    orderbilly: false
     category: promo
     price: 3.50
     note: Elke eerste vrijdag van de maand een Omer aan 3,50.
@@ -121,20 +107,6 @@ items:
     name: Piraat 1+1
     category: promo
     price: 5.00
-    note: Met een bon van Guido Gids twee voor de prijs van één.
-    noteEn: Two for the price of one with a Guido Gids voucher.
-    tags: [promo]
-  - id: tongerlo-1-1
-    name: Tongerlo 1+1
-    category: promo
-    price: 4.80
-    note: Met een bon van Guido Gids twee voor de prijs van één.
-    noteEn: Two for the price of one with a Guido Gids voucher.
-    tags: [promo]
-  - id: keizer-karel-1-1
-    name: Keizer Karel 1+1
-    category: promo
-    price: 4.80
     note: Met een bon van Guido Gids twee voor de prijs van één.
     noteEn: Two for the price of one with a Guido Gids voucher.
     tags: [promo]
@@ -321,15 +293,17 @@ items:
   - id: cornet
     name: Cornet
     category: bier
-    price: 4.50
+    price: 5.00
     style: blond
     tags: [promo, favo]
   - id: corona-extra
     name: Corona Extra
+    orderbilly: 'Corona (Extra)'
     category: bier
     price: 4.90
     style: pils
     abv: 4.5
+    tags: [bier-van-de-maand]
   - id: de-poes
     name: De Poes
     category: bier
@@ -435,20 +409,17 @@ items:
   # met een eigen naam, anders botsen de ids.
   - id: leffe-blond
     name: Leffe Blond
+    orderbilly: 'Leffe (blond)'
     category: bier
     price: 4.80
     style: blond
     abv: 6.6
   - id: leffe-bruin
     name: Leffe Bruin
+    orderbilly: 'Leffe (bruin)'
     category: bier
     price: 4.80
     style: bruin
-  - id: martha-sexy-blond
-    name: Martha Sexy Blond
-    category: bier
-    price: 5.00
-    style: blond
   - id: omer
     name: Omer
     category: bier
@@ -493,13 +464,11 @@ items:
   - id: ouwen-duiker
     name: Ouwen Duiker
     category: bier
-    price: 3.50
+    price: 5.00
     style: blond
     abv: 8.0
     brewery: Van Steenberge
-    note: Bier van de maand, aan promoprijs.
-    noteEn: Beer of the month, at a reduced price.
-    tags: [lokaal, gents, favo, promo, bier-van-de-maand]
+    tags: [lokaal, gents, favo]
   - id: piraat
     name: Piraat
     category: bier
@@ -837,6 +806,7 @@ items:
   # ------------------------------------------------------------------
   - id: verse-gember-citroen-thee
     name: Verse gember- en citroenthee
+    orderbilly: 'Verse gember en citroen thee'
     category: warm
     price: 3.00
   - id: warm-perensap-kaneel
@@ -872,6 +842,7 @@ items:
     price: 2.50
   - id: cappuccino
     name: Cappuccino
+    orderbilly: 'Cappucino'
     category: warm
     price: 3.50
   - id: latte-macchiato
@@ -999,6 +970,7 @@ items:
     price: 20.00
   - id: fles-cava
     name: Fles Cava
+    orderbilly: 'Cava Fles'
     category: apero
     price: 30.00
   - id: campari
@@ -1034,16 +1006,6 @@ items:
     name: Martini Bellini Fles
     category: apero
     price: 35.00
-  - id: roomer
-    name: Roomer
-    category: apero
-    price: 5.50
-    note: Aperitief van vlierbloesem.
-    noteEn: Belgian elderflower aperitif.
-  - id: coupe-fleur
-    name: Coupe Fleur
-    category: apero
-    price: 7.50
   - id: ricard
     name: Ricard (2cl)
     category: apero
@@ -1173,10 +1135,11 @@ items:
     category: cocktails
     price: 9.00
     tags: [favo]
-  - id: havana-club-especial-cola
-    name: "Havana Club Especial & Cola"
+  - id: cocktail-vd-maand-horse-s-neck
+    name: 'Cocktail VD Maand: Horse''s Neck'
     category: cocktails
-    price: 8.50
+    price: 10.00
+    orderbilly: 'Cocktail VD Maand : Horse''s Neck*'
     tags: [favo]
 
   # ------------------------------------------------------------------
@@ -1252,6 +1215,7 @@ items:
     price: 7.50
   - id: lagavulin-16
     name: Lagavulin 16 jaar
+    orderbilly: 'Lagavullin 16 jaar'
     category: spirits
     price: 10.00
   - id: shankys-whip
@@ -1272,6 +1236,7 @@ items:
     price: 6.50
   - id: hendricks
     name: Hendrick's
+    orderbilly: 'Hendricks'
     category: spirits
     price: 7.50
   - id: monkey-47
@@ -1306,6 +1271,10 @@ items:
     name: Zubrowka
     category: spirits
     price: 8.00
+  - id: glas-limoncello
+    name: 'Glas Limoncello'
+    category: spirits
+    price: 5.50
 
   # ------------------------------------------------------------------
   # SHOTS — het meeste aan 4,00
@@ -1314,6 +1283,7 @@ items:
   # ------------------------------------------------------------------
   - id: shot-white-milf
     name: Shot White MILF
+    orderbilly: 'Shot White M*LF'
     category: shots
     price: 4.00
     note: Half St-Germain, half vodka.
@@ -1464,6 +1434,7 @@ items:
     price: 4.00
   - id: shot-whisky-lagavulin-16
     name: Shot Whisky Lagavulin 16 jaar
+    orderbilly: 'Shot Whisky Lagavullin 16 jaar'
     category: shots
     price: 7.00
   - id: shot-whisky-shankys-whip
@@ -1502,10 +1473,12 @@ items:
     price: 8.00
   - id: kaasplank
     name: Kaasplank
+    orderbilly: 'Kaas Plank'
     category: eten
     price: 8.50
   - id: kaas-serranoham-plankje
     name: "Kaas & serranoham plankje"
+    orderbilly: 'Kaas & Seranoham plankje'
     category: eten
     price: 14.50
   - id: chips
