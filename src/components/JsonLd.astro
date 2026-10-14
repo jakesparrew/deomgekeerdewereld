@@ -73,7 +73,8 @@ const business = {
 const eventNodes = events.slice(0, 25).map((event) => ({
   '@type': 'Event',
   name: lang === 'en' && event.titleEn ? event.titleEn : event.title,
-  startDate: toIsoWithBrusselsOffset(event.start),
+  // Zonder uur enkel de datum, anders denkt Google dat het om middernacht begint.
+  startDate: event.start.includes('T') ? toIsoWithBrusselsOffset(event.start) : event.start,
   ...(event.end ? { endDate: toIsoWithBrusselsOffset(event.end) } : {}),
   eventStatus: 'https://schema.org/EventScheduled',
   eventAttendanceMode: 'https://schema.org/OfflineEventAttendanceMode',

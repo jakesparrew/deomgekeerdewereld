@@ -75,7 +75,10 @@ export function toEventEntry(item: FeedItem): EventEntry | undefined {
     title: item.name.trim(),
     start,
     end,
-    type: typeFromCategory(item.category),
+    // Geen categorie in SuperHoreca? Dan geeft de titel soms een hint ("Halloweenparty").
+    type: item.category?.trim()
+      ? typeFromCategory(item.category)
+      : typeFromCategory(item.name),
     // SuperHoreca kent geen prijs. Leeg laten zou "gratis" tonen, en dat weten we niet.
     price: null,
     description: text,

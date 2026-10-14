@@ -53,6 +53,8 @@ const description =
   (lang === 'en' && event.descriptionEn ? event.descriptionEn : event.description) ?? '';
 
 const badge = formatDayBadge(event.start, lang);
+/** Enkel een datum, geen uur (komt voor bij events uit SuperHoreca). */
+const allDay = !event.start.includes('T');
 const iso = toIsoWithBrusselsOffset(event.start);
 
 const startDate = parseLocalDateTime(event.start);
@@ -100,13 +102,18 @@ const gcalEnd = event.end
   ? new Date(toIsoWithBrusselsOffset(event.end))
   : new Date(gcalStart.getTime() + 3 * 3600 * 1000);
 const stamp = (d: Date) => d.toISOString().replace(/[-:]|\.\d{3}/g, '');
+// Zonder uur: een event voor de hele dag, JJJJMMDD/JJJJMMDD van de dag erna.
+const dayStamp = (d: Date) => d.toISOString().slice(0, 10).replace(/-/g, '');
+const gcalDates = allDay
+  ? `${dayStamp(startDate)}/${dayStamp(new Date(startDate.getTime() + 24 * 3600 * 1000))}`
+  : `${stamp(gcalStart)}/${stamp(gcalEnd)}`;
 const gcalDetails = [description, link, `${site.url}${route('agenda', lang)}`]
   .filter(Boolean)
   .join('\n\n');
 const calendarUrl =
   'https://calendar.google.com/calendar/render?action=TEMPLATE' +
   `&text=${encodeURIComponent(title)}` +
-  `&dates=${stamp(gcalStart)}/${stamp(gcalEnd)}` +
+  `&dates=${gcalDates}` +
   `&details=${encodeURIComponent(gcalDetails)}` +
   `&location=${encodeURIComponent(`${site.name}, ${addressLine}`)}` +
   '&ctz=Europe/Brussels';
@@ -133,12 +140,18 @@ const newWindowNote =
     <Heading class="ec__title">{title}</Heading>
 
     <p class="ec__when">
-      <time datetime={iso}>{dateText}</time>
-      <span class="ec__dot" aria-hidden="true">·</span>
-      <span class="ec__time">
-        <Icon name="clock" size={16} />
-        {timeText}
-      </span>
+      <time datetime={allDay ? event.start : iso}>{dateText}</time>
+      {
+        timeText && (
+          <>
+            <span class="ec__dot" aria-hidden="true">·</span>
+            <span class="ec__time">
+              <Icon name="clock" size={16} />
+              {timeText}
+            </span>
+          </>
+        )
+      }
       {untilText && <span class="ec__until">{untilText}</span>}
     </p>
 

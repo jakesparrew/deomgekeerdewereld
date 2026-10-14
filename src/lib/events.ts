@@ -106,15 +106,24 @@ export function buildAgenda(data: EventsData, now: Date): AgendaSplit {
   const manualDays = new Set(
     manual.filter((e) => !e.id.startsWith('superhoreca-')).map((e) => e.start.slice(0, 10)),
   );
+  const kept = generated.filter((g) => !manualDays.has(g.start.slice(0, 10)));
+
+  // Staat een terugkerend event (bv. Aper'Omer) ook in SuperHoreca, dan tonen we
+  // het maar één keer: de versie uit events.yaml, met prijs en uitleg.
+  const sameEvent = (e: ResolvedEvent) =>
+    `${e.start.slice(0, 10)}|${e.title.trim().toLowerCase()}`;
+  const generatedKeys = new Set(kept.map(sameEvent));
   const all = [
-    ...manual,
-    ...generated.filter((g) => !manualDays.has(g.start.slice(0, 10))),
+    ...manual.filter((e) => !(e.id.startsWith('superhoreca-') && generatedKeys.has(sameEvent(e)))),
+    ...kept,
   ];
 
   const cutoff = now.getTime() - GRACE_MS;
+  // Een event zonder uur (enkel een datum, uit SuperHoreca) rekenen we als een
+  // avond om zes uur: zo staat het die hele dag nog bij "wat komt er aan".
   const withTime = all.map((e) => ({
     event: e,
-    time: parseLocalDateTime(e.start).getTime(),
+    time: parseLocalDateTime(e.start).getTime() + (e.start.includes('T') ? 0 : 18 * 3600 * 1000),
   }));
 
   const upcoming = withTime
