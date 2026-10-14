@@ -167,10 +167,10 @@ Voorbije uitzonderingen mag ge laten staan; ze verdwijnen vanzelf uit beeld. Rui
 **De kaart volgt OrderBilly.** Elke maandagochtend neemt de site de kaart over van
 [OrderBilly](https://orderbilly.com/de-omgekeerde-wereld): prijzen, wat even op is,
 nieuwe en verdwenen producten, en het bier van de maand (het "BVDM"-product in PROMO).
-Een prijs pas je dus best aan in OrderBilly; een prijs die je hier verandert, wordt de
+Een prijs past ge dus best aan in OrderBilly; een prijs die ge hier verandert, wordt de
 maandag erna weer overschreven.
 
-Wat OrderBilly niet kent, blijft wel van jou: alcoholpercentage, brouwerij, stijl, tags,
+Wat OrderBilly niet kent, blijft gewoon staan: alcoholpercentage, brouwerij, stijl, tags,
 notities en de namen zoals ze op de site staan. Heet iets op de site anders dan op
 OrderBilly, dan staat er `orderbilly: 'naam op OrderBilly'` bij. Moet een item blijven
 staan terwijl het niet op OrderBilly staat, zet dan `orderbilly: false`.
