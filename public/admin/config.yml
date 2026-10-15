@@ -27,7 +27,7 @@ public_folder: '/images'
 
 site_url: https://deomgekeerdewereld.be
 display_url: https://deomgekeerdewereld.be
-logo_url: https://deomgekeerdewereld.be/favicon.svg
+logo_url: https://deomgekeerdewereld.be/apple-touch-icon.png
 
 collections:
   # ----------------------------------------------------------

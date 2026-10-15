@@ -175,6 +175,7 @@ Deze staan er nog niet en horen op de checklist van de eigenaars:
 | `/public/icons/icon-512.png` | 512 x 512 | idem, op een groot scherm |
 | `/public/apple-touch-icon.png` | 180 x 180 | idem, op iPhone en iPad |
 
-Alle drie het zonneke: acid geel (`#f8f812`) op bijna zwart (`#0d0a07`),
-vierkant, zonder afgeronde hoeken (die zet het toestel er zelf op). Je kunt ze
-exporteren uit `public/favicon.svg`.
+Die staan er al. Alle drie het echte zonneke, geel ingekleurd op bijna zwart,
+vierkant, zonder afgeronde hoeken (die zet het toestel er zelf op). Samen met het
+icoontje op het tabblad (`favicon.ico`) worden ze gemaakt uit
+`public/images/zon.png` met `npm run icons`. Verandert het logo, draai dat dan opnieuw.
