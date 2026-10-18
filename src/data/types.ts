@@ -272,6 +272,8 @@ export interface Bilingual {
 }
 
 export interface BovenzaalData {
+  /** Apart telefoonnummer voor de bovenverdieping. Leeg = dat van het café. */
+  contact?: { telefoon?: string | null };
   capaciteit: { zittend: number | null; staand: number | null; oppervlakte: number | null };
   prijs: {
     toon: boolean;

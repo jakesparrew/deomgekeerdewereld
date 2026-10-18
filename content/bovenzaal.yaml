@@ -6,6 +6,12 @@
 # van er een getal bij te verzinnen.
 # ============================================================
 
+# ---- Wie belt ge voor de bovenverdieping? ----
+# Dit nummer staat op de knop bovenaan /bovenzaal/ en /en/upstairs/.
+# Leeg = het gewone nummer van het café.
+contact:
+  telefoon: '+32 471 54 27 38'
+
 # ---- Hoe groot is't? ----
 # Laat leeg zolang ge de juiste cijfers niet hebt. NIET gokken:
 # een fout aantal in Google is erger dan geen aantal.

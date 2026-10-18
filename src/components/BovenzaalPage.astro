@@ -24,7 +24,13 @@ const { lang } = Astro.props;
 const en = lang === 'en';
 const pick = (item: { nl: string; en: string }) => (en ? item.en : item.nl);
 
-const { capaciteit, prijs, inbegrepen, waarvoor, praktisch } = bovenzaal;
+const { capaciteit, prijs, inbegrepen, waarvoor, praktisch, contact } = bovenzaal;
+
+/* Eigen nummer voor de bovenverdieping, anders dat van het café. */
+const phone = contact?.telefoon?.trim() || site.phone;
+const phoneHref = contact?.telefoon?.trim()
+  ? phone.replace(/[^\d+]/g, '')
+  : site.phoneHref;
 
 const breadcrumbs = [
   { name: en ? 'Home' : 'Home', url: route('home', lang) },
@@ -98,9 +104,9 @@ const toonPrijs = prijs.toon && typeof prijs.vanaf === 'number';
               {en ? 'Ask about a date' : 'Vraag een datum aan'}
               <Icon name="arrow" size={18} />
             </a>
-            <a class="btn btn--ghost" href={`tel:${site.phoneHref}`}>
+            <a class="btn btn--ghost" href={`tel:${phoneHref}`}>
               <Icon name="phone" size={18} />
-              {site.phone}
+              {phone}
             </a>
           </p>
         </div>
