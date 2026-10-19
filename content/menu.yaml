@@ -70,7 +70,7 @@ intro:
     Everything behind the bar is on this list — and if something looks
     off, just ask us at the bar.
 
-updated: '2026-10-14'
+updated: '2026-10-19'
 
 items:
   # ------------------------------------------------------------------
@@ -135,16 +135,6 @@ items:
     style: cider
   # BBP = Brussels Beer Project. Staat in promo aan 4,50, dat is ook de
   # gewone prijs, dus één item met de tag promo.
-  - id: bbp-mexican-sour
-    name: "BBP Mexican Sour"
-    category: bier
-    price: 4.50
-    tags: [promo]
-  - id: bbp-peaches-cream
-    name: "BBP Peaches & Cream"
-    category: bier
-    price: 4.50
-    tags: [promo]
   - id: flying-fish
     name: Flying Fish
     category: bier
@@ -153,11 +143,6 @@ items:
     name: Golden Tricky
     category: bier
     price: 5.00
-  - id: tout-bien-rouge
-    name: Tout Bien Rouge
-    category: bier
-    price: 4.00
-    tags: [promo]
   - id: delta-ipa
     name: Delta IPA
     category: bier
@@ -1275,6 +1260,10 @@ items:
     name: 'Glas Limoncello'
     category: spirits
     price: 5.50
+  - id: fireball
+    name: 'Fireball'
+    category: spirits
+    price: 6.00
 
   # ------------------------------------------------------------------
   # SHOTS — het meeste aan 4,00
