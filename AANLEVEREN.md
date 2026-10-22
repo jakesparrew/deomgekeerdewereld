@@ -20,9 +20,8 @@ staat in één bestand: `content/bovenzaal.yaml`.
       tarief is. Nu zegt de pagina "in overleg" en stuurt ze door naar het formulier
 - [ ] **Klopt de lijst van wat erbij zit?** Ik heb ze afgeleid uit de foto's en uit
       wat op jullie eigen krijtbord staat. Schrap gerust wat niet klopt
-- [ ] **Twee foto's bevestigen.** Ik koos `bovenzaal-kicker.jpg` en
-      `bovenzaal-zithoek.jpg` omdat ze een aparte ruimte tonen met wereldkaarten,
-      zetels en een kicker. Bevestig dat dat écht boven is en niet een hoek beneden
+- [x] **Foto's.** Vervangen door recente foto's van boven uit de Drive-map
+      *Foto's van de zaak* (oktober 2026): pooltafel, kicker bij de ramen en de lange zaal
 - [ ] **De naam.** Ik noem ze "de bibliotheek", want dat staat op jullie krijtbord:
       *2e verdiep — bibliotheek, gratis pool*. Heet ze anders, zeg het
 
