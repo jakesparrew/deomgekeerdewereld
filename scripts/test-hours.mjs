@@ -48,15 +48,15 @@ function brussels(y, m, d, hh, mm = 0) {
 
 console.log('\nUren-logica\n');
 
-/* ---- 1. Gewone dinsdag: open 14:00, toe 02:00 ---- */
-console.log('Dinsdag 15 september 2026 (open 14:00 - 02:00)');
-check('13:30 is toe', getStatus(hours, brussels(2026, 9, 15, 13, 30)).isOpen, false);
+/* ---- 1. Gewone dinsdag: open 13:30, toe 03:00 ---- */
+console.log('Dinsdag 15 september 2026 (open 13:30 - 03:00)');
+check('13:00 is toe', getStatus(hours, brussels(2026, 9, 15, 13, 0)).isOpen, false);
 check(
-  '13:30 zegt wanneer hij opent',
-  getStatus(hours, brussels(2026, 9, 15, 13, 30)).label,
-  'Opent om 14:00',
+  '13:00 zegt wanneer hij opent',
+  getStatus(hours, brussels(2026, 9, 15, 13, 0)).label,
+  'Opent om 13:30',
 );
-check('14:00 is open', getStatus(hours, brussels(2026, 9, 15, 14, 0)).isOpen, true);
+check('13:30 is open', getStatus(hours, brussels(2026, 9, 15, 13, 30)).isOpen, true);
 check('23:00 is open', getStatus(hours, brussels(2026, 9, 15, 23, 0)).isOpen, true);
 
 /* ---- 2. Na middernacht hoort bij de avond ervoor ---- */
@@ -67,31 +67,31 @@ check(
   true,
 );
 check(
-  '01:30 is bijna sluitingstijd',
-  getStatus(hours, brussels(2026, 9, 16, 1, 30)).closingSoon,
+  '02:30 is bijna sluitingstijd',
+  getStatus(hours, brussels(2026, 9, 16, 2, 30)).closingSoon,
   true,
 );
 check(
-  '02:00 is toe',
-  getStatus(hours, brussels(2026, 9, 16, 2, 0)).isOpen,
+  '03:00 is toe',
+  getStatus(hours, brussels(2026, 9, 16, 3, 0)).isOpen,
   false,
 );
 check(
-  '03:00 is toe en wacht op 14:00',
-  getStatus(hours, brussels(2026, 9, 16, 3, 0)).label,
-  'Opent om 14:00',
+  '04:00 is toe en wacht op 13:30',
+  getStatus(hours, brussels(2026, 9, 16, 4, 0)).label,
+  'Opent om 13:30',
 );
 
-/* ---- 3. Vrijdagnacht loopt door tot 04:00 ---- */
-console.log('\nVrijdag 18 september 2026 (toe om 04:00)');
+/* ---- 3. Vrijdagnacht loopt door tot 03:00 ---- */
+console.log('\nVrijdag 18 september 2026 (toe om 03:00)');
 check(
-  'zaterdag 03:00 is nog open (vrijdagnacht)',
-  getStatus(hours, brussels(2026, 9, 19, 3, 0)).isOpen,
+  'zaterdag 02:30 is nog open (vrijdagnacht)',
+  getStatus(hours, brussels(2026, 9, 19, 2, 30)).isOpen,
   true,
 );
 check(
-  'zaterdag 04:30 is toe',
-  getStatus(hours, brussels(2026, 9, 19, 4, 30)).isOpen,
+  'zaterdag 03:30 is toe',
+  getStatus(hours, brussels(2026, 9, 19, 3, 30)).isOpen,
   false,
 );
 
@@ -120,7 +120,7 @@ check(
 check(
   '25 december wijst naar de volgende open dag',
   getStatus(hours, brussels(2026, 12, 25, 20, 0)).label,
-  'Opent zaterdag om 14:00',
+  'Opent zaterdag om 13:30',
 );
 
 /* ---- 5. Oudejaar sluit om 05:00, dus nieuwjaar 04:00 is nog open ---- */
@@ -169,13 +169,14 @@ check(
 check(
   'toe in het Engels',
   getStatus(hours, brussels(2026, 9, 15, 10, 0), 'en').label,
-  'Opens at 14:00',
+  'Opens at 13:30',
 );
 
 /* ---- 8. schema.org ---- */
 console.log('\nGestructureerde data');
 const spec = toSchemaOpeningHours(hours);
-check('drie groepen uren', spec.length, 3);
+// Elke dag dezelfde uren: één groep voor Google.
+check('één groep uren', spec.length, 1);
 check(
   'alle zeven dagen komen voor',
   spec.reduce((n, g) => n + g.dayOfWeek.length, 0),

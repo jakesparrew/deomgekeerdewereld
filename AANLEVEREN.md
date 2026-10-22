@@ -87,8 +87,8 @@ getekend heeft, dan vervangen we dat in vijf minuten.
 
 ## 3. Teksten en gegevens nakijken
 
-- [ ] **De uren kloppen?** Nu staat er: elke dag 14:00, sluiten om 02:00, donderdag 03:00,
-      vrijdag en zaterdag 04:00. Aanpassen in `content/hours.yaml`
+- [x] **De uren kloppen?** Elke dag van 13:30 tot 03:00 (bevestigd oktober 2026).
+      Aanpassen in `content/hours.yaml`
 - [ ] **De feestdagen voor dit jaar.** Er staan nu vier voorbeelden in (Kerstavond,
       Kerstmis, Oudejaar, Nieuwjaar). Vul aan of pas aan
 - [ ] **De kaart nakijken.** Ze is overgenomen van OrderBilly in september 2026.

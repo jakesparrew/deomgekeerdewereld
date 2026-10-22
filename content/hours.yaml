@@ -12,27 +12,27 @@
 
 # Vaste week
 week:
-  monday: { open: '14:00', close: '02:00' }
-  tuesday: { open: '14:00', close: '02:00' }
-  wednesday: { open: '14:00', close: '02:00' }
-  thursday: { open: '14:00', close: '03:00' }
-  friday: { open: '14:00', close: '04:00' }
-  saturday: { open: '14:00', close: '04:00' }
-  sunday: { open: '14:00', close: '02:00' }
+  monday: { open: '13:30', close: '03:00' }
+  tuesday: { open: '13:30', close: '03:00' }
+  wednesday: { open: '13:30', close: '03:00' }
+  thursday: { open: '13:30', close: '03:00' }
+  friday: { open: '13:30', close: '03:00' }
+  saturday: { open: '13:30', close: '03:00' }
+  sunday: { open: '13:30', close: '03:00' }
 
 # Uitzonderingen: feestdagen, verlof, latere/vroegere sluiting.
 # Datum in YYYY-MM-DD. Verwijder gerust wat voorbij is.
 exceptions:
   - date: '2026-12-24'
     label: 'Kerstavond'
-    open: '14:00'
+    open: '13:30'
     close: '20:00'
   - date: '2026-12-25'
     label: 'Kerstmis'
     closed: true
   - date: '2026-12-31'
     label: 'Oudejaarsavond'
-    open: '14:00'
+    open: '13:30'
     close: '05:00'
   - date: '2027-01-01'
     label: 'Nieuwjaar'
