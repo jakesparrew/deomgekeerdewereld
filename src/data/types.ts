@@ -178,6 +178,11 @@ export interface EventEntry {
   /** Bestand in /public/images/events/ */
   image?: string;
   imageAlt?: string;
+  /**
+   * Deals per dag, bv. tijdens een feestweek. De site toont ze als lijstje
+   * met de dag ervoor.
+   */
+  deals?: { date: string; name: string; nameEn?: string }[];
 }
 
 /**

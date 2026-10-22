@@ -126,19 +126,33 @@ export function buildAgenda(data: EventsData, now: Date): AgendaSplit {
     time: parseLocalDateTime(e.start).getTime() + (e.start.includes('T') ? 0 : 18 * 3600 * 1000),
   }));
 
+  // Een event over meerdere dagen (een feestweek) blijft staan tot het gedaan is.
+  const lasts = (e: ResolvedEvent) =>
+    Boolean(e.end) && parseLocalDateTime(e.end!).getTime() >= now.getTime();
+
   const upcoming = withTime
-    .filter((x) => x.time >= cutoff)
+    .filter((x) => x.time >= cutoff || lasts(x.event))
     .sort((a, b) => a.time - b.time)
     .map((x) => x.event);
 
   const past = withTime
-    .filter((x) => x.time < cutoff)
+    .filter((x) => x.time < cutoff && !lasts(x.event))
     .sort((a, b) => b.time - a.time)
     .map((x) => x.event);
 
   // De datum zoals ze in Gent op de klok staat, niet in UTC.
   const todayIso = brusselsNow(now).isoDate;
-  const today = upcoming.filter((e) => e.start.slice(0, 10) === todayIso);
+  // Vandaag = begint vandaag, of loopt nog (een feestweek). Eindigt het voor
+  // zes uur 's ochtends, dan telt die laatste nacht bij de dag ervoor.
+  const lastDay = (e: ResolvedEvent) => {
+    if (!e.end) return e.start.slice(0, 10);
+    const end = parseLocalDateTime(e.end);
+    if (end.getUTCHours() < 6) end.setUTCDate(end.getUTCDate() - 1);
+    return end.toISOString().slice(0, 10);
+  };
+  const today = upcoming.filter(
+    (e) => e.start.slice(0, 10) <= todayIso && todayIso <= lastDay(e),
+  );
 
   return { upcoming, past, next: upcoming[0], today };
 }

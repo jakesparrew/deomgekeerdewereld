@@ -52,4 +52,33 @@ recurring:
 #      Northern soul, funk en een pak vinyl uit den ouwen doos.
 #    descriptionEn: >-
 #      Northern soul, funk and a stack of vinyl from the good old days.
-events: []
+events:
+  - id: feestweek-oktober-2026
+    title: 'Feestweek 26 oktober tot 1 november'
+    titleEn: 'Party week 26 October to 1 November'
+    start: '2026-10-26T14:00'
+    end: '2026-11-02T02:00'
+    type: feest
+    # Geen prijs: elke dag een andere deal.
+    price: null
+    description: >-
+      Van maandag 26 oktober tot zondag 1 november elke dag een deal aan de toog.
+      Donderdag de Halloweenparty erbovenop.
+    descriptionEn: >-
+      From Monday 26 October to Sunday 1 November, a different deal at the bar
+      every day. Plus the Halloween party on Thursday.
+    deals:
+      - date: '2026-10-26'
+        name: 'Gouden Carolus Tripel 1+1'
+      - date: '2026-10-27'
+        name: 'Strongbow Apple & Red Berries 3+2'
+      - date: '2026-10-28'
+        name: 'Cherry Chouffe 1+1'
+      - date: '2026-10-29'
+        name: 'Flying Fish 1+1'
+      - date: '2026-10-30'
+        name: 'Weer nen Tripel minder 1+1'
+      - date: '2026-10-31'
+        name: 'Corona Extra 1+1'
+      - date: '2026-11-01'
+        name: 'Gulden Draak Brewmaster 1+1'

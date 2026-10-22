@@ -70,13 +70,21 @@ const timeText =
   event.end && !spansDays
     ? `${formatTime(event.start)}–${formatTime(event.end)}`
     : formatTime(event.start);
+// Sluit het om twee uur 's nachts, dan is de laatste dag nog de dag ervoor.
+const lastDay = (() => {
+  if (!endDate) return undefined;
+  const d = new Date(endDate);
+  if (d.getUTCHours() < 6) d.setUTCDate(d.getUTCDate() - 1);
+  return d.toISOString().slice(0, 10);
+})();
 const untilText =
-  spansDays && event.end
-    ? `${lang === 'en' ? 'until' : 't.e.m.'} ${formatDate(event.end, lang, showYear)}`
+  spansDays && lastDay
+    ? `${lang === 'en' ? 'until' : 't.e.m.'} ${formatDate(lastDay, lang, showYear)}`
     : '';
 
 const typeLabel = EVENT_TYPE_LABELS[event.type]?.[lang] ?? EVENT_TYPE_LABELS.andere[lang];
 const price = priceLabel(event.price, lang);
+const deals = [...(event.deals ?? [])].sort((a, b) => a.date.localeCompare(b.date));
 const isFree = !event.price;
 
 const startHour = Number.parseInt(formatTime(event.start).slice(0, 2), 10);
@@ -172,6 +180,19 @@ const newWindowNote =
     </p>
 
     {description && <p class="ec__text">{description}</p>}
+
+    {
+      deals.length > 0 && (
+        <ul class="ec__deals" role="list">
+          {deals.map((d) => (
+            <li class="ec__deal">
+              <span class="ec__deal-dag">{formatDate(d.date, lang, false)}</span>
+              <span class="ec__deal-naam">{lang === 'en' && d.nameEn ? d.nameEn : d.name}</span>
+            </li>
+          ))}
+        </ul>
+      )
+    }
 
     {
       showPhoto && (
@@ -340,6 +361,35 @@ const newWindowNote =
     max-width: var(--measure);
     margin-block-start: var(--space-3xs);
     color: var(--ink-soft);
+  }
+
+  .ec__deals {
+    max-width: var(--measure);
+    margin: var(--space-xs) 0 0;
+    padding: 0;
+    list-style: none;
+    border-block-start: var(--border-hairline) solid var(--line);
+  }
+
+  .ec__deal {
+    display: grid;
+    grid-template-columns: 11rem 1fr;
+    gap: var(--space-2xs);
+    padding-block: var(--space-3xs);
+    border-block-end: var(--border-hairline) solid var(--line);
+  }
+
+  .ec__deal-dag {
+    color: var(--ink-faint);
+  }
+
+  .ec__deal-dag::first-letter {
+    text-transform: uppercase;
+  }
+
+  .ec__deal-naam {
+    color: var(--ink);
+    font-weight: 600;
   }
 
   /* Photo rendert zijn eigen <figure>; vandaar :global. */
