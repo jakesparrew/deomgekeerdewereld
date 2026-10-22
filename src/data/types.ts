@@ -175,9 +175,14 @@ export interface EventEntry {
   descriptionEn?: string;
   /** Facebook-event of Instagram-post. */
   link?: string;
-  /** Bestand in /public/images/events/ */
+  /** Pad vanaf public, bv. /images/events/feestweek.jpg */
   image?: string;
   imageAlt?: string;
+  /**
+   * Verhouding van de foto, bv. '4 / 5' voor een staande affiche van Instagram.
+   * Leeg = breed (16 / 9 bovenaan, 3 / 2 in de lijst).
+   */
+  imageRatio?: string;
   /**
    * Deals per dag, bv. tijdens een feestweek. De site toont ze als lijstje
    * met de dag ervoor.

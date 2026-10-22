@@ -62,11 +62,20 @@ events:
     # Geen prijs: elke dag een andere deal.
     price: null
     description: >-
-      Van maandag 26 oktober tot zondag 1 november elke dag een deal aan de toog.
-      Donderdag de Halloweenparty erbovenop.
+      Den Omgekeerden bestaat 12 jaar, en dat vieren we met zotte promoties:
+      van maandag 26 oktober tot zondag 1 november elke dag nen nieuwe deal aan
+      de toog. Donderdag de Halloweenparty erbovenop.
     descriptionEn: >-
-      From Monday 26 October to Sunday 1 November, a different deal at the bar
-      every day. Plus the Halloween party on Thursday.
+      De Omgekeerde Wereld turns 12, and we are celebrating with crazy deals:
+      from Monday 26 October to Sunday 1 November, a new deal at the bar every
+      day. Plus the Halloween party on Thursday.
+    # Affiche uit de Instagram-post van 22 oktober 2026.
+    image: '/images/events/feestweek-2026.jpg'
+    imageRatio: '4 / 5'
+    imageAlt: >-
+      Affiche "Feestweek in OW!": een dj in een wit T-shirt steekt beide handen in de
+      lucht voor een muur vol foto's. Tekst: 12 jaar Omgekeerde Wereld, 26 oktober tot
+      1 november. Den Omgekeerden bestaat 12 jaar en dat vieren we met zotte promoties.
     deals:
       - date: '2026-10-26'
         name: 'Gouden Carolus Tripel 1+1'

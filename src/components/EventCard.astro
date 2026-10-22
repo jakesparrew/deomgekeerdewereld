@@ -92,6 +92,11 @@ const todayLabel = startHour >= 17 ? T.tonight : T.todayLabel;
 
 const link = event.link?.trim() ? event.link.trim() : '';
 const hasImage = Boolean(event.image?.trim());
+/** Een staande affiche (bv. van Instagram) tonen we volledig, maar niet te groot. */
+const isPoster = Boolean(event.imageRatio) && (() => {
+  const [w, h] = (event.imageRatio ?? '').split('/').map(Number);
+  return h > w;
+})();
 const showPhoto = variant === 'featured' || (variant === 'default' && hasImage);
 
 const photoAlt =
@@ -200,7 +205,8 @@ const newWindowNote =
           src={event.image}
           alt={photoAlt}
           brief={photoBrief}
-          ratio={variant === 'featured' ? '16 / 9' : '3 / 2'}
+          ratio={event.imageRatio ?? (variant === 'featured' ? '16 / 9' : '3 / 2')}
+          class={isPoster ? 'ec__poster' : undefined}
           loading="lazy"
         />
       )
@@ -371,12 +377,18 @@ const newWindowNote =
     border-block-start: var(--border-hairline) solid var(--line);
   }
 
+  /* Op een gsm de dag boven de deal; vanaf tabletbreedte ernaast. */
   .ec__deal {
     display: grid;
-    grid-template-columns: 11rem 1fr;
-    gap: var(--space-2xs);
+    gap: 0 var(--space-2xs);
     padding-block: var(--space-3xs);
     border-block-end: var(--border-hairline) solid var(--line);
+  }
+
+  @media (min-width: 40em) {
+    .ec__deal {
+      grid-template-columns: 11rem 1fr;
+    }
   }
 
   .ec__deal-dag {
@@ -475,6 +487,10 @@ const newWindowNote =
     .ec--featured .ec__body :global(.photo) {
       max-width: 34rem;
     }
+  }
+
+  .ec__body :global(.photo.ec__poster) {
+    max-width: 24rem;
   }
 
   /* ---- Al geweest ---- */
