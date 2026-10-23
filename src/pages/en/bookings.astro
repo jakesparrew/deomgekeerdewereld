@@ -2,7 +2,7 @@
 /**
  * Bookings — English twin of /reserveren/.
  * Den Omgekeerde does not hold tables. This page is for groups,
- * birthdays, student clubs, concerts and collaborations.
+ * birthdays, concerts and collaborations.
  */
 import Base from '../../layouts/Base.astro';
 import Icon from '../../components/Icon.astro';
@@ -30,12 +30,6 @@ const kinds = [
       'Coming with ten, twenty or thirty to celebrate something? Let us know and we will keep you in mind and make sure there is enough cold behind the bar.',
   },
   {
-    icon: 'pils',
-    title: 'Student club night',
-    body:
-      'A club night, the tail end of a cantus, or an initiation that needs somewhere to land. Tell us how many of you and when, and we will work out what is possible.',
-  },
-  {
     icon: 'music',
     title: 'Concert or DJ set',
     body:
@@ -45,12 +39,12 @@ const kinds = [
     icon: 'coffee',
     title: 'Collaboration or partnership',
     body:
-      'An idea with a student society, a festival or the neighbours across the street? Drop by for a coffee, or write it down here first.',
+      'An idea with a festival or the neighbours across the street? Drop by for a coffee, or write it down here first.',
   },
 ];
 
 const goodToKnow = [
-  'Open every day from 2pm until late. Thursday, Friday and Saturday a good bit later.',
+  'Open every day from 1:30pm until 3am.',
   `A pils costs ${euro(2.7)}, there are more than 69 beers on the list and coffee is bottomless at ${euro(3)}.`,
   `Pool is free, table football costs ${euro(0.5)} and there is a chess board around somewhere.`,
   'Concerts and parties are free. Aper’Omer is on the first Friday of every month.',
@@ -86,8 +80,7 @@ const goodToKnow = [
           </p>
           <p>
             What we do like to know in advance: that a whole crowd of you is
-            coming, that someone has a birthday, that your student club is
-            looking for a night, that you want to play or DJ, or that you have an
+            coming, that someone has a birthday, that you want to play or DJ, or that you have an
             idea for something we could do together. Fill in what you have in
             mind below and it lands straight with the right person.
           </p>
@@ -99,8 +92,8 @@ const goodToKnow = [
             Just coming for a drink?
           </h2>
           <p class="walkin__body">
-            Then there is nothing to fill in. We are open every day from 2pm
-            until late and the door is open to everyone — student, neighbour or
+            Then there is nothing to fill in. We are open every day from 1:30pm
+            until 3am and the door is open to everyone — student, neighbour or
             passer-by.
           </p>
           <p class="walkin__links">
@@ -140,7 +133,7 @@ const goodToKnow = [
       <h2>Tell us what you are planning</h2>
 
       <div class="event-cta">
-        <p class="event-cta__tekst">A birthday, club night or party with us? Request it directly.</p>
+        <p class="event-cta__tekst">A birthday, leaving do or party with us? Request it directly.</p>
         <ReserveButton lang={lang} kind="event" />
       </div>
 
@@ -318,9 +311,10 @@ const goodToKnow = [
     gap: var(--space-s);
   }
 
-  @media (min-width: 42em) {
+  /* Three kinds: side by side when there is room, stacked otherwise. */
+  @media (min-width: 52em) {
     .kinds {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
+      grid-template-columns: repeat(3, minmax(0, 1fr));
     }
   }
 

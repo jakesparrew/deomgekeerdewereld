@@ -29,7 +29,7 @@ const todayIds = new Set(today.map((e) => e.id));
 const description =
   "What's on in Ghent? Free concerts, DJ nights, quizzes and the Aper’Omer at " +
   'De Omgekeerde Wereld, right opposite VIERNULVIER. See what is coming up — ' +
-  'open every day from 2pm until late.';
+  'open every day from 1:30pm until 3am.';
 
 const breadcrumbs = [
   { name: 'Home', url: route('home', lang) },
@@ -176,7 +176,7 @@ const reasons = [
   <section class="section section--tight zelf-event">
     <div class="wrap zelf-event__inner">
       <h2 class="zelf-event__titel">Hosting something yourself?</h2>
-      <p class="zelf-event__tekst">Birthday, club night or party: request your date for the upstairs or the bar.</p>
+      <p class="zelf-event__tekst">Birthday, leaving do or party: request your date for the upstairs or the bar.</p>
       <ReserveButton lang={lang} kind="event" bare />
     </div>
   </section>

@@ -26,7 +26,7 @@ const todayIds = new Set(today.map((e) => e.id));
 const description =
   'Wat te doen in Gent? Gratis concerten, dj-avonden, quiz en de Aper’Omer in ' +
   'De Omgekeerde Wereld, rechtover VIERNULVIER. Bekijk de agenda — elke dag open ' +
-  'van 14 uur tot laat.';
+  'van 13u30 tot 3 uur.';
 
 const breadcrumbs = [
   { name: site.name, url: route('home', lang) },
@@ -173,7 +173,7 @@ const reasons = [
   <section class="section section--tight zelf-event">
     <div class="wrap zelf-event__inner">
       <h2 class="zelf-event__titel">Zelf iets organiseren?</h2>
-      <p class="zelf-event__tekst">Verjaardag, clubavond, cantus of fuif: vraag je datum aan voor de bovenzaal of het café.</p>
+      <p class="zelf-event__tekst">Verjaardag, afscheid of fuif: vraag je datum aan voor de bovenzaal of het café.</p>
       <ReserveButton lang={lang} kind="event" bare />
     </div>
   </section>

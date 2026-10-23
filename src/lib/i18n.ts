@@ -65,7 +65,7 @@ export const STRINGS = {
   /* Openingsuren */
   whenOpen: t("Wanneer is't open?", 'When are we open?'),
   todayLabel: t('Vandaag', 'Today'),
-  openEveryDay: t('Elke dag van 14 uur tot laat', 'Every day from 2pm until late'),
+  openEveryDay: t('Elke dag van 13u30 tot 3 uur', 'Every day from 1:30pm until 3am'),
   hoursNote: t(
     'Openingstijden kunnen afwijken op feestdagen en tijdens events.',
     'Hours can differ on public holidays and during events.',

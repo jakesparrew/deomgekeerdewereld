@@ -45,7 +45,7 @@ const exceptionRows = exceptions.map((entry) => {
   };
 });
 
-const description = `De Omgekeerde Wereld, ${addressLine}, right opposite VIERNULVIER in Ghent. Open every day from 2pm until late. All the hours, how to get here and how to reach us.`;
+const description = `De Omgekeerde Wereld, ${addressLine}, right opposite VIERNULVIER in Ghent. Open every day from 1:30pm until 3am. All the hours, how to get here and how to reach us.`;
 
 const breadcrumbs = [
   { name: 'Home', url: route('home', lang) },
@@ -66,8 +66,8 @@ const breadcrumbs = [
       <p class="eyebrow">Find us</p>
       <h1>{T.whereToFind}</h1>
       <p class="intro__lead">
-        {site.address.street}, right opposite VIERNULVIER. Open every day from 2pm until
-        late, for a beer, a game of pool or simply somewhere to sit.
+        {site.address.street}, right opposite VIERNULVIER. Open every day from 1:30pm until
+        3am, for a beer, a game of pool or simply somewhere to sit.
       </p>
 
       <div class="intro__meta">
@@ -199,7 +199,7 @@ const breadcrumbs = [
             <a href={`tel:${site.phoneHref}`}>{site.phone}</a>
           </p>
           <p class="channel__hint">
-            For anything that cannot wait. From 2pm there is someone behind the bar.
+            For anything that cannot wait. From 1:30pm there is someone behind the bar.
           </p>
         </div>
 

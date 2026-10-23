@@ -52,7 +52,7 @@ const facts = [
   { value: String(site.founded), label: 'when we got the keys' },
   { value: '69+', label: 'beers on the list' },
   { value: euro(2.7), label: 'for a pils' },
-  { value: '7/7', label: 'open from 2pm until late' },
+  { value: '7/7', label: 'open from 1:30pm until 3am' },
 ];
 
 const pairs: [string, string][] = [
@@ -243,7 +243,7 @@ const breadcrumbs = [
         <h2>You are not a customer here</h2>
 
         <p class="lead">
-          From football teams to quiz teams, from student clubs to the staff and the
+          From football teams to quiz teams, from the staff to the
           familiar faces: den Omgekeerde runs on its people.
         </p>
 
@@ -339,8 +339,7 @@ const breadcrumbs = [
           <p class="eyebrow">{T.whenOpen}</p>
           <h2>Every day. Really every day.</h2>
           <p class="closing__lead">
-            {T.openEveryDay}. On Thursday, Friday and Saturday we stay open a good bit
-            longer.
+            {T.openEveryDay}.
           </p>
           <p class="closing__status"><OpenStatus lang={lang} variant="pill" /></p>
         </div>

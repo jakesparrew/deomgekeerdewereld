@@ -2,7 +2,7 @@
 /**
  * Reserveren — of beter: aanvragen.
  * Den Omgekeerde houdt geen tafels vrij. Deze pagina is voor groepen,
- * verjaardagen, studentenclubs, concerten en samenwerkingen.
+ * verjaardagen, concerten en samenwerkingen.
  */
 import Base from '../layouts/Base.astro';
 import Icon from '../components/Icon.astro';
@@ -29,12 +29,6 @@ const soorten = [
       'Komt ge met tien, twintig of dertig man vieren? Laat het weten, dan houden we rekening met u en staat er genoeg koud.',
   },
   {
-    icon: 'pils',
-    title: 'Studentenclub of doop',
-    body:
-      'Clubavond, cantus-nazit of gewoon een doop die ergens moet landen. Zeg met hoeveel ge zijt en wanneer, dan spreken we af wat kan.',
-  },
-  {
     icon: 'music',
     title: 'Concert of DJ-set',
     body:
@@ -44,12 +38,12 @@ const soorten = [
     icon: 'coffee',
     title: 'Samenwerking of partnership',
     body:
-      'Een idee met een vereniging, een festival of de buren van hiernaast? Kom eens langs voor een koffie, of schrijf het eerst hier op.',
+      'Een idee met een festival of de buren van hiernaast? Kom eens langs voor een koffie, of schrijf het eerst hier op.',
   },
 ];
 
 const weetjes = [
-  'Elke dag open vanaf 14 uur tot laat. Donderdag, vrijdag en zaterdag nog wat later.',
+  'Elke dag open van 13u30 tot 3 uur.',
   'Een pilske kost € 2,70, er staan meer dan 69 bierkes op de kaart en koffie is à volonté voor € 3,00.',
   'Poolke spelen is gratis, kickeren kost € 0,50 en er ligt ook een schaakbord.',
   'Concerten en fuiven zijn gratis. Aper’Omer is elke eerste vrijdag van de maand.',
@@ -85,8 +79,7 @@ const weetjes = [
           </p>
           <p>
             Wat we wél graag op voorhand weten: dat ge met een hele bende afkomt,
-            dat er iemand verjaart, dat uw studentenclub een avond zoekt, dat ge
-            wilt spelen of draaien, of dat ge een voorstel hebt om samen iets te
+            dat er iemand verjaart, dat ge wilt spelen of draaien, of dat ge een voorstel hebt om samen iets te
             doen. Vul hieronder in wat ge in gedachten hebt — het komt meteen bij
             de juiste persoon terecht.
           </p>
@@ -98,7 +91,7 @@ const weetjes = [
             Gewoon iets komen drinken?
           </h2>
           <p class="walkin__body">
-            Dan moet ge niks invullen. We zijn elke dag open van 14 uur tot laat
+            Dan moet ge niks invullen. We zijn elke dag open van 13u30 tot 3 uur
             en de deur staat voor iedereen open — student, buur of passant.
           </p>
           <p class="walkin__links">
@@ -138,7 +131,7 @@ const weetjes = [
       <h2>Vertel eens wat ge van plan zijt</h2>
 
       <div class="event-cta">
-        <p class="event-cta__tekst">Een verjaardag, clubavond of fuif bij ons? Vraag het rechtstreeks aan.</p>
+        <p class="event-cta__tekst">Een verjaardag, afscheid of fuif bij ons? Vraag het rechtstreeks aan.</p>
         <ReserveButton lang={lang} kind="event" />
       </div>
 
@@ -316,9 +309,10 @@ const weetjes = [
     gap: var(--space-s);
   }
 
-  @media (min-width: 42em) {
+  /* Drie soorten: naast elkaar zodra er plaats is, anders onder elkaar. */
+  @media (min-width: 52em) {
     .soorten {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
+      grid-template-columns: repeat(3, minmax(0, 1fr));
     }
   }
 

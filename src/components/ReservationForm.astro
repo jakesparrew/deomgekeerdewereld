@@ -1,7 +1,7 @@
 ---
 /**
- * Aanvraagformulier voor groepen, verjaardagen, studentenclubs,
- * concerten en samenwerkingen. GEEN tafelreservaties: den Omgekeerde
+ * Aanvraagformulier voor groepen, verjaardagen, concerten en
+ * samenwerkingen. GEEN tafelreservaties: den Omgekeerde
  * is een inloopcafé.
  *
  * Werkt out of the box met Netlify Forms. Wil je een andere endpoint
@@ -42,12 +42,6 @@ const requestTypes = [
   {
     id: 'groep',
     label: isEN ? 'Group or birthday' : 'Groep of verjaardag',
-    to: site.email.events,
-    who: 'Tristan',
-  },
-  {
-    id: 'studentenclub',
-    label: isEN ? 'Student club or initiation' : 'Studentenclub of doop',
     to: site.email.events,
     who: 'Tristan',
   },
