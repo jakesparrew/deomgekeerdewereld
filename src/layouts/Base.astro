@@ -137,17 +137,6 @@ const defaultImageAlt =
 
     <script type="application/json" data-hours-config is:inline set:html={hoursJson}></script>
 
-    {
-      site.analytics.enabled && (
-        <script
-          is:inline
-          defer
-          data-domain={site.analytics.plausibleDomain}
-          src="https://plausible.io/js/script.js"
-        ></script>
-      )
-    }
-
     <!-- Bezoekcijfers van SuperHoreca: zonder cookies, slaat niets op het toestel op. -->
     <script
       is:inline

@@ -101,11 +101,6 @@ export const site = {
     turnstileSiteKey: '',
   },
 
-  /** Privacyvriendelijke analytics. Leeg = geen script, geen cookiebanner. */
-  analytics: {
-    plausibleDomain: 'deomgekeerdewereld.be',
-    enabled: true,
-  },
 } as const;
 
 export type Site = typeof site;

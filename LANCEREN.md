@@ -162,7 +162,7 @@ dagthema**:
 - [ ] De link op **Untappd** nakijken
 - [ ] Google Search Console: de site toevoegen, eigendom bevestigen, de sitemap indienen
 - [ ] Bing Webmaster Tools: hetzelfde
-- [ ] Plausible: kijken of er statistieken binnenlopen
+- [ ] SuperHoreca: kijken of er bezoekcijfers binnenlopen
 
 ### De week erna
 

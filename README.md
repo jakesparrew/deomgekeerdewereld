@@ -380,7 +380,7 @@ public/             wat één op één mee online gaat
 **Wat er bewust níét in zit**
 
 Geen cookiebanner, want er worden geen cookies gezet. De bezoekersstatistieken lopen via
-Plausible, dat geen cookies gebruikt en geen persoonsgegevens bewaart. De kaart op de
+SuperHoreca (de sitetag in `src/layouts/Base.astro`), zonder cookies en zonder iets op het toestel op te slaan. De kaart op de
 contactpagina laadt pas nadat de bezoeker erop klikt, zodat OpenStreetMap niet ongevraagd
 wordt aangesproken. Zet ge later toch Google Analytics of iets dergelijks aan, dan hebt
 ge wél een toestemmingsbanner nodig.
