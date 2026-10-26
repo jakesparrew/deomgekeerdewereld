@@ -70,7 +70,7 @@ intro:
     Everything behind the bar is on this list — and if something looks
     off, just ask us at the bar.
 
-updated: '2026-10-19'
+updated: '2026-10-26'
 
 items:
   # ------------------------------------------------------------------
@@ -137,10 +137,6 @@ items:
   # gewone prijs, dus één item met de tag promo.
   - id: flying-fish
     name: Flying Fish
-    category: bier
-    price: 5.00
-  - id: golden-tricky
-    name: Golden Tricky
     category: bier
     price: 5.00
   - id: delta-ipa
@@ -554,13 +550,6 @@ items:
     category: bier
     price: 5.00
     style: blond
-  - id: westmalle
-    name: Westmalle
-    category: bier
-    price: 5.00
-    style: trappist
-    brewery: Westmalle
-    tags: [trappist]
   - id: westmalle-tripel
     name: Westmalle Tripel
     category: bier
@@ -654,6 +643,11 @@ items:
     name: '0,0 Nona June & Tonic'
     category: alcoholvrij
     price: 10.00
+    tags: [alcoholvrij]
+  - id: 0-0-delirio
+    name: '0,0 Delirio'
+    category: alcoholvrij
+    price: 5.00
     tags: [alcoholvrij]
 
   # ------------------------------------------------------------------
@@ -1280,7 +1274,7 @@ items:
   - id: shot-rum-kraken
     name: Shot Rum Kraken
     category: shots
-    price: 4.00
+    price: 4.50
   - id: bols-blue-1575
     name: Bols Blue 1575
     category: shots
@@ -1372,7 +1366,7 @@ items:
   - id: shot-rum-bumbu
     name: Shot Rum Bumbu
     category: shots
-    price: 4.00
+    price: 4.50
   - id: shot-rum-bumbu-x
     name: Shot Rum Bumbu X
     category: shots
