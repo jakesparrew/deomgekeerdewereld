@@ -7,7 +7,6 @@
 import Base from '../../layouts/Base.astro';
 import Icon from '../../components/Icon.astro';
 import Photo from '../../components/Photo.astro';
-import ReservationForm from '../../components/ReservationForm.astro';
 import ReserveButton from '../../components/ReserveButton.astro';
 
 import { site } from '../../data/site';
@@ -49,17 +48,13 @@ const breadcrumbs = [
       <h2>A group, a party or an idea?</h2>
       <p class="aanvraag__intro">
         A birthday, a leaving do, a concert or a collaboration: request it
-        directly, or fill in the form. It lands straight with the right person.
+        directly. It lands straight with the right person.
       </p>
       <p class="reserve-cta">
         <ReserveButton lang={lang} kind="event" />
       </p>
 
       <div class="aanvraag">
-        <div class="aanvraag__form">
-          <ReservationForm lang={lang} />
-        </div>
-
         <aside class="aanvraag__aside" aria-labelledby="direct-title">
           <Photo
             src="/images/groep-klinken.jpg"
@@ -125,10 +120,10 @@ const breadcrumbs = [
   }
 
   @media (min-width: 60em) {
-    .aanvraag {
-      grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr);
+    .aanvraag__aside {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
       align-items: start;
-      gap: var(--space-2xl);
     }
   }
 

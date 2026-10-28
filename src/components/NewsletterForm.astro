@@ -1,10 +1,15 @@
 ---
 /**
- * Nieuwsbriefformulier. Werkt out of the box met Netlify Forms.
- * Wil je Brevo rechtstreeks? Zet de endpoint in src/data/site.ts.
- * Er is altijd een honeypot; Turnstile komt erbij zodra je een sleutel invult.
+ * Nieuwsbrief, via SuperHoreca.
+ *
+ * Vroeger was dit een Netlify-formulier. De site draait op Vercel, en Vercel
+ * aanvaardt geen POST op een statische pagina: inschrijven gaf "HTTP ERROR 405".
+ * Nu bouwt het script van SuperHoreca het formulier zelf in dit vak. Het stuurt
+ * naar de server van SuperHoreca, die een bevestigingsmail stuurt (dubbele
+ * opt-in) en de lijst bijhoudt.
+ *
+ * Zonder JavaScript is er een gewone link naar de inschrijfpagina.
  */
-import { site } from '../data/site';
 import { route, strings, type Lang } from '../lib/i18n';
 
 interface Props {
@@ -15,148 +20,56 @@ interface Props {
 const { lang, compact = false } = Astro.props;
 const T = strings(lang);
 
-const action = site.forms.newsletterEndpoint || undefined;
-const useNetlify = !action;
+const EMBED = 'https://superhoreca.app/embed/omgekeerde-wereld-bv/newsletter';
+const PAGE = 'https://superhoreca.app/newsletter/omgekeerde-wereld-bv';
 ---
 
-<form
-  class:list={['newsletter', compact && 'newsletter--compact']}
-  name="nieuwsbrief"
-  method="POST"
-  action={action}
-  data-netlify={useNetlify ? 'true' : undefined}
-  netlify-honeypot={useNetlify ? 'bedankt-bot' : undefined}
->
-  {useNetlify && <input type="hidden" name="form-name" value="nieuwsbrief" />}
-
-  <p class="newsletter__honey" aria-hidden="true">
-    <label>
-      Laat dit veld leeg
-      <input type="text" name="bedankt-bot" tabindex="-1" autocomplete="off" />
-    </label>
+<div class:list={['newsletter', compact && 'newsletter--compact']}>
+  <div id="nieuwsbrief-vak" class="newsletter__vak"></div>
+  <noscript>
+    <a class="btn btn--primary" href={PAGE}>{T.newsletterCta}</a>
+  </noscript>
+  <p class="newsletter__privacy">
+    <a href={route('privacy', lang)}>{T.privacyPolicy}</a>
   </p>
+</div>
 
-  <div class="newsletter__row">
-    <div class="newsletter__field">
-      <label class="newsletter__label" for="nieuwsbrief-email">{T.email}</label>
-      <input
-        class="newsletter__input"
-        id="nieuwsbrief-email"
-        type="email"
-        name="email"
-        required
-        autocomplete="email"
-        inputmode="email"
-        placeholder={lang === 'en' ? 'yourname@example.com' : 'uwnaam@voorbeeld.be'}
-      />
-    </div>
-    <button class="btn btn--primary newsletter__submit" type="submit">
-      {T.newsletterCta}
-    </button>
-  </div>
-
-  <label class="newsletter__consent">
-    <input type="checkbox" name="toestemming" required />
-    <span>
-      {T.newsletterConsent}{' '}
-      <a href={route('privacy', lang)}>{T.privacyPolicy}</a>.
-    </span>
-  </label>
-
-  {
-    site.forms.turnstileSiteKey && (
-      <>
-        <div class="cf-turnstile" data-sitekey={site.forms.turnstileSiteKey} />
-        <script is:inline defer src="https://challenges.cloudflare.com/turnstile/v0/api.js" />
-      </>
-    )
-  }
-</form>
+<script
+  is:inline
+  async
+  src={EMBED}
+  data-auto-form
+  data-mount="#nieuwsbrief-vak"
+  data-lang={lang}
+  data-theme="dark"
+  data-color="#ff3d5a"
+  data-cta={T.newsletterCta}
+></script>
 
 <style>
   .newsletter {
     display: flex;
     flex-direction: column;
-    gap: var(--space-xs);
-  }
-
-  .newsletter__honey {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    overflow: hidden;
-    clip-path: inset(50%);
-    white-space: nowrap;
-  }
-
-  .newsletter__row {
-    display: flex;
-    flex-wrap: wrap;
     gap: var(--space-2xs);
-    align-items: flex-end;
   }
 
-  .newsletter__field {
-    flex: 1 1 14rem;
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-3xs);
+  /* Hun formulier is maximaal 380px; in de voettekst mag het de kolom vullen. */
+  .newsletter__vak :global(.ssn-form) {
+    max-width: none;
+    font-family: var(--font-body);
   }
 
-  .newsletter__label {
-    font-size: var(--step--2);
-    font-weight: 600;
-    letter-spacing: var(--tracking-wide);
+  .newsletter__vak :global(.ssn-btn) {
+    font-weight: 800;
+    letter-spacing: 0.04em;
     text-transform: uppercase;
-    color: var(--ink-faint);
   }
 
-  .newsletter__input {
-    min-height: var(--tap-min);
-    padding: var(--space-2xs) var(--space-xs);
-    background: var(--bg-inset);
-    color: var(--ink);
-    border: var(--border-hairline) solid var(--line-strong);
-    border-radius: var(--radius-s);
-  }
-
-  .newsletter__input::placeholder {
-    color: var(--ink-faint);
-  }
-
-  .newsletter__input:focus-visible {
-    border-color: var(--accent);
-  }
-
-  .newsletter__submit {
-    flex: 0 0 auto;
-  }
-
-  .newsletter__consent {
-    display: flex;
-    gap: var(--space-2xs);
-    align-items: flex-start;
-    font-size: var(--step--1);
-    line-height: var(--leading-snug);
-    color: var(--ink-faint);
-  }
-
-  .newsletter__consent {
-    /* Genoeg hoogte om er met een duim op te mikken. */
-    min-block-size: 2.25rem;
-    align-items: center;
-  }
-
-  .newsletter__consent input {
-    /* In rem, niet in em: anders krimpt het vinkje mee met de compacte tekst
-       en blijft er een doelwit van 12 bij 12 pixels over. */
-    inline-size: 1.25rem;
-    block-size: 1.25rem;
-    accent-color: var(--accent);
-    flex: none;
-  }
-
-  .newsletter--compact .newsletter__consent {
+  .newsletter__privacy {
     font-size: var(--step--2);
+  }
+
+  .newsletter__privacy a {
+    color: var(--ink-faint);
   }
 </style>

@@ -94,7 +94,8 @@ export const site = {
 
   /** Formulieren. Zie README voor het instellen. */
   forms: {
-    /** Netlify Forms staat aan via data-netlify. Wil je Formspree? Zet hier de endpoint. */
+    /** Niet meer in gebruik: de site draait op Vercel, dat geen formulier-POST
+     *  aanvaardt (HTTP 405). Nieuwsbrief en aanvragen lopen via SuperHoreca. */
     reservationEndpoint: '',
     newsletterEndpoint: '',
     /** Cloudflare Turnstile site key. Leeg = geen widget (enkel honeypot). */

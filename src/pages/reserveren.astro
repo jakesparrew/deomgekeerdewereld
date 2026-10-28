@@ -8,7 +8,6 @@
 import Base from '../layouts/Base.astro';
 import Icon from '../components/Icon.astro';
 import Photo from '../components/Photo.astro';
-import ReservationForm from '../components/ReservationForm.astro';
 import ReserveButton from '../components/ReserveButton.astro';
 
 import { site } from '../data/site';
@@ -50,18 +49,13 @@ const breadcrumbs = [
       <h2>Een groep, een feestje of een voorstel?</h2>
       <p class="aanvraag__intro">
         Een verjaardag, een afscheid, een concert of een samenwerking: vraag het
-        rechtstreeks aan, of vul het formulier in. Het komt meteen bij de juiste
-        persoon terecht.
+        rechtstreeks aan. Het komt meteen bij de juiste persoon terecht.
       </p>
       <p class="reserve-cta">
         <ReserveButton lang={lang} kind="event" />
       </p>
 
       <div class="aanvraag">
-        <div class="aanvraag__form">
-          <ReservationForm lang={lang} />
-        </div>
-
         <aside class="aanvraag__aside" aria-labelledby="direct-titel">
           <Photo
             src="/images/groep-klinken.jpg"
@@ -127,10 +121,12 @@ const breadcrumbs = [
   }
 
   @media (min-width: 60em) {
-    .aanvraag {
-      grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr);
+    /* Het formulier is weg (het gaf een 405 op Vercel); foto en bel/mail-kaart
+       staan nu naast elkaar. */
+    .aanvraag__aside {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
       align-items: start;
-      gap: var(--space-2xl);
     }
   }
 
