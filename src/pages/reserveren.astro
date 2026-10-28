@@ -120,20 +120,21 @@ const breadcrumbs = [
     margin-block-start: var(--space-m);
   }
 
+  .aanvraag__aside {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-m);
+  }
+
   @media (min-width: 60em) {
     /* Het formulier is weg (het gaf een 405 op Vercel); foto en bel/mail-kaart
        staan nu naast elkaar. */
+    /* Na de gewone regel, anders wint die en blijven ze onder elkaar. */
     .aanvraag__aside {
       display: grid;
       grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
       align-items: start;
     }
-  }
-
-  .aanvraag__aside {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-m);
   }
 
   /* ---- Bellen of mailen ---- */

@@ -297,10 +297,10 @@ Werkt ge met Vercel, dan hoort dat in `vercel.json`; met Cloudflare Pages in een
 `_redirects` met dezelfde inhoud. Zet het hoofddomein daarnaast ook in de
 DNS-instellingen van uw registrar.
 
-**De formulieren** (reservaties en nieuwsbrief) werken op Netlify vanzelf: die vangt ze
-op en mailt ze door. Ge moet enkel in Netlify onder **Forms → Form notifications**
-instellen naar welk adres ze gaan. Op een andere host zet ge een endpoint in
-`src/data/site.ts` bij `forms.reservationEndpoint` en `forms.newsletterEndpoint`.
+**Formulieren.** De site heeft geen eigen formulieren meer: Vercel aanvaardt geen
+formulier-POST (HTTP 405). Reservaties en aanvragen lopen via de twee knoppen van
+SuperHoreca ("Reserveer een tafel" en "Vraag uw event aan"), en de nieuwsbrief in de
+voettekst is het nieuwsbriefformulier van SuperHoreca.
 
 **Reserveren via SuperHoreca.** De knop op `/reserveren/` opent een boekingsvenster
 van SuperHoreca. Eén instelling regelt alles: `reservations.embed` in
