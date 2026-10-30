@@ -118,22 +118,23 @@ const telHref = `tel:${site.phoneHref}`;
       <h3 id="wat-nieuwsbrief">1. De nieuwsbrief</h3>
       <ul>
         <li>
-          <strong>Wat:</strong> uw e-mailadres, en het moment waarop ge u inschreef —
-          de datum en het uur van uw toestemming. Meer niet: geen naam, geen leeftijd,
-          geen adres.
+          <strong>Wat:</strong> uw e-mailadres, en het moment waarop ge u inschreef en
+          bevestigde. Meer niet: geen naam, geen leeftijd, geen adres.
         </li>
         <li>
           <strong>Waarom:</strong> om u af en toe te laten weten wat er te doen is.
         </li>
         <li>
           <strong>Rechtsgrond:</strong> uw toestemming — artikel 6.1.a van de AVG
-          (GDPR). Ge geeft ze zelf door het vakje aan te vinken, en ge kunt ze op elk
-          moment weer intrekken.
+          (GDPR). Ge geeft ze zelf: na het inschrijven krijgt ge een mail, en pas als ge
+          daarin bevestigt, staat ge op de lijst. Ge kunt ze op elk moment weer
+          intrekken.
         </li>
         <li>
-          <strong>Wie helpt ons:</strong> Brevo (vroeger Sendinblue), gevestigd in
-          Parijs, Frankrijk. Zij versturen de mails in onze opdracht en zitten dus
-          binnen de Europese Unie. Zij mogen uw adres nergens anders voor gebruiken.
+          <strong>Wie helpt ons:</strong> SuperHoreca, dat ook onze reservaties
+          beheert. Het inschrijfvak onderaan elke pagina komt van hen, en zij houden de
+          lijst bij en versturen de mails in onze opdracht. Zij mogen uw adres nergens
+          anders voor gebruiken.
         </li>
         <li>
           <strong>Hoe lang:</strong> tot ge u uitschrijft. Daarna gaat uw adres eruit.
@@ -145,16 +146,16 @@ const telHref = `tel:${site.phoneHref}`;
         </li>
       </ul>
 
-      <h3 id="wat-formulier">2. Het reservatie- en samenwerkingsformulier</h3>
+      <h3 id="wat-formulier">2. Reservaties en aanvragen</h3>
       <ul>
         <li>
-          <strong>Wat:</strong> uw naam, uw e-mailadres, en als ge ze invult ook uw
-          telefoonnummer, de datum die ge in gedachten hebt, met hoeveel ge zijt, en
-          uw bericht. De velden die niet verplicht zijn, moet ge echt niet invullen.
+          <strong>Wat:</strong> wat ge zelf invult in het venster van SuperHoreca: uw
+          naam, uw e-mailadres, eventueel uw telefoonnummer, de datum, met hoeveel ge
+          zijt en uw bericht.
         </li>
         <li>
-          <strong>Waarom:</strong> om u te kunnen antwoorden en om uw feestje,
-          verjaardag, concert of voorstel geregeld te krijgen.
+          <strong>Waarom:</strong> om uw tafel vast te leggen, of om u te antwoorden en
+          uw feestje, concert of voorstel geregeld te krijgen.
         </li>
         <li>
           <strong>Rechtsgrond:</strong> voor een reservatie of een boeking is dat
@@ -164,27 +165,20 @@ const telHref = `tel:${site.phoneHref}`;
           een antwoord.
         </li>
         <li>
-          <strong>Wie leest het:</strong> de zaakvoerders. Boekingen en events komen
-          binnen bij <a href={mailtoEvents}>{mailEvents}</a>, voorstellen voor
-          samenwerking bij <a href={mailtoPartners}>{mailPartners}</a>.
+          <strong>Wie helpt ons:</strong> SuperHoreca. Hun venster opent pas als ge op
+          <em>Reserveer een tafel</em> of <em>Vraag uw event aan</em> duwt, en wat ge
+          daarin invult gaat rechtstreeks naar hen. Wij zien de reservatie of de
+          aanvraag zelf.
         </li>
         <li>
           <strong>Hoe lang:</strong> niet langer dan 12 maanden na het event, of na het
           laatste contact als er geen event van gekomen is.
         </li>
       </ul>
-      <!--
-        NOG IN TE VULLEN. Vervang de zin hieronder door de naam en de
-        vestigingsplaats van de partij die het formulier afhandelt, bijvoorbeeld:
-        "Het formulier wordt technisch afgehandeld door Netlify, Inc. Die partij
-        verwerkt de gegevens buiten de Europese Economische Ruimte, op basis van
-        de standaardcontractbepalingen van de Europese Commissie."
-        Zie AANLEVEREN.md, blok 3.
-      -->
       <p>
-        Het formulier wordt technisch afgehandeld door de partij die deze website host
-        en de berichten doorstuurt. Wie dat is en waar die gevestigd is, kunt ge bij ons
-        opvragen via <a href={`mailto:${site.email.general}`}>{site.email.general}</a>.
+        Mailt ge ons rechtstreeks, op <a href={mailtoEvents}>{mailEvents}</a> of
+        <a href={mailtoPartners}>{mailPartners}</a>, dan lezen de zaakvoerders dat en
+        bewaren we het even lang.
       </p>
 
       <h3 id="wat-statistieken">3. De bezoekcijfers van deze website</h3>
@@ -256,7 +250,7 @@ const telHref = `tel:${site.phoneHref}`;
               <td>Tot ge u uitschrijft</td>
             </tr>
             <tr>
-              <th scope="row">Bericht via het formulier</th>
+              <th scope="row">Reservatie of aanvraag</th>
               <td>Max. 12 maanden na het event of na het laatste contact</td>
             </tr>
             <tr>
@@ -309,14 +303,13 @@ const telHref = `tel:${site.phoneHref}`;
         </li>
         <li><strong>OpenStreetMap</strong> — het kaartje bij ons adres.</li>
         <li>
-          <strong>SuperHoreca</strong> — het boekingsvenster waarin ge een tafel
-          vastlegt.
+          <strong>SuperHoreca</strong> — het venster waarin ge een tafel vastlegt of
+          een event aanvraagt.
         </li>
-        <li><strong>De hostingpartij</strong> — die het formulier ontvangt en doorstuurt.</li>
       </ul>
       <p>
-        <strong>Over dat reserveren.</strong> Net als bij het kaartje wordt er niks van
-        SuperHoreca geladen zolang ge er niet op klikt. Duwt ge op
+        <strong>Over dat reserveren.</strong> Net als bij het kaartje wordt het
+        boekingsvenster van SuperHoreca niet geladen zolang ge er niet op klikt. Duwt ge op
         <em>Reserveer een tafel</em>, dan halen we op dat moment pas hun script op en
         opent hun boekingsvenster. Wat ge daarin invult — uw naam, uw e-mailadres, het
         aantal personen en het uur — gaat rechtstreeks naar SuperHoreca, die de

@@ -314,11 +314,15 @@ enkel op de computer van de ontwikkelaar. Daarom controleert de site die URL zel
 - localhost, `http`, of leeg → geen knop, wel het telefoonnummer, plus een
   waarschuwing in de bouwlog
 
-Anders dan het knip-en-plakvoorbeeld van SuperHoreca laadt de site hun script **pas
-wanneer iemand op de knop duwt**. Voor de bezoeker is dat dezelfde ene klik. Voor ons
-betekent het dat wie enkel de kaart komt bekijken, nooit contact legt met SuperHoreca
-— en dat is precies waarom deze site geen cookiebanner nodig heeft. Zet dat dus niet
-terug naar een gewone `<script async>` in de layout.
+Anders dan het knip-en-plakvoorbeeld van SuperHoreca laadt de site hun
+boekingsvenster **pas wanneer iemand op de knop duwt**. Voor de bezoeker is dat
+dezelfde ene klik; het boekingsscript kan cookies zetten, en zo komen die er enkel na
+een klik. Zet dat dus niet terug naar een gewone `<script async>` in de layout.
+
+Wat wél op elke pagina van SuperHoreca komt: de sitetag voor bezoekcijfers en het
+nieuwsbriefvak in de voettekst. Geen van beide zet cookies of slaat iets op het
+toestel op; daarom blijft een cookiebanner overbodig. Voegt ge iets toe dat dat wél
+doet, pas dan ook `/privacy/` en `/cookies/` aan.
 
 **Spam.** Er zit al een verborgen lokvakje in dat de meeste robots tegenhoudt. Krijgt ge
 toch rommel binnen, maak dan een gratis Cloudflare Turnstile-sleutel aan en zet die in

@@ -42,7 +42,7 @@ const PAGE = 'https://superhoreca.app/newsletter/omgekeerde-wereld-bv';
   data-mount="#nieuwsbrief-vak"
   data-lang={lang}
   data-theme="dark"
-  data-color="#ff3d5a"
+  data-color="#ffd23f"
   data-cta={T.newsletterCta}
 ></script>
 
@@ -53,10 +53,32 @@ const PAGE = 'https://superhoreca.app/newsletter/omgekeerde-wereld-bv';
     gap: var(--space-2xs);
   }
 
-  /* Hun formulier is maximaal 380px; in de voettekst mag het de kolom vullen. */
+  /* Hun formulier is maximaal 380px; in de voettekst mag het de kolom vullen.
+     De kleuren komen uit tokens.css, zodat het vak meekleurt met het dag- en
+     nachtthema. Hun script zet die variabelen inline, vandaar !important. */
   .newsletter__vak :global(.ssn-form) {
     max-width: none;
     font-family: var(--font-body);
+    --ssn-c: var(--accent) !important;
+    --ssn-h: var(--accent-dim) !important;
+    --ssn-ink: var(--accent-ink) !important;
+    --ssn-ring: color-mix(in srgb, var(--accent) 25%, transparent) !important;
+  }
+
+  /* Hun donkere stijl zet witte tekst op een doorzichtig veld: onleesbaar op de
+     lichte voettekst van het dagthema. */
+  .newsletter__vak :global(.ssn-input) {
+    background: var(--bg-inset);
+    color: var(--ink);
+    border-color: var(--line-strong);
+  }
+
+  .newsletter__vak :global(.ssn-input::placeholder) {
+    color: var(--ink-faint);
+  }
+
+  .newsletter__vak :global(.ssn-hint) {
+    color: var(--ink-faint);
   }
 
   .newsletter__vak :global(.ssn-btn) {
