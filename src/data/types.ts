@@ -183,6 +183,8 @@ export interface EventEntry {
    * Leeg = breed (16 / 9 bovenaan, 3 / 2 in de lijst).
    */
   imageRatio?: string;
+  /** Datum en uur staan nog niet vast: niet als vast event aan Google geven. */
+  provisional?: boolean;
   /**
    * Deals per dag, bv. tijdens een feestweek. De site toont ze als lijstje
    * met de dag ervoor.

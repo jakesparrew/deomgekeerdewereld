@@ -69,7 +69,11 @@ for (const entry of eventsYaml.events) {
     throw new Error(`Dubbele id in content/events.yaml: "${entry.id}"`);
   }
   seenEventIds.add(entry.id);
-  if (!/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}/.test(entry.start)) {
+  // Enkel een datum mag alleen als het uur nog onder voorbehoud staat.
+  const startPattern = entry.provisional
+    ? /^\d{4}-\d{2}-\d{2}(T\d{2}:\d{2})?/
+    : /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}/;
+  if (!startPattern.test(entry.start)) {
     throw new Error(
       `Event "${entry.id}" heeft een rare startdatum: "${entry.start}". Gebruik 2026-10-03T21:00`,
     );

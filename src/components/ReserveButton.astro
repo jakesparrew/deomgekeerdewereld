@@ -159,6 +159,17 @@ const fallback = isEvent ? `mailto:${site.email.events}` : `tel:${site.phoneHref
         const name = (button.dataset.api as ApiName) ?? 'SuperHoreca';
         const api = await loadEmbed(src, name);
         api.open();
+
+        // Hun script opent het venster zonder taal, en toont dan soms Engels op
+        // een Nederlandse pagina. Geef de taal van de pagina mee.
+        const frames = document.querySelectorAll<HTMLIFrameElement>('iframe.ss-frame, iframe.ssq-frame');
+        const frame = frames[frames.length - 1];
+        if (frame) {
+          const url = new URL(frame.src);
+          url.searchParams.set('lang', document.documentElement.lang.slice(0, 2));
+          frame.src = url.toString();
+          frame.title = original;
+        }
       } catch (error) {
         // Niet stilvallen: stuur ze naar de telefoon.
         console.warn('[reserveren]', (error as Error).message);

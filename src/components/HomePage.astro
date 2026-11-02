@@ -192,6 +192,8 @@ const weekday = (start: string) => formatDate(start, lang).split(' ')[0];
             {en
               ? 'Every Buffalo match live, home and away, with the sound on.'
               : 'Elke Buffalo-match live, thuis en uit, met geluid.'}
+            {' '}
+            <a href={route('agenda', lang)}>{en ? 'All matches' : 'Alle matchen'}</a>
           </li>
           <li>
             <strong>Merch</strong>

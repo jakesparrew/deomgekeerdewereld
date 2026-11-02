@@ -91,3 +91,248 @@ events:
         name: 'Corona Extra 1+1'
       - date: '2026-11-01'
         name: 'Gulden Draak Brewmaster 2+1'
+
+  # ---- KAA Gent: officieel Buffalo Point ----
+  # Overgenomen van kaagent.be/nl/team/first-team/kalender op 2 november 2026.
+  # "provisional: true" = de club heeft datum en uur nog niet vastgelegd. Is het
+  # uur bekend, zet het dan bij start ('2027-01-23T20:45') en haal die regel weg.
+  - id: kups-kaa-gent-2026-11-05
+    title: 'KuPS - KAA Gent'
+    start: '2026-11-05T18:45'
+    type: sport
+    price: null
+    description: 'Live op groot scherm.'
+    descriptionEn: 'Live on the big screen.'
+
+  - id: kaa-gent-kortrijk-2026-11-08
+    title: 'KAA Gent - Kortrijk'
+    start: '2026-11-08T16:00'
+    type: sport
+    price: null
+    description: 'Live op groot scherm.'
+    descriptionEn: 'Live on the big screen.'
+
+  - id: beveren-kaa-gent-2026-11-22
+    title: 'SK Beveren - KAA Gent'
+    start: '2026-11-22T13:30'
+    type: sport
+    price: null
+    description: 'Live op groot scherm.'
+    descriptionEn: 'Live on the big screen.'
+
+  - id: kaa-gent-rode-ster-2026-11-26
+    title: 'KAA Gent - Rode Ster Belgrado'
+    start: '2026-11-26T21:00'
+    type: sport
+    price: null
+    description: 'Live op groot scherm.'
+    descriptionEn: 'Live on the big screen.'
+
+  - id: union-kaa-gent-2026-11-29
+    title: 'Union SG - KAA Gent'
+    start: '2026-11-29T19:15'
+    type: sport
+    price: null
+    description: 'Live op groot scherm.'
+    descriptionEn: 'Live on the big screen.'
+
+  - id: thun-kaa-gent-2026-12-10
+    title: 'FC Thun - KAA Gent'
+    start: '2026-12-10T21:00'
+    type: sport
+    price: null
+    description: 'Live op groot scherm.'
+    descriptionEn: 'Live on the big screen.'
+
+  - id: kaa-gent-stvv-2026-12-13
+    title: 'KAA Gent - STVV'
+    start: '2026-12-13T19:15'
+    type: sport
+    price: null
+    description: 'Live op groot scherm.'
+    descriptionEn: 'Live on the big screen.'
+
+  - id: kaa-gent-brann-2026-12-17
+    title: 'KAA Gent - SK Brann'
+    start: '2026-12-17T21:00'
+    type: sport
+    price: null
+    description: 'Live op groot scherm.'
+    descriptionEn: 'Live on the big screen.'
+
+  - id: westerlo-kaa-gent-2026-12-20
+    title: 'Westerlo - KAA Gent'
+    start: '2026-12-20T19:15'
+    type: sport
+    price: null
+    description: 'Live op groot scherm.'
+    descriptionEn: 'Live on the big screen.'
+
+  - id: kaa-gent-antwerp-2026-12-27
+    title: 'KAA Gent - Antwerp'
+    start: '2026-12-27T18:30'
+    type: sport
+    price: null
+    description: 'Live op groot scherm.'
+    descriptionEn: 'Live on the big screen.'
+
+  - id: charleroi-kaa-gent-2027-01-17
+    title: 'Charleroi - KAA Gent'
+    start: '2027-01-17T18:30'
+    type: sport
+    price: null
+    description: 'Live op groot scherm.'
+    descriptionEn: 'Live on the big screen.'
+
+  - id: kaa-gent-cercle-2027-01-23
+    title: 'KAA Gent - Cercle Brugge'
+    start: '2027-01-23'
+    type: sport
+    price: null
+    provisional: true
+    description: 'Live op groot scherm. Datum en uur staan nog onder voorbehoud.'
+    descriptionEn: 'Live on the big screen. Date and time still to be confirmed.'
+
+  - id: anderlecht-kaa-gent-2027-01-30
+    title: 'Anderlecht - KAA Gent'
+    start: '2027-01-30'
+    type: sport
+    price: null
+    provisional: true
+    description: 'Live op groot scherm. Datum en uur staan nog onder voorbehoud.'
+    descriptionEn: 'Live on the big screen. Date and time still to be confirmed.'
+
+  - id: kaa-gent-beveren-2027-02-06
+    title: 'KAA Gent - SK Beveren'
+    start: '2027-02-06'
+    type: sport
+    price: null
+    provisional: true
+    description: 'Live op groot scherm. Datum en uur staan nog onder voorbehoud.'
+    descriptionEn: 'Live on the big screen. Date and time still to be confirmed.'
+
+  - id: stvv-kaa-gent-2027-02-13
+    title: 'STVV - KAA Gent'
+    start: '2027-02-13'
+    type: sport
+    price: null
+    provisional: true
+    description: 'Live op groot scherm. Datum en uur staan nog onder voorbehoud.'
+    descriptionEn: 'Live on the big screen. Date and time still to be confirmed.'
+
+  - id: kaa-gent-la-louviere-2027-02-20
+    title: 'KAA Gent - RAAL La Louvière'
+    start: '2027-02-20'
+    type: sport
+    price: null
+    provisional: true
+    description: 'Live op groot scherm. Datum en uur staan nog onder voorbehoud.'
+    descriptionEn: 'Live on the big screen. Date and time still to be confirmed.'
+
+  - id: standard-kaa-gent-2027-02-27
+    title: 'Standard - KAA Gent'
+    start: '2027-02-27'
+    type: sport
+    price: null
+    provisional: true
+    description: 'Live op groot scherm. Datum en uur staan nog onder voorbehoud.'
+    descriptionEn: 'Live on the big screen. Date and time still to be confirmed.'
+
+  - id: kaa-gent-charleroi-2027-03-06
+    title: 'KAA Gent - Charleroi'
+    start: '2027-03-06'
+    type: sport
+    price: null
+    provisional: true
+    description: 'Live op groot scherm. Datum en uur staan nog onder voorbehoud.'
+    descriptionEn: 'Live on the big screen. Date and time still to be confirmed.'
+
+  - id: kaa-gent-zulte-waregem-2027-03-13
+    title: 'KAA Gent - SV Zulte Waregem'
+    start: '2027-03-13'
+    type: sport
+    price: null
+    provisional: true
+    description: 'Live op groot scherm. Datum en uur staan nog onder voorbehoud.'
+    descriptionEn: 'Live on the big screen. Date and time still to be confirmed.'
+
+  - id: club-brugge-kaa-gent-2027-03-20
+    title: 'Club Brugge - KAA Gent'
+    start: '2027-03-20'
+    type: sport
+    price: null
+    provisional: true
+    description: 'Live op groot scherm. Datum en uur staan nog onder voorbehoud.'
+    descriptionEn: 'Live on the big screen. Date and time still to be confirmed.'
+
+  - id: kaa-gent-westerlo-2027-04-03
+    title: 'KAA Gent - Westerlo'
+    start: '2027-04-03'
+    type: sport
+    price: null
+    provisional: true
+    description: 'Live op groot scherm. Datum en uur staan nog onder voorbehoud.'
+    descriptionEn: 'Live on the big screen. Date and time still to be confirmed.'
+
+  - id: mechelen-kaa-gent-2027-04-10
+    title: 'KV Mechelen - KAA Gent'
+    start: '2027-04-10'
+    type: sport
+    price: null
+    provisional: true
+    description: 'Live op groot scherm. Datum en uur staan nog onder voorbehoud.'
+    descriptionEn: 'Live on the big screen. Date and time still to be confirmed.'
+
+  - id: kaa-gent-lommel-2027-04-17
+    title: 'KAA Gent - Lommel SK'
+    start: '2027-04-17'
+    type: sport
+    price: null
+    provisional: true
+    description: 'Live op groot scherm. Datum en uur staan nog onder voorbehoud.'
+    descriptionEn: 'Live on the big screen. Date and time still to be confirmed.'
+
+  - id: antwerp-kaa-gent-2027-04-24
+    title: 'Antwerp - KAA Gent'
+    start: '2027-04-24'
+    type: sport
+    price: null
+    provisional: true
+    description: 'Live op groot scherm. Datum en uur staan nog onder voorbehoud.'
+    descriptionEn: 'Live on the big screen. Date and time still to be confirmed.'
+
+  - id: kaa-gent-genk-2027-05-01
+    title: 'KAA Gent - KRC Genk'
+    start: '2027-05-01'
+    type: sport
+    price: null
+    provisional: true
+    description: 'Live op groot scherm. Datum en uur staan nog onder voorbehoud.'
+    descriptionEn: 'Live on the big screen. Date and time still to be confirmed.'
+
+  - id: kortrijk-kaa-gent-2027-05-08
+    title: 'KV Kortrijk - KAA Gent'
+    start: '2027-05-08'
+    type: sport
+    price: null
+    provisional: true
+    description: 'Live op groot scherm. Datum en uur staan nog onder voorbehoud.'
+    descriptionEn: 'Live on the big screen. Date and time still to be confirmed.'
+
+  - id: kaa-gent-union-2027-05-15
+    title: 'KAA Gent - Union SG'
+    start: '2027-05-15'
+    type: sport
+    price: null
+    provisional: true
+    description: 'Live op groot scherm. Datum en uur staan nog onder voorbehoud.'
+    descriptionEn: 'Live on the big screen. Date and time still to be confirmed.'
+
+  - id: leuven-kaa-gent-2027-05-22
+    title: 'OH Leuven - KAA Gent'
+    start: '2027-05-22'
+    type: sport
+    price: null
+    provisional: true
+    description: 'Live op groot scherm. Datum en uur staan nog onder voorbehoud.'
+    descriptionEn: 'Live on the big screen. Date and time still to be confirmed.'
