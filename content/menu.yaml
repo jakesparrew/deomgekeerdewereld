@@ -70,7 +70,7 @@ intro:
     Everything behind the bar is on this list — and if something looks
     off, just ask us at the bar.
 
-updated: '2026-10-26'
+updated: '2026-11-02'
 
 items:
   # ------------------------------------------------------------------
@@ -471,13 +471,6 @@ items:
     price: 5.00
     style: bruin
     abv: 6.0
-  - id: salitos
-    name: Salitos
-    category: bier
-    price: 5.00
-    style: pils
-    note: Pils met tequila.
-    noteEn: Lager with tequila.
   - id: scotch-cts
     name: Scotch cts
     category: bier
