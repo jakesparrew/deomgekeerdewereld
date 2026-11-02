@@ -37,8 +37,8 @@ const title = en
   : 'De Omgekeerde Wereld · studentencafé in Gent';
 
 const description = en
-  ? 'Student bar opposite VIERNULVIER in Ghent. 69+ beers, lager €2,70, free pool, table football, free gigs and parties. Open every day from 1:30pm until 3am.'
-  : 'Studentencafé rechtover VIERNULVIER in Gent. 69+ bierkes, pilske €2,70, gratis pool, kickeren, gratis concertjes en fiestjes. Elke dag open van 13u30 tot 3 uur.';
+  ? 'Student bar opposite VIERNULVIER in Ghent. 69+ beers, lager €2,70, free pool, table football, free gigs and parties. Official KAA Gent Buffalo Point. Open every day from 1:30pm until 3am.'
+  : 'Studentencafé rechtover VIERNULVIER in Gent. 69+ bierkes, pilske €2,70, gratis pool, kickeren, gratis concertjes en fiestjes. Officieel Buffalo Point van KAA Gent. Elke dag open van 13u30 tot 3 uur.';
 
 /** De lopende band: wat het kost, recht van het bord. */
 const ticker = tiles.map((t) => ({
@@ -157,6 +157,90 @@ const weekday = (start: string) => formatDate(start, lang).split(' ')[0];
           <p class="events__leeg">{T.noEvents}</p>
         )
       }
+    </div>
+  </section>
+
+  <!-- ============================================================
+       KAA GENT — officieel Buffalo Point, uit de Instagram-post van
+       1 november 2026. Is de merch er of komen de tickets: pas de
+       tekst hieronder aan.
+       ============================================================ -->
+  <section class="sectie buffalo">
+    <div class="wrap wrap--wide">
+      <header class="sectie__kop">
+        <h2 class="sectie__titel">{en ? 'KAA Gent at den Omgekeerde' : 'KAA Gent in den Omgekeerde'}</h2>
+        <a
+          class="sectie__link"
+          href="https://www.instagram.com/p/DfMpj-ogB-M/"
+          rel="noopener"
+        >
+          {en ? 'See the post' : 'Bekijk de post'} →
+        </a>
+      </header>
+
+      <div class="buffalo__tekst">
+        <p class="buffalo__lead">
+          {
+            en
+              ? 'We are an official Buffalo Point of KAA Gent, the very first in Ghent. Home or away: this is where we support together. Allez AG!'
+              : 'We zijn een officieel Buffalo Point van KAA Gent, het allereerste in Gent. Thuis of uit: hier supporteren we samen. Allez AG!'
+          }
+        </p>
+        <ul class="buffalo__punten" role="list">
+          <li>
+            <strong>{en ? 'Big screen' : 'Groot scherm'}</strong>
+            {en
+              ? 'Every Buffalo match live, home and away, with the sound on.'
+              : 'Elke Buffalo-match live, thuis en uit, met geluid.'}
+          </li>
+          <li>
+            <strong>Merch</strong>
+            {en ? 'Soon available at the bar.' : 'Binnenkort verkrijgbaar aan de toog.'}
+          </li>
+          <li>
+            <strong>Tickets</strong>
+            {en
+              ? 'Coming soon: always together in block 321, next to the Spionkop.'
+              : 'Binnenkort: altijd samen in vak 321, naast de Spionkop.'}
+          </li>
+        </ul>
+      </div>
+
+      <div class="buffalo__fotos">
+        {
+          [
+            {
+              src: '/images/kaa-gent-in-ow.jpg',
+              nl: 'Twee mannen in blauw-witte KAA Gent-truitjes en sjaals op een leren zetel. Tekst: KAA Gent in OW! Den Omgekeerden is een officieel Buffalopoint.',
+              en: 'Two men in blue and white KAA Gent shirts and scarves on a leather sofa. Text: KAA Gent in OW! Den Omgekeerden is an official Buffalo Point.',
+            },
+            {
+              src: '/images/kaa-gent-groot-scherm.jpg',
+              nl: 'Twee supporters in KAA Gent-truitjes voor de toog, met de barman erachter. Tekst: Groot scherm. Alle thuis- en uitmatchen met geluid.',
+              en: 'Two supporters in KAA Gent shirts in front of the bar, with the barman behind them. Text: Big screen. All home and away matches with sound.',
+            },
+            {
+              src: '/images/kaa-gent-merch-tickets.jpg',
+              nl: 'Twee supporters in KAA Gent-truitjes aan de voordeur van het café. Tekst: Merch en tickets, aan de toog.',
+              en: 'Two supporters in KAA Gent shirts at the front door of the bar. Text: Merch and tickets, at the bar.',
+            },
+            {
+              src: '/images/kaa-gent-pintje.jpg',
+              nl: 'Twee supporters klinken aan een tafel voor een muur vol krantenknipsels. Tekst: Pakt u een pintje en geniet van de match!',
+              en: 'Two supporters toasting at a table in front of a wall of newspaper clippings. Text: Grab a beer and enjoy the match!',
+            },
+          ].map((foto) => (
+            <img
+              src={foto.src}
+              alt={en ? foto.en : foto.nl}
+              width="1074"
+              height="1350"
+              loading="lazy"
+              decoding="async"
+            />
+          ))
+        }
+      </div>
     </div>
   </section>
 
@@ -591,6 +675,61 @@ const weekday = (start: string) => formatDate(start, lang).split(' ')[0];
   }
 
   /* ============================================================ FIESTJES */
+  /* ============================================================ KAA GENT */
+  .buffalo__tekst {
+    display: grid;
+    gap: var(--space-m);
+    margin-block-end: var(--space-l);
+  }
+
+  @media (min-width: 56em) {
+    .buffalo__tekst {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      gap: var(--space-xl);
+    }
+  }
+
+  .buffalo__lead {
+    font-size: var(--step-1);
+    line-height: var(--leading-snug);
+    color: var(--ink);
+  }
+
+  .buffalo__punten {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    color: var(--ink-soft);
+  }
+
+  .buffalo__punten li {
+    padding-block: var(--space-2xs);
+    border-block-end: var(--border-hairline) solid var(--line);
+  }
+
+  .buffalo__punten strong {
+    display: block;
+    color: var(--ink);
+  }
+
+  .buffalo__fotos {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--space-2xs);
+  }
+
+  @media (min-width: 56em) {
+    .buffalo__fotos {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+  }
+
+  .buffalo__fotos img {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
   .fiest {
     padding-block: var(--space-xl) 0;
   }
