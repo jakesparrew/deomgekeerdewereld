@@ -9,7 +9,7 @@
  *   - "even op" (available: false) als OrderBilly het als niet beschikbaar toont
  *   - nieuwe producten: die komen onderaan hun categorie bij
  *   - producten die van OrderBilly verdwenen zijn: die gaan eraf
- *   - het bier van de maand ("BVDM ..." in de PROMO van OrderBilly)
+ *   - het bier van de maand ("BVDM ..." of "Bier van de maand: ..." in de PROMO)
  *
  * Wat het NIET aanraakt: alcoholpercentages, brouwerijen, stijlen, tags, notities
  * en de opgekuiste namen. Die staan enkel in menu.yaml en blijven staan.
@@ -186,11 +186,14 @@ async function main() {
   /** id → { price?, available? } */
   const updates = new Map();
 
-  // Het bier van de maand staat in PROMO als "BVDM <naam>".
+  // Het bier van de maand staat in PROMO als "BVDM <naam>" of "Bier van de maand: <naam>".
   let bvdm;
   for (const [key, p] of products) {
-    if (/^bvdm\s/.test(key)) {
-      bvdm = { name: cleanName(p.raw.replace(/^\s*\**\s*bvdm\s+/i, '')).name, price: p.price };
+    if (/^(bvdm|bier van de maand)\s/.test(key)) {
+      bvdm = {
+        name: cleanName(p.raw.replace(/^\s*\**\s*(bvdm|bier van de maand)\s*:?\s*/i, '')).name,
+        price: p.price,
+      };
       matchedKeys.add(key);
     }
   }

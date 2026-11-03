@@ -1,0 +1,314 @@
+---
+/**
+ * De bovenverdieping, bij ons "de bibliotheek". Staat als blok op de
+ * reserveerpagina (/reserveren/#bovenzaal en /en/bookings/#bovenzaal).
+ *
+ * Cijfers en prijzen komen uit content/bovenzaal.yaml. Staat daar niets, dan
+ * zegt de pagina "in overleg" in plaats van er iets bij te verzinnen.
+ */
+import Icon from './Icon.astro';
+import Photo from './Photo.astro';
+import ReserveButton from './ReserveButton.astro';
+
+import { bovenzaal } from '../lib/content';
+import { euro } from '../lib/format';
+import type { Lang } from '../lib/i18n';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const en = lang === 'en';
+const pick = (item: { nl: string; en: string }) => (en ? item.en : item.nl);
+
+const { capaciteit, prijs, inbegrepen, waarvoor, praktisch } = bovenzaal;
+
+/** Alleen tonen wat echt ingevuld is. */
+const cijfers = [
+  capaciteit.zittend && {
+    value: String(capaciteit.zittend),
+    label: en ? 'seated' : 'zittend',
+  },
+  capaciteit.staand && {
+    value: String(capaciteit.staand),
+    label: en ? 'standing' : 'staand',
+  },
+  capaciteit.oppervlakte && {
+    value: `${capaciteit.oppervlakte} m²`,
+    label: en ? 'floor space' : 'vloeroppervlak',
+  },
+].filter(Boolean) as { value: string; label: string }[];
+
+const toonPrijs = prijs.toon && typeof prijs.vanaf === 'number';
+---
+
+<section class="section section--tight" id="bovenzaal">
+  <div class="wrap">
+    <h2>{en ? 'The upstairs, to rent' : 'De bovenzaal, te huur'}</h2>
+    <p class="lead">
+      {
+        en
+          ? 'Our second floor is the library: walls full of old newspaper clippings, tall windows, wooden tables and benches, the pool table and a table football. You can have it to yourselves for an evening.'
+          : 'Ons tweede verdiep is de bibliotheek: muren vol oude krantenknipsels, hoge ramen, houten tafels en banken, de pooltafel en een kicker. Ge kunt ze een avond voor u alleen hebben.'
+      }
+    </p>
+
+    {
+      cijfers.length > 0 && (
+        <ul class="cijfers" role="list">
+          {cijfers.map((c) => (
+            <li class="cijfer">
+              <span class="cijfer__value">{c.value}</span>
+              <span class="cijfer__label">{c.label}</span>
+            </li>
+          ))}
+        </ul>
+      )
+    }
+
+    <div class="fotos">
+      <Photo
+        src="/images/bovenzaal-pool.jpg"
+        alt={en
+          ? 'The upstairs room at De Omgekeerde Wereld in daylight: a pool table with red felt under a white plaster ceiling with a rosette, with a small bar and a bookcase behind it.'
+          : 'De bovenverdieping van De Omgekeerde Wereld bij daglicht: een pooltafel met rood laken onder een wit stucplafond met rozet, met daarachter een toogje en een boekenkast.'}
+        brief=""
+        ratio="4 / 5"
+      />
+      <Photo
+        src="/images/bovenzaal-kicker-ramen.jpg"
+        alt={en
+          ? 'A table football and the pool table in front of the tall windows upstairs, with a leather bench along the wall.'
+          : 'Een kicker en de pooltafel voor de hoge ramen van de bovenverdieping, met een leren bank langs de muur.'}
+        brief=""
+        ratio="4 / 5"
+      />
+      <Photo
+        src="/images/bovenzaal-tafels.jpg"
+        alt={en
+          ? 'The long side of the upstairs room: wooden tables and benches by the tall windows, walls covered in newspaper clippings and the pool table at the back.'
+          : 'De lange kant van de bovenverdieping: houten tafels en banken bij de hoge ramen, muren vol krantenknipsels en achteraan de pooltafel.'}
+        brief=""
+        ratio="4 / 5"
+      />
+    </div>
+
+    <div class="erbij">
+      <div class="lijsten">
+        <div>
+          <h3>{en ? 'What you get' : 'Wat ge krijgt'}</h3>
+          <ul class="inbegrepen" role="list">
+            {
+              inbegrepen.map((item) => (
+                <li class="inbegrepen__item">
+                  <Icon name="check" size={18} />
+                  <span>{pick(item)}</span>
+                </li>
+              ))
+            }
+          </ul>
+        </div>
+
+        <div>
+          <h3>{en ? 'What people use it for' : 'Waarvoor mensen ze huren'}</h3>
+          <ul class="inbegrepen" role="list">
+            {
+              waarvoor.map((item) => (
+                <li class="inbegrepen__item">
+                  <Icon name={item.icon} size={18} />
+                  <span>{pick(item)}</span>
+                </li>
+              ))
+            }
+          </ul>
+        </div>
+
+        {
+          praktisch.length > 0 && (
+            <p class="praktisch">{praktisch.map((item) => pick(item)).join(' ')}</p>
+          )
+        }
+      </div>
+
+      <aside class="prijskaart" aria-labelledby="prijs-titel">
+        <h3 class="prijskaart__title" id="prijs-titel">
+          {en ? 'What does it cost?' : 'Wat kost het?'}
+        </h3>
+
+        {
+          toonPrijs ? (
+            <p class="prijskaart__bedrag">
+              <span class="prijskaart__vanaf">{en ? 'from' : 'vanaf'}</span>
+              <span class="prijskaart__euro">{euro(prijs.vanaf as number)}</span>
+              <span class="prijskaart__eenheid">
+                {en ? 'per evening' : `per ${prijs.eenheid}`}
+              </span>
+            </p>
+          ) : (
+            <p class="prijskaart__bedrag prijskaart__bedrag--open">
+              {en ? 'By arrangement' : 'In overleg'}
+            </p>
+          )
+        }
+
+        <p class="prijskaart__note">{en ? prijs.noteEn : prijs.note}</p>
+
+        <div class="prijskaart__cta">
+          <ReserveButton lang={lang} kind="event" />
+        </div>
+      </aside>
+    </div>
+  </div>
+</section>
+
+<style>
+  .lead {
+    max-width: var(--measure);
+    margin-block-start: var(--space-2xs);
+    color: var(--ink-soft);
+  }
+
+  /* ---- Cijfers ---- */
+  .cijfers {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-l);
+    list-style: none;
+    margin: var(--space-m) 0 0;
+    padding: 0;
+  }
+
+  .cijfer {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .cijfer__value {
+    font-family: var(--font-display);
+    font-size: var(--step-3);
+    font-weight: 800;
+    line-height: 1;
+    color: var(--accent-text);
+  }
+
+  .cijfer__label {
+    font-size: var(--step--1);
+    color: var(--ink-faint);
+    letter-spacing: var(--tracking-wide);
+    text-transform: uppercase;
+  }
+
+  .fotos {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: var(--space-2xs);
+    margin-block-start: var(--space-m);
+  }
+
+  /* ---- Wat zit erbij ---- */
+  .erbij {
+    display: grid;
+    gap: var(--space-l);
+    margin-block-start: var(--space-m);
+  }
+
+  @media (min-width: 56em) {
+    .erbij {
+      grid-template-columns: 1.6fr 1fr;
+      gap: var(--space-xl);
+      align-items: start;
+    }
+  }
+
+  .lijsten {
+    display: grid;
+    gap: var(--space-m);
+  }
+
+  @media (min-width: 40em) {
+    .lijsten {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  .inbegrepen {
+    list-style: none;
+    margin: var(--space-2xs) 0 0;
+    padding: 0;
+  }
+
+  .inbegrepen__item {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-2xs);
+    padding-block: var(--space-3xs);
+    line-height: var(--leading-snug);
+    font-size: var(--step--1);
+    color: var(--ink-soft);
+  }
+
+  .inbegrepen__item :global(svg) {
+    color: var(--accent-text);
+    flex: none;
+    margin-block-start: 0.1em;
+  }
+
+  .praktisch {
+    grid-column: 1 / -1;
+    font-size: var(--step--1);
+    color: var(--ink-faint);
+  }
+
+  /* ---- Prijskaart ---- */
+  .prijskaart {
+    background: var(--bg-raised);
+    border: var(--border-hairline) solid var(--line-strong);
+    border-radius: var(--radius-m);
+    padding: var(--space-m);
+  }
+
+  .prijskaart__title {
+    font-size: var(--step-1);
+    margin-block-end: var(--space-2xs);
+  }
+
+  .prijskaart__bedrag {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: var(--space-3xs);
+  }
+
+  .prijskaart__vanaf,
+  .prijskaart__eenheid {
+    font-size: var(--step--1);
+    color: var(--ink-faint);
+  }
+
+  .prijskaart__euro {
+    font-family: var(--font-display);
+    font-size: var(--step-3);
+    font-weight: 800;
+    color: var(--accent-text);
+    line-height: 1;
+  }
+
+  .prijskaart__bedrag--open {
+    font-family: var(--font-display);
+    font-size: var(--step-2);
+    font-weight: 700;
+    color: var(--accent-text);
+  }
+
+  .prijskaart__note {
+    font-size: var(--step--1);
+    color: var(--ink-soft);
+    line-height: var(--leading-normal);
+    margin-block-start: var(--space-2xs);
+  }
+
+  .prijskaart__cta {
+    margin-block-start: var(--space-s);
+  }
+</style>

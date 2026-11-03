@@ -5,6 +5,7 @@
  * table, or ask about a group, a party, a concert or a collaboration.
  */
 import Base from '../../layouts/Base.astro';
+import Bovenzaal from '../../components/Bovenzaal.astro';
 import Icon from '../../components/Icon.astro';
 import Photo from '../../components/Photo.astro';
 import ReserveButton from '../../components/ReserveButton.astro';
@@ -22,8 +23,8 @@ const breadcrumbs = [
 ---
 
 <Base
-  title="Bookings"
-  description="You never need to book a table at De Omgekeerde Wereld for a beer. Coming with a group, celebrating something, or got an idea for a concert or a collaboration? Tell us here."
+  title="Bookings & upstairs"
+  description="You never need to book a table at De Omgekeerde Wereld for a beer. Coming with a group, celebrating something, or got an idea for a concert or a collaboration? Tell us here, or rent the upstairs."
   lang={lang}
   active="reserve"
   breadcrumbs={breadcrumbs}
@@ -42,6 +43,8 @@ const breadcrumbs = [
       </p>
     </div>
   </section>
+
+  <Bovenzaal lang={lang} />
 
   <section class="section section--tight" id="request">
     <div class="wrap">

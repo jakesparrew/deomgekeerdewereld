@@ -1,0 +1,24 @@
+{
+  "redirects": [
+    {
+      "source": "/bovenzaal",
+      "destination": "/reserveren/#bovenzaal",
+      "permanent": true
+    },
+    {
+      "source": "/bovenzaal/",
+      "destination": "/reserveren/#bovenzaal",
+      "permanent": true
+    },
+    {
+      "source": "/en/upstairs",
+      "destination": "/en/bookings/#bovenzaal",
+      "permanent": true
+    },
+    {
+      "source": "/en/upstairs/",
+      "destination": "/en/bookings/#bovenzaal",
+      "permanent": true
+    }
+  ]
+}

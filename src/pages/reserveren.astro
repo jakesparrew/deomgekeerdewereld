@@ -6,6 +6,7 @@
  * een concert of een samenwerking.
  */
 import Base from '../layouts/Base.astro';
+import Bovenzaal from '../components/Bovenzaal.astro';
 import Icon from '../components/Icon.astro';
 import Photo from '../components/Photo.astro';
 import ReserveButton from '../components/ReserveButton.astro';
@@ -23,8 +24,8 @@ const breadcrumbs = [
 ---
 
 <Base
-  title="Reserveren"
-  description="Voor een pintje moet ge bij den Omgekeerde niks reserveren. Komt ge met een groep, viert ge iets, of hebt ge een voorstel voor een concert of een samenwerking? Laat het hier weten."
+  title="Reserveren & bovenzaal"
+  description="Voor een pintje moet ge bij den Omgekeerde niks reserveren. Komt ge met een groep, viert ge iets, of hebt ge een voorstel voor een concert of een samenwerking? Laat het hier weten, of huur de bovenzaal."
   lang={lang}
   active="reserve"
   breadcrumbs={breadcrumbs}
@@ -43,6 +44,8 @@ const breadcrumbs = [
       </p>
     </div>
   </section>
+
+  <Bovenzaal lang={lang} />
 
   <section class="section section--tight" id="aanvraag">
     <div class="wrap">

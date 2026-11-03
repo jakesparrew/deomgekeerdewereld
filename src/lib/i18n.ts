@@ -15,7 +15,7 @@ export const ROUTES = {
   agenda: { nl: '/agenda/', en: '/en/events/' },
   about: { nl: '/over/', en: '/en/about/' },
   reserve: { nl: '/reserveren/', en: '/en/bookings/' },
-  upstairs: { nl: '/bovenzaal/', en: '/en/upstairs/' },
+  kaaGent: { nl: '/kaa-gent/', en: '/en/kaa-gent/' },
   contact: { nl: '/contact/', en: '/en/contact/' },
   privacy: { nl: '/privacy/', en: '/privacy/' },
   cookies: { nl: '/cookies/', en: '/cookies/' },
@@ -32,8 +32,8 @@ export const NAV: { key: RouteKey; nl: string; en: string }[] = [
   { key: 'menu', nl: 'De kaart', en: 'Menu' },
   { key: 'agenda', nl: 'Agenda', en: "What's on" },
   { key: 'about', nl: 'Ons verhaal', en: 'Our story' },
-  { key: 'upstairs', nl: 'De bovenzaal', en: 'The upstairs' },
-  { key: 'reserve', nl: 'Reserveren', en: 'Bookings' },
+  { key: 'kaaGent', nl: 'KAA Gent', en: 'KAA Gent' },
+  { key: 'reserve', nl: 'Reserveren & zaal', en: 'Bookings & hire' },
   { key: 'contact', nl: 'Contact', en: 'Find us' },
 ];
 

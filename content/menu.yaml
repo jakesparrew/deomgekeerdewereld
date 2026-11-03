@@ -70,7 +70,7 @@ intro:
     Everything behind the bar is on this list — and if something looks
     off, just ask us at the bar.
 
-updated: '2026-11-02'
+updated: '2026-11-03'
 
 items:
   # ------------------------------------------------------------------
@@ -89,8 +89,7 @@ items:
   # ------------------------------------------------------------------
   - id: aperomer
     name: Aper'Omer
-    # Staat niet op OrderBilly, hoort bij de maandelijkse Aper'Omer. Blijft staan.
-    orderbilly: false
+    orderbilly: 'Aper’Omer 1ste vrijdag elke maand'
     category: promo
     price: 3.50
     note: Elke eerste vrijdag van de maand een Omer aan 3,50.
@@ -99,7 +98,7 @@ items:
   - id: augustijn-1-1
     name: Augustijn 1+1
     category: promo
-    price: 4.80
+    price: 4.50
     note: Met een bon van Guido Gids twee voor de prijs van één.
     noteEn: Two for the price of one with a Guido Gids voucher.
     tags: [promo]
@@ -231,11 +230,11 @@ items:
   - id: augustijn
     name: Augustijn
     category: bier
-    price: 4.50
+    price: 3.50
     style: blond
     abv: 8.0
     brewery: Van Steenberge
-    tags: [lokaal]
+    tags: [lokaal, bier-van-de-maand]
   - id: barbar
     name: Barbar
     category: bier
@@ -284,7 +283,6 @@ items:
     price: 4.90
     style: pils
     abv: 4.5
-    tags: [bier-van-de-maand]
   - id: de-poes
     name: De Poes
     category: bier
@@ -1042,10 +1040,6 @@ items:
     name: "Dark & Stormy"
     category: cocktails
     price: 9.50
-  - id: dark-stormy-blood-orange
-    name: "Dark & Stormy Blood Orange"
-    category: cocktails
-    price: 9.50
   - id: espresso-martini
     name: Espresso Martini
     category: cocktails
@@ -1113,6 +1107,10 @@ items:
     price: 10.00
     orderbilly: 'Cocktail VD Maand : Horse''s Neck*'
     tags: [favo]
+  - id: dark-stormy-grapefruit
+    name: 'Dark & Stormy Grapefruit'
+    category: cocktails
+    price: 9.50
 
   # ------------------------------------------------------------------
   # RUM — per glas

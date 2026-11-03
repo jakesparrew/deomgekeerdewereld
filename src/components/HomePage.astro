@@ -161,24 +161,17 @@ const weekday = (start: string) => formatDate(start, lang).split(' ')[0];
   </section>
 
   <!-- ============================================================
-       KAA GENT — officieel Buffalo Point, uit de Instagram-post van
-       1 november 2026. Is de merch er of komen de tickets: pas de
-       tekst hieronder aan.
+       KAA GENT — officieel Buffalo Point. De rest staat op /kaa-gent/.
        ============================================================ -->
   <section class="sectie buffalo">
     <div class="wrap wrap--wide">
       <header class="sectie__kop">
         <h2 class="sectie__titel">{en ? 'KAA Gent at den Omgekeerde' : 'KAA Gent in den Omgekeerde'}</h2>
-        <a
-          class="sectie__link"
-          href="https://www.instagram.com/p/DfMpj-ogB-M/"
-          rel="noopener"
-        >
-          {en ? 'See the post' : 'Bekijk de post'} →
+        <a class="sectie__link" href={route('kaaGent', lang)}>
+          {en ? 'All matches' : 'Alle matchen'} →
         </a>
       </header>
 
-      <div class="buffalo__tekst">
         <p class="buffalo__lead">
           {
             en
@@ -186,27 +179,6 @@ const weekday = (start: string) => formatDate(start, lang).split(' ')[0];
               : 'We zijn een officieel Buffalo Point van KAA Gent, het allereerste in Gent. Thuis of uit: hier supporteren we samen. Allez AG!'
           }
         </p>
-        <ul class="buffalo__punten" role="list">
-          <li>
-            <strong>{en ? 'Big screen' : 'Groot scherm'}</strong>
-            {en
-              ? 'Every Buffalo match live, home and away, with the sound on.'
-              : 'Elke Buffalo-match live, thuis en uit, met geluid.'}
-            {' '}
-            <a href={route('agenda', lang)}>{en ? 'All matches' : 'Alle matchen'}</a>
-          </li>
-          <li>
-            <strong>Merch</strong>
-            {en ? 'Soon available at the bar.' : 'Binnenkort verkrijgbaar aan de toog.'}
-          </li>
-          <li>
-            <strong>Tickets</strong>
-            {en
-              ? 'Coming soon: always together in block 321, next to the Spionkop.'
-              : 'Binnenkort: altijd samen in vak 321, naast de Spionkop.'}
-          </li>
-        </ul>
-      </div>
 
       <div class="buffalo__fotos">
         {
@@ -366,7 +338,7 @@ const weekday = (start: string) => formatDate(start, lang).split(' ')[0];
         </p>
         <div class="boven__knoppen">
           <ReserveButton lang={lang} kind="event" bare buttonClass="boven__btn" />
-          <a class="boven__meer" href={route('upstairs', lang)}>{en ? 'About the upstairs' : 'Meer over de bovenzaal'} →</a>
+          <a class="boven__meer" href={`${route('reserve', lang)}#bovenzaal`}>{en ? 'About the upstairs' : 'Meer over de bovenzaal'} →</a>
         </div>
       </div>
     </div>
@@ -678,39 +650,11 @@ const weekday = (start: string) => formatDate(start, lang).split(' ')[0];
 
   /* ============================================================ FIESTJES */
   /* ============================================================ KAA GENT */
-  .buffalo__tekst {
-    display: grid;
-    gap: var(--space-m);
-    margin-block-end: var(--space-l);
-  }
-
-  @media (min-width: 56em) {
-    .buffalo__tekst {
-      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-      gap: var(--space-xl);
-    }
-  }
-
   .buffalo__lead {
+    max-width: var(--measure);
+    margin-block-end: var(--space-m);
     font-size: var(--step-1);
     line-height: var(--leading-snug);
-    color: var(--ink);
-  }
-
-  .buffalo__punten {
-    margin: 0;
-    padding: 0;
-    list-style: none;
-    color: var(--ink-soft);
-  }
-
-  .buffalo__punten li {
-    padding-block: var(--space-2xs);
-    border-block-end: var(--border-hairline) solid var(--line);
-  }
-
-  .buffalo__punten strong {
-    display: block;
     color: var(--ink);
   }
 

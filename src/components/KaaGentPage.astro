@@ -1,0 +1,296 @@
+---
+/**
+ * KAA Gent: officieel Buffalo Point. Eén component voor beide talen;
+ * /kaa-gent/ en /en/kaa-gent/ zijn twee regels die hier binnenkomen.
+ *
+ * De matchen komen uit content/events.yaml (type: sport, met KAA Gent in de
+ * titel). Is de merch er of komen de tickets: pas de tekst hieronder aan.
+ */
+import Base from '../layouts/Base.astro';
+
+import { events } from '../lib/content';
+import { buildAgenda } from '../lib/events';
+import { formatDate, formatTime } from '../lib/format';
+import { route, type Lang } from '../lib/i18n';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const en = lang === 'en';
+
+const POST = 'https://www.instagram.com/p/DfMpj-ogB-M/';
+
+const breadcrumbs = [
+  { name: 'Home', url: route('home', lang) },
+  { name: 'KAA Gent', url: route('kaaGent', lang) },
+];
+
+const matches = buildAgenda(events, new Date()).upcoming.filter(
+  (e) => e.type === 'sport' && e.title.includes('KAA Gent'),
+);
+
+const punten = [
+  {
+    title: en ? 'Big screen' : 'Groot scherm',
+    text: en
+      ? 'Every Buffalo match live, home and away, with the sound on.'
+      : 'Elke Buffalo-match live, thuis en uit, met geluid.',
+  },
+  {
+    title: 'Merch',
+    text: en ? 'Soon available at the bar.' : 'Binnenkort verkrijgbaar aan de toog.',
+  },
+  {
+    title: 'Tickets',
+    text: en
+      ? 'Coming soon: always together in block 321, next to the Spionkop.'
+      : 'Binnenkort: altijd samen in vak 321, naast de Spionkop.',
+  },
+];
+
+const fotos = [
+  {
+    src: '/images/kaa-gent-in-ow.jpg',
+    nl: 'Twee mannen in blauw-witte KAA Gent-truitjes en sjaals op een leren zetel. Tekst: KAA Gent in OW! Den Omgekeerden is een officieel Buffalopoint.',
+    en: 'Two men in blue and white KAA Gent shirts and scarves on a leather sofa. Text: KAA Gent in OW! Den Omgekeerden is an official Buffalo Point.',
+  },
+  {
+    src: '/images/kaa-gent-groot-scherm.jpg',
+    nl: 'Twee supporters in KAA Gent-truitjes voor de toog, met de barman erachter. Tekst: Groot scherm. Alle thuis- en uitmatchen met geluid.',
+    en: 'Two supporters in KAA Gent shirts in front of the bar, with the barman behind them. Text: Big screen. All home and away matches with sound.',
+  },
+  {
+    src: '/images/kaa-gent-merch-tickets.jpg',
+    nl: 'Twee supporters in KAA Gent-truitjes aan de voordeur van het café. Tekst: Merch en tickets, aan de toog.',
+    en: 'Two supporters in KAA Gent shirts at the front door of the bar. Text: Merch and tickets, at the bar.',
+  },
+  {
+    src: '/images/kaa-gent-pintje.jpg',
+    nl: 'Twee supporters klinken aan een tafel voor een muur vol krantenknipsels. Tekst: Pakt u een pintje en geniet van de match!',
+    en: 'Two supporters toasting at a table in front of a wall of newspaper clippings. Text: Grab a beer and enjoy the match!',
+  },
+];
+---
+
+<Base
+  title="KAA Gent"
+  description={en
+    ? 'De Omgekeerde Wereld is an official Buffalo Point of KAA Gent, the first in Ghent. Every match live on the big screen, home and away. See all the fixtures.'
+    : 'De Omgekeerde Wereld is een officieel Buffalo Point van KAA Gent, het allereerste in Gent. Elke match live op groot scherm, thuis en uit. Bekijk alle matchen.'}
+  lang={lang}
+  active="kaaGent"
+  image="/images/kaa-gent-pintje.jpg"
+  breadcrumbs={breadcrumbs}
+>
+  <section class="section">
+    <div class="wrap wrap--wide">
+      <p class="eyebrow">{en ? 'Official Buffalo Point' : 'Officieel Buffalo Point'}</p>
+      <h1>{en ? 'KAA Gent at den Omgekeerde' : 'KAA Gent in den Omgekeerde'}</h1>
+
+      <div class="kop">
+        <p class="lead">
+          {
+            en
+              ? 'We are an official Buffalo Point of KAA Gent, the very first in Ghent. Home or away: this is where we support together. Allez AG!'
+              : 'We zijn een officieel Buffalo Point van KAA Gent, het allereerste in Gent. Thuis of uit: hier supporteren we samen. Allez AG!'
+          }
+        </p>
+        <ul class="punten" role="list">
+          {
+            punten.map((p) => (
+              <li>
+                <strong>{p.title}</strong>
+                {p.text}
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+
+      <div class="fotos">
+        {
+          fotos.map((foto, i) => (
+            <img
+              src={foto.src}
+              alt={en ? foto.en : foto.nl}
+              width="1074"
+              height="1350"
+              loading={i < 2 ? 'eager' : 'lazy'}
+              decoding="async"
+            />
+          ))
+        }
+      </div>
+
+      <p class="post">
+        <a href={POST} rel="noopener">{en ? 'See the post on Instagram' : 'Bekijk de post op Instagram'} →</a>
+      </p>
+    </div>
+  </section>
+
+  <section class="section section--tight" id="matchen">
+    <div class="wrap wrap--wide">
+      <h2>{en ? 'The matches' : 'De matchen'}</h2>
+
+      {
+        matches.length > 0 ? (
+          <ol class="matchen" role="list">
+            {matches.map((m) => {
+              const thuis = m.title.startsWith('KAA Gent');
+              const uur = m.provisional
+                ? en
+                  ? 'To be confirmed'
+                  : 'Onder voorbehoud'
+                : formatTime(m.start);
+              return (
+                <li class="match">
+                  <span class="match__datum">
+                    {formatDate(m.start, lang, m.start.slice(0, 4) !== String(new Date().getFullYear()))}
+                  </span>
+                  <span class:list={['match__uur', m.provisional && 'match__uur--open']}>{uur}</span>
+                  <span class="match__titel">{m.title}</span>
+                  <span class="match__plek">
+                    {thuis ? (en ? 'Home' : 'Thuis') : en ? 'Away' : 'Uit'}
+                  </span>
+                </li>
+              );
+            })}
+          </ol>
+        ) : (
+          <p class="post">{en ? 'New fixtures coming soon.' : 'Binnenkort nieuwe matchen.'}</p>
+        )
+      }
+
+      <p class="bron">
+        {
+          en
+            ? 'Fixtures from the KAA Gent calendar. Kick-off times can still change.'
+            : 'Overgenomen van de kalender van KAA Gent. Aanvangsuren kunnen nog wijzigen.'
+        }
+      </p>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .kop {
+    display: grid;
+    gap: var(--space-m);
+    margin-block: var(--space-m) var(--space-l);
+  }
+
+  @media (min-width: 56em) {
+    .kop {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      gap: var(--space-xl);
+    }
+  }
+
+  .lead {
+    font-size: var(--step-1);
+    line-height: var(--leading-snug);
+    color: var(--ink);
+  }
+
+  .punten {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    color: var(--ink-soft);
+  }
+
+  .punten li {
+    padding-block: var(--space-2xs);
+    border-block-end: var(--border-hairline) solid var(--line);
+  }
+
+  .punten strong {
+    display: block;
+    color: var(--ink);
+  }
+
+  .fotos {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--space-2xs);
+  }
+
+  @media (min-width: 56em) {
+    .fotos {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+  }
+
+  .fotos img {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  .post {
+    margin-block-start: var(--space-s);
+    font-weight: 600;
+  }
+
+  /* ---- De matchen ---- */
+  .matchen {
+    margin: var(--space-m) 0 0;
+    padding: 0;
+    list-style: none;
+    border-block-start: 2px solid var(--ink);
+  }
+
+  .match {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 0 var(--space-s);
+    padding-block: var(--space-xs);
+    border-block-end: var(--border-hairline) solid var(--line);
+  }
+
+  .match__datum {
+    color: var(--ink-soft);
+  }
+
+  .match__uur {
+    color: var(--accent-text);
+    font-weight: 700;
+    text-align: end;
+  }
+
+  .match__uur--open {
+    color: var(--ink-faint);
+    font-weight: 400;
+    font-size: var(--step--1);
+  }
+
+  .match__titel {
+    font-weight: 700;
+    color: var(--ink);
+  }
+
+  .match__plek {
+    color: var(--ink-faint);
+    font-size: var(--step--1);
+    text-align: end;
+  }
+
+  @media (min-width: 56em) {
+    .match {
+      grid-template-columns: 16rem 9rem minmax(0, 1fr) 4rem;
+      align-items: baseline;
+    }
+
+    .match__uur {
+      text-align: start;
+    }
+  }
+
+  .bron {
+    margin-block-start: var(--space-s);
+    font-size: var(--step--1);
+    color: var(--ink-faint);
+  }
+</style>

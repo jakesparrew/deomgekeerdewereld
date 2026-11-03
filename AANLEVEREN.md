@@ -10,7 +10,7 @@ Afvinken van boven naar onder. Het eerste blok is het belangrijkste.
 
 ## 0. De bovenverdieping — cijfers ontbreken nog
 
-De pagina `/bovenzaal/` staat er en werkt. Alleen de getallen moeten er nog in. Alles
+De bovenzaal staat op `/reserveren/#bovenzaal`. Alleen de getallen moeten er nog in. Alles
 staat in één bestand: `content/bovenzaal.yaml`.
 
 - [ ] **Hoeveel mensen kunnen er?** Zittend en staand, plus het aantal m² als je dat

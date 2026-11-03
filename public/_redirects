@@ -26,6 +26,13 @@
 # ============================================================
 
 
+# ---- De bovenzaal woont nu op de reserveerpagina ---------------
+/bovenzaal     /reserveren/#bovenzaal    301
+/bovenzaal/    /reserveren/#bovenzaal    301
+/en/upstairs   /en/bookings/#bovenzaal   301
+/en/upstairs/  /en/bookings/#bovenzaal   301
+
+
 # ---- www -> kaal domein -------------------------------------
 http://www.deomgekeerdewereld.be/*    https://deomgekeerdewereld.be/:splat    301!
 https://www.deomgekeerdewereld.be/*   https://deomgekeerdewereld.be/:splat    301!
