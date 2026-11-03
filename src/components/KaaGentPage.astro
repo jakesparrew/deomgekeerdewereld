@@ -118,9 +118,14 @@ const fotos = [
         <p>
           {
             en
-              ? 'Buy a voucher and claim your seat in block 321 for a home match. Redeem it online, by the Wednesday before the match at the latest.'
-              : 'Koop een voucher en claim uw plaats in vak 321 voor een thuismatch. Wissel hem online in, ten laatste de woensdag voor de match.'
+              ? 'Buy a voucher and claim your seat in block 321 for a home match. Use it when you buy your ticket on the official KAA Gent website, by the Wednesday before the match at the latest.'
+              : 'Koop een voucher en claim uw plaats in vak 321 voor een thuismatch. Gebruik hem bij de aankoop van uw ticket op de officiële website van KAA Gent, ten laatste de woensdag voor de match.'
           }
+        </p>
+        <p class="voucher__link">
+          <a class="btn btn--primary" href="https://www.kaagent.be/nl/tickets" rel="noopener">
+            {en ? 'Tickets on kaagent.be' : 'Tickets op kaagent.be'}
+          </a>
         </p>
       </aside>
 
@@ -254,6 +259,10 @@ const fotos = [
 
   .voucher__prijs {
     color: var(--accent-text);
+  }
+
+  .voucher__link {
+    margin-block-start: var(--space-s);
   }
 
   .fotos {
