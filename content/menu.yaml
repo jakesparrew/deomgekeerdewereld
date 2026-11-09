@@ -70,7 +70,7 @@ intro:
     Everything behind the bar is on this list — and if something looks
     off, just ask us at the bar.
 
-updated: '2026-11-03'
+updated: '2026-11-09'
 
 items:
   # ------------------------------------------------------------------
@@ -109,6 +109,11 @@ items:
     note: Met een bon van Guido Gids twee voor de prijs van één.
     noteEn: Two for the price of one with a Guido Gids voucher.
     tags: [promo]
+  - id: bier-vd-maand-augustijn
+    name: 'Bier VD Maand: Augustijn'
+    category: promo
+    price: 3.50
+    tags: [promo, favo]
 
   # ------------------------------------------------------------------
   # FAVO'S — geen aparte lijst meer
@@ -823,10 +828,6 @@ items:
     name: Warme choco
     category: warm
     price: 4.00
-  - id: bosvruchten-thee
-    name: Bosvruchten Thee
-    category: warm
-    price: 3.00
   - id: verse-munt-thee
     name: Verse Munt Thee
     category: warm
@@ -871,6 +872,10 @@ items:
     name: Straffen Choco Rum
     category: warm
     price: 8.50
+  - id: rooibos-thee
+    name: 'Rooibos Thee'
+    category: warm
+    price: 3.00
 
   # ------------------------------------------------------------------
   # SPRITZ — allemaal aan dezelfde prijs
@@ -1101,16 +1106,16 @@ items:
     category: cocktails
     price: 9.00
     tags: [favo]
-  - id: cocktail-vd-maand-horse-s-neck
-    name: 'Cocktail VD Maand: Horse''s Neck'
-    category: cocktails
-    price: 10.00
-    orderbilly: 'Cocktail VD Maand : Horse''s Neck*'
-    tags: [favo]
   - id: dark-stormy-grapefruit
     name: 'Dark & Stormy Grapefruit'
     category: cocktails
     price: 9.50
+  - id: cocktail-vd-maand-peartini
+    name: 'Cocktail VD Maand: Peartini'
+    category: cocktails
+    price: 10.00
+    orderbilly: 'Cocktail VD Maand : Peartini'
+    tags: [favo]
 
   # ------------------------------------------------------------------
   # RUM — per glas
