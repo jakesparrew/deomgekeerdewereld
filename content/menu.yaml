@@ -70,7 +70,7 @@ intro:
     Everything behind the bar is on this list — and if something looks
     off, just ask us at the bar.
 
-updated: '2026-11-09'
+updated: '2026-11-16'
 
 items:
   # ------------------------------------------------------------------
@@ -114,6 +114,11 @@ items:
     category: promo
     price: 3.50
     tags: [promo, favo]
+  - id: saison-dupont-dry-hop-promo
+    name: 'Saison Dupont Dry Hop PROMO'
+    category: promo
+    price: 4.50
+    tags: [promo]
 
   # ------------------------------------------------------------------
   # FAVO'S — geen aparte lijst meer
@@ -180,7 +185,7 @@ items:
   - id: saison-dupont-dry-hop
     name: Saison Dupont Dry Hop
     category: bier
-    price: 5.00
+    price: 4.50
     style: blond
   # Van het vat. De vier hieronder staan op de tap: verandert er een vat,
   # haal dan de tag "op-tap" weg of zet ze bij een ander bier.
@@ -207,12 +212,6 @@ items:
     style: tripel
     abv: 8.4
     brewery: Bosteels
-    tags: [op-tap, favo]
-  - id: hoegaarden-rosee
-    name: Hoegaarden Rosée
-    category: bier
-    price: 3.60
-    style: fruit
     tags: [op-tap, favo]
   # Ons pilske van 2,70.
   - id: stella-artois-25
@@ -570,11 +569,6 @@ items:
     category: alcoholvrij
     price: 5.00
     tags: [alcoholvrij]
-  - id: vedett-00
-    name: '0,0 Vedett'
-    category: alcoholvrij
-    price: 5.00
-    tags: [alcoholvrij]
   - id: energibajer-lemon-00
     name: '0,0 Energibajer Lemon'
     category: alcoholvrij
@@ -642,6 +636,11 @@ items:
     tags: [alcoholvrij]
   - id: 0-0-delirio
     name: '0,0 Delirio'
+    category: alcoholvrij
+    price: 5.00
+    tags: [alcoholvrij]
+  - id: 0-0-verzet-unplugged
+    name: '0,0 Verzet Unplugged'
     category: alcoholvrij
     price: 5.00
     tags: [alcoholvrij]
