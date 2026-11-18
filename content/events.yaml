@@ -92,6 +92,26 @@ events:
       - date: '2026-11-01'
         name: 'Gulden Draak Brewmaster 2+1'
 
+  # Staat ook in SuperHoreca. Zelfde datum en exact dezelfde titel, dus deze
+  # versie (met affiche en uitleg) wint. Affiche uit de Instagram-post van 5/11.
+  - id: rnb-afroparty-2026-11
+    title: 'R&B/ Hip Hop en Afro'
+    start: '2026-11-18T23:00'
+    end: '2026-11-19T03:00'
+    type: dj
+    price: null
+    description: >-
+      Rnb & Afroparty: DJ Shiel komt all night long de leukste afro en rnb
+      draaien. De dansvloer staat warm, om 23:00 stipt gaan we los.
+    descriptionEn: >-
+      R&B & Afro party: DJ Shiel plays the best afro and R&B all night long.
+      The dance floor is warm, we kick off at 11pm sharp.
+    image: '/images/events/afroparty-2026-11.jpg'
+    imageRatio: '4 / 5'
+    imageAlt: >-
+      Affiche "Rnb - Afroparty, DJ Shiel All Night Long": een dansende menigte in
+      paars licht. Woensdag 18 november 2026, 23:00 tot 03:00.
+
   # ---- KAA Gent: officieel Buffalo Point ----
   # Overgenomen van kaagent.be/nl/team/first-team/kalender op 2 november 2026.
   # "provisional: true" = de club heeft datum en uur nog niet vastgelegd. Is het
