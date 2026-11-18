@@ -1,7 +1,8 @@
 ---
 /**
- * Wie de foto's van elders maakte. Foto's onder een CC BY-SA-licentie mogen we
- * gebruiken als we de fotograaf en de licentie vermelden: dat staat hier.
+ * Waar de foto's van elders vandaan komen. Foto's onder een CC BY-SA-licentie
+ * mogen we gebruiken als we de fotograaf en de licentie vermelden; bij
+ * productfoto's van een merk vermelden we het merk en de bron.
  * De lijst staat in public/images/menu/credits.json.
  */
 import credits from '../../public/images/menu/credits.json';
@@ -14,8 +15,15 @@ interface Props {
 }
 
 const { items, lang } = Astro.props;
+const en = lang === 'en';
 
-type Credit = { author: string; license: string; licenseUrl: string; source: string };
+type Credit = {
+  author: string;
+  source: string;
+  via: string;
+  license?: string;
+  licenseUrl?: string;
+};
 const lijst = Object.entries(credits as Record<string, Credit>)
   .map(([id, c]) => ({ ...c, item: items.find((i) => i.id === id && i.image) }))
   .filter((c) => c.item);
@@ -24,15 +32,24 @@ const lijst = Object.entries(credits as Record<string, Credit>)
 {
   lijst.length > 0 && (
     <p class="credits">
-      {lang === 'en' ? 'Photos: ' : "Foto's: "}
+      {en ? 'Photos: ' : "Foto's: "}
       {lijst.map((c, i) => (
         <>
-          {i > 0 && ', '}
-          {c.item!.name} {lang === 'en' ? 'by' : 'door'} <a href={c.source} rel="noopener">{c.author}</a>
-          {' '}(<a href={c.licenseUrl} rel="noopener license">{c.license}</a>)
+          {i > 0 && '; '}
+          {c.item!.name}{' '}
+          {c.license ? (
+            <>
+              {en ? 'by' : 'door'} <a href={c.source} rel="noopener">{c.author}</a> (
+              <a href={c.licenseUrl} rel="noopener license">{c.license}</a>, via {c.via})
+            </>
+          ) : (
+            <>
+              © {c.author} (<a href={c.source} rel="noopener">{c.via}</a>)
+            </>
+          )}
         </>
       ))}
-      {lang === 'en' ? ', via Wikimedia Commons.' : ', via Wikimedia Commons.'}
+      .
     </p>
   )
 }

@@ -3,12 +3,24 @@
     "author": "Bertrouf",
     "license": "CC BY-SA 3.0",
     "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0",
-    "source": "https://commons.wikimedia.org/wiki/File:La_chouffe_et_son_verre.jpg"
+    "source": "https://commons.wikimedia.org/wiki/File:La_chouffe_et_son_verre.jpg",
+    "via": "Wikimedia Commons"
   },
   "duvel": {
     "author": "Chris Olszewski",
     "license": "CC BY-SA 4.0",
     "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
-    "source": "https://commons.wikimedia.org/wiki/File:Duvel_beer_in_beer_glass,_2024.jpg"
+    "source": "https://commons.wikimedia.org/wiki/File:Duvel_beer_in_beer_glass,_2024.jpg",
+    "via": "Wikimedia Commons"
+  },
+  "duvel-666": {
+    "author": "Duvel Moortgat",
+    "source": "https://www.duvel.com/nl-be/nieuws/tweede-gouden-medaille-voor-duvel-666",
+    "via": "duvel.com"
+  },
+  "lillet-rose-spritz": {
+    "author": "Pernod Ricard",
+    "source": "https://pernod-ricard.com/en/brands/lillet",
+    "via": "pernod-ricard.com"
   }
 }

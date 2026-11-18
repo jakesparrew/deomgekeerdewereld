@@ -313,6 +313,7 @@ items:
     price: 4.90
     style: blond
     brewery: Duvel Moortgat
+    image: '/images/menu/duvel-666.jpg'
     tags: [favo, suggestie]
   - id: duvel-tripel-hop
     name: Duvel Tripel Hop
@@ -927,6 +928,7 @@ items:
     name: Lillet Rosé Spritz
     category: spritz
     price: 9.00
+    image: '/images/menu/lillet-rose-spritz.jpg'
     tags: [favo, suggestie]
 
   # ------------------------------------------------------------------
