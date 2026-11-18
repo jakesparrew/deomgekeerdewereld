@@ -200,6 +200,7 @@ items:
     style: blond
     abv: 8.0
     brewery: Achouffe
+    image: '/images/menu/la-chouffe.jpg'
     tags: [op-tap, favo]
   - id: tripel-karmeliet
     name: Tripel Karmeliet
@@ -304,6 +305,7 @@ items:
     style: blond
     abv: 8.5
     brewery: Duvel Moortgat
+    image: '/images/menu/duvel.jpg'
     tags: [favo, suggestie]
   - id: duvel-666
     name: Duvel 666

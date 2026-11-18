@@ -179,6 +179,8 @@ async function fetchOrderBilly() {
 
 const IMAGE_DIR = fileURLToPath(new URL('../public/images/menu/', import.meta.url));
 const IMAGE_SOURCES = `${IMAGE_DIR}bron.json`;
+/** Foto's van elders (bv. Wikimedia Commons), met de fotograaf en de licentie. */
+const IMAGE_CREDITS = `${IMAGE_DIR}credits.json`;
 
 /** Haalt een foto van OrderBilly en bewaart ze vierkant en klein, zonder metadata. */
 async function saveImage(url, file) {
@@ -416,7 +418,9 @@ async function main() {
         changes.push(`foto: ${item.name}`);
       }
       if (item.image !== path) u.image = path;
-    } else if (item.image) {
+    } else if (item.image && sources[item.id]) {
+      // Enkel foto's die van OrderBilly kwamen. Een foto van elders (credits.json)
+      // blijft staan.
       u.image = null;
       deletions.push(item.id);
       changes.push(`foto weg: ${item.name}`);
@@ -509,10 +513,20 @@ async function main() {
 
   // Eerst de foto's: lukt er een niet, dan schrijven we ook de kaart niet weg.
   mkdirSync(IMAGE_DIR, { recursive: true });
+  // Heeft OrderBilly nu zelf een foto voor iets met een foto van elders, dan wint
+  // die van OrderBilly en valt de vermelding van de fotograaf weg.
+  let credits = {};
+  try {
+    credits = JSON.parse(readFileSync(IMAGE_CREDITS, 'utf8'));
+  } catch {
+    /* geen foto's van elders */
+  }
   for (const { id, url } of downloads) {
     await saveImage(url, `${IMAGE_DIR}${id}.jpg`);
     sources[id] = url;
+    delete credits[id];
   }
+  if (existsSync(IMAGE_CREDITS)) writeFileSync(IMAGE_CREDITS, `${JSON.stringify(credits, null, 2)}\n`);
   for (const id of deletions) {
     rmSync(`${IMAGE_DIR}${id}.jpg`, { force: true });
     delete sources[id];

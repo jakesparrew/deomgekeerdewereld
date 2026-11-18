@@ -10,6 +10,7 @@ import Base from '../../layouts/Base.astro';
 import Icon from '../../components/Icon.astro';
 import MenuList from '../../components/MenuList.astro';
 import MenuSuggesties from '../../components/MenuSuggesties.astro';
+import FotoCredits from '../../components/FotoCredits.astro';
 
 import { site } from '../../data/site';
 import {
@@ -328,6 +329,7 @@ const priceLine = [
         }
 
         <p class="menu-empty" hidden data-empty>{T.noResults}</p>
+        <FotoCredits items={menu.items} lang={lang} />
       </div>
     </section>
 

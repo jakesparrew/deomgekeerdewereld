@@ -1,0 +1,50 @@
+---
+/**
+ * Wie de foto's van elders maakte. Foto's onder een CC BY-SA-licentie mogen we
+ * gebruiken als we de fotograaf en de licentie vermelden: dat staat hier.
+ * De lijst staat in public/images/menu/credits.json.
+ */
+import credits from '../../public/images/menu/credits.json';
+import type { MenuItem } from '../data/types';
+import type { Lang } from '../lib/i18n';
+
+interface Props {
+  items: MenuItem[];
+  lang: Lang;
+}
+
+const { items, lang } = Astro.props;
+
+type Credit = { author: string; license: string; licenseUrl: string; source: string };
+const lijst = Object.entries(credits as Record<string, Credit>)
+  .map(([id, c]) => ({ ...c, item: items.find((i) => i.id === id && i.image) }))
+  .filter((c) => c.item);
+---
+
+{
+  lijst.length > 0 && (
+    <p class="credits">
+      {lang === 'en' ? 'Photos: ' : "Foto's: "}
+      {lijst.map((c, i) => (
+        <>
+          {i > 0 && ', '}
+          {c.item!.name} {lang === 'en' ? 'by' : 'door'} <a href={c.source} rel="noopener">{c.author}</a>
+          {' '}(<a href={c.licenseUrl} rel="noopener license">{c.license}</a>)
+        </>
+      ))}
+      {lang === 'en' ? ', via Wikimedia Commons.' : ', via Wikimedia Commons.'}
+    </p>
+  )
+}
+
+<style>
+  .credits {
+    margin-block-start: var(--space-l);
+    font-size: var(--step--2);
+    color: var(--ink-faint);
+  }
+
+  .credits a {
+    color: inherit;
+  }
+</style>
