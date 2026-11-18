@@ -24,7 +24,7 @@
  * menu.yaml blijft staan.
  */
 
-import { readFileSync, writeFileSync } from 'node:fs';
+import { existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { load } from 'js-yaml';
 
@@ -38,6 +38,7 @@ const CHECK_ONLY = process.argv.includes('--check');
 const CATEGORY_MAP = {
   PROMO: 'promo',
   BIER: 'bier',
+  'BIER EN CIDER': 'bier',
   ALCOHOLVRIJ: 'alcoholvrij',
   FRISDRANK: 'frisdrank',
   WARM: 'warm',
@@ -115,9 +116,33 @@ async function fetchOrderBilly() {
   const tagLists = new Map([...TAG_LISTS].map((t) => [t, new Set()]));
   /** naam (genormaliseerd) → alle categorieën waarin het op OrderBilly staat */
   const inCategory = new Map();
+  /** naam (genormaliseerd) → URL van de originele foto, als OrderBilly er een heeft */
+  const images = new Map();
+  /** De suggesties ("Bierkes naar onze smaak"), in de volgorde van OrderBilly. */
+  const spotlight = [];
+  /** Wat ergens als "OP TAP ..." op OrderBilly staat. */
+  const onTap = new Set();
 
   for (const id of eventIds) {
     const { data } = await getJson(`${API}/events/${id}/menu`);
+    for (const p of (data?.spotlights ?? []).flatMap((s) => s.products ?? [])) {
+      const key = norm(p.name);
+      if (!spotlight.includes(key)) spotlight.push(key);
+    }
+    // Dezelfde drank staat soms in meerdere lijsten, en maar in één met foto.
+    for (const p of [
+      ...(data?.spotlights ?? []).flatMap((s) => s.products ?? []),
+      ...(data?.category_groups ?? []).flatMap((g) => (g.categories ?? []).flatMap((c) => c.products ?? [])),
+    ]) {
+      const key = norm(p.name);
+      if (p.images?.original && !images.has(key)) images.set(key, p.images.original);
+      // "OP TAP" staat soms maar in één van de lijsten (bv. FAVO'S).
+      if (/^\s*\**\s*op tap\s/i.test(p.name)) onTap.add(key);
+      // Een suggestie die nergens anders staat (bv. "Bier VD Maand: ..."), toch kennen.
+      if (!products.has(key)) {
+        products.set(key, { raw: p.name, price: Number(p.price), available: p.is_available !== false });
+      }
+    }
     for (const group of data?.category_groups ?? []) {
       for (const cat of group.categories ?? []) {
         const catName = String(cat.name).trim().toUpperCase();
@@ -130,7 +155,7 @@ async function fetchOrderBilly() {
             inCategory.get(key).add(category);
           }
           const existing = products.get(key);
-          // De eigen categorie (bv. BIER) wint van een lijstje als FAVO'S.
+          // De eigen categorie (bv. BIER) wint van een lijstje als FAVO'S of de suggesties.
           if (!existing || (!existing.category && category)) {
             products.set(key, {
               raw: p.name,
@@ -147,7 +172,24 @@ async function fetchOrderBilly() {
   if (products.size < 50) {
     throw new Error(`OrderBilly geeft maar ${products.size} producten. Te weinig, ik raak niks aan.`);
   }
-  return { products, tagLists, inCategory };
+  return { products, tagLists, inCategory, images, spotlight, onTap };
+}
+
+/* ---------------------------------------------------------------- foto's */
+
+const IMAGE_DIR = fileURLToPath(new URL('../public/images/menu/', import.meta.url));
+const IMAGE_SOURCES = `${IMAGE_DIR}bron.json`;
+
+/** Haalt een foto van OrderBilly en bewaart ze vierkant en klein, zonder metadata. */
+async function saveImage(url, file) {
+  const response = await fetch(url, { signal: AbortSignal.timeout(30_000) });
+  if (!response.ok) throw new Error(`${url} gaf HTTP ${response.status}`);
+  const { default: sharp } = await import('sharp');
+  await sharp(Buffer.from(await response.arrayBuffer()))
+    .rotate()
+    .resize(480, 480, { fit: 'cover', position: sharp.strategy.attention })
+    .jpeg({ quality: 78, mozjpeg: true, progressive: true })
+    .toFile(file);
 }
 
 /* ------------------------------------------------------ menu.yaml lezen */
@@ -173,7 +215,9 @@ function findBlocks(lines) {
 /* ---------------------------------------------------------------- sync */
 
 async function main() {
-  const { products, tagLists, inCategory } = await fetchOrderBilly();
+  const { products, tagLists, inCategory, images, spotlight, onTap } = await fetchOrderBilly();
+  /** id op de site → naam (genormaliseerd) op OrderBilly */
+  const keyOf = new Map();
 
   const menuText = readFileSync(MENU_FILE, 'utf8');
   const menu = load(menuText);
@@ -186,12 +230,15 @@ async function main() {
   /** id → { price?, available? } */
   const updates = new Map();
 
-  // Het bier van de maand staat in PROMO als "BVDM <naam>" of "Bier van de maand: <naam>".
+  // Het bier van de maand heet op OrderBilly "BVDM <naam>", "Bier van de maand: <naam>"
+  // of "Bier VD Maand: <naam>".
   let bvdm;
+  let bvdmKey;
   for (const [key, p] of products) {
-    if (/^(bvdm|bier van de maand)\s/.test(key)) {
+    if (/^(bvdm|bier (van de|vd) maand)\s/.test(key)) {
+      bvdmKey = key;
       bvdm = {
-        name: cleanName(p.raw.replace(/^\s*\**\s*(bvdm|bier van de maand)\s*:?\s*/i, '')).name,
+        name: cleanName(p.raw.replace(/^\s*\**\s*(bvdm|bier\s+(van\s+de|vd)\s+maand)\s*:?\s*/i, '')).name,
         price: p.price,
       };
       matchedKeys.add(key);
@@ -212,6 +259,13 @@ async function main() {
       continue;
     }
     matchedKeys.add(key);
+    // Het bier van de maand heeft zijn eigen plek (highlights.yaml), geen apart item.
+    if (key === bvdmKey) {
+      removeIds.add(item.id);
+      changes.push(`weg: ${item.name} (staat al als bier van de maand)`);
+      continue;
+    }
+    keyOf.set(item.id, key);
     const p = products.get(key);
     const update = {};
     if (typeof item.price === 'number' && Math.abs(item.price - p.price) > 0.001) {
@@ -236,11 +290,12 @@ async function main() {
     for (let n = 2; takenIds.has(id); n++) id = `${slug(name)}-${n}`;
     takenIds.add(id);
     const tags = [];
-    if (tap) tags.push('op-tap');
+    if (tap || onTap.has(key)) tags.push('op-tap');
     if (p.category === 'alcoholvrij') tags.push('alcoholvrij');
     if (p.category === 'promo') tags.push('promo');
     if (tagLists.get('LOKAAL')?.has(key)) tags.push('lokaal');
     if (tagLists.get("FAVO'S")?.has(key)) tags.push('favo');
+    if (spotlight.includes(key)) tags.push('suggestie');
     const block = [
       `  - id: ${id}`,
       `    name: ${quote(name)}`,
@@ -326,6 +381,49 @@ async function main() {
     }
   }
 
+  /* ---- Suggesties en foto's ----
+     De suggesties van OrderBilly krijgen het labeltje "suggestie". Alles van het
+     vat, het bier van de maand en de suggesties krijgen de foto van OrderBilly,
+     als die er een heeft. Die foto's staan in public/images/menu/. */
+  let sources = {};
+  try {
+    sources = JSON.parse(readFileSync(IMAGE_SOURCES, 'utf8'));
+  } catch {
+    /* nog geen foto's */
+  }
+  const downloads = [];
+  const deletions = [];
+  for (const item of items) {
+    if (removeIds.has(item.id)) continue;
+    const key = keyOf.get(item.id);
+    const u = updates.get(item.id) ?? {};
+    const tags = [...(u.tags ?? item.tags ?? [])];
+    const isBotm = tags.includes('bier-van-de-maand');
+    const inSpotlight =
+      (key && spotlight.includes(key)) || (isBotm && bvdmKey && spotlight.includes(bvdmKey));
+
+    if (inSpotlight !== tags.includes('suggestie')) {
+      u.tags = inSpotlight ? [...tags, 'suggestie'] : tags.filter((t) => t !== 'suggestie');
+      changes.push(`${inSpotlight ? 'nu suggestie' : 'geen suggestie meer'}: ${item.name}`);
+    }
+
+    const wanted = tags.includes('op-tap') || isBotm || inSpotlight;
+    const url = (key && images.get(key)) || (isBotm && bvdmKey ? images.get(bvdmKey) : undefined);
+    const path = `/images/menu/${item.id}.jpg`;
+    if (wanted && url) {
+      if (sources[item.id] !== url || !existsSync(`${IMAGE_DIR}${item.id}.jpg`)) {
+        downloads.push({ id: item.id, url });
+        changes.push(`foto: ${item.name}`);
+      }
+      if (item.image !== path) u.image = path;
+    } else if (item.image) {
+      u.image = null;
+      deletions.push(item.id);
+      changes.push(`foto weg: ${item.name}`);
+    }
+    if (Object.keys(u).length) updates.set(item.id, u);
+  }
+
   if (changes.length === 0) {
     console.log('De kaart is al gelijk met OrderBilly. Niks te doen.');
     return;
@@ -385,6 +483,13 @@ async function main() {
         result.splice(at === -1 ? result.length : at + 1, 0, '    available: false');
       }
     }
+    if (u.image !== undefined) {
+      result = result.filter((l) => !/^ {4}image:/.test(l));
+      if (u.image) {
+        const at = result.findIndex((l) => /^ {4}tags:/.test(l));
+        result.splice(at === -1 ? result.length : at, 0, `    image: '${u.image}'`);
+      }
+    }
     if (u.tags !== undefined) {
       result = result.filter((l) => !/^ {4}tags:/.test(l));
       if (u.tags.length) result.push(`    tags: [${u.tags.join(', ')}]`);
@@ -401,6 +506,18 @@ async function main() {
   // Zekerheid: de nieuwe YAML moet nog leesbaar zijn, anders schrijven we niks weg.
   load(newMenu);
   load(newHighlights);
+
+  // Eerst de foto's: lukt er een niet, dan schrijven we ook de kaart niet weg.
+  mkdirSync(IMAGE_DIR, { recursive: true });
+  for (const { id, url } of downloads) {
+    await saveImage(url, `${IMAGE_DIR}${id}.jpg`);
+    sources[id] = url;
+  }
+  for (const id of deletions) {
+    rmSync(`${IMAGE_DIR}${id}.jpg`, { force: true });
+    delete sources[id];
+  }
+  writeFileSync(IMAGE_SOURCES, `${JSON.stringify(sources, null, 2)}\n`);
 
   writeFileSync(MENU_FILE, newMenu);
   if (newHighlights !== highlightsText) writeFileSync(HIGHLIGHTS_FILE, newHighlights);

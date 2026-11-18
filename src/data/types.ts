@@ -86,6 +86,7 @@ export const MENU_TAGS = [
   'op-tap',
   'gents',
   'bier-van-de-maand',
+  'suggestie',
 ] as const;
 
 export type MenuTag = (typeof MENU_TAGS)[number];
@@ -99,6 +100,7 @@ export const MENU_TAG_LABELS: Record<MenuTag, { nl: string; en: string }> = {
   'op-tap': { nl: 'Van het vat', en: 'On tap' },
   gents: { nl: 'Gents', en: 'From Ghent' },
   'bier-van-de-maand': { nl: 'Bier van de maand', en: 'Beer of the month' },
+  suggestie: { nl: 'Suggestie', en: 'Our pick' },
 };
 
 export interface MenuItem {
@@ -121,6 +123,8 @@ export interface MenuItem {
   tags?: MenuTag[];
   /** Tijdelijk uitverkocht? Zet op false; hij blijft staan maar grijs. */
   available?: boolean;
+  /** Foto, door scripts/sync-orderbilly.mjs gezet: /images/menu/<id>.jpg */
+  image?: string;
 }
 
 export interface MenuData {

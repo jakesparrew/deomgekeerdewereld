@@ -70,7 +70,7 @@ intro:
     Everything behind the bar is on this list — and if something looks
     off, just ask us at the bar.
 
-updated: '2026-11-16'
+updated: '2026-11-18'
 
 items:
   # ------------------------------------------------------------------
@@ -109,11 +109,6 @@ items:
     note: Met een bon van Guido Gids twee voor de prijs van één.
     noteEn: Two for the price of one with a Guido Gids voucher.
     tags: [promo]
-  - id: bier-vd-maand-augustijn
-    name: 'Bier VD Maand: Augustijn'
-    category: promo
-    price: 3.50
-    tags: [promo, favo]
   - id: saison-dupont-dry-hop-promo
     name: 'Saison Dupont Dry Hop PROMO'
     category: promo
@@ -196,6 +191,7 @@ items:
     style: pils
     abv: 5.2
     brewery: AB InBev
+    image: '/images/menu/stella-artois-33.jpg'
     tags: [op-tap, favo]
   - id: la-chouffe
     name: La Chouffe
@@ -212,6 +208,7 @@ items:
     style: tripel
     abv: 8.4
     brewery: Bosteels
+    image: '/images/menu/tripel-karmeliet.jpg'
     tags: [op-tap, favo]
   # Ons pilske van 2,70.
   - id: stella-artois-25
@@ -234,11 +231,12 @@ items:
   - id: augustijn
     name: Augustijn
     category: bier
-    price: 3.50
+    price: 4.50
     style: blond
     abv: 8.0
     brewery: Van Steenberge
-    tags: [lokaal, bier-van-de-maand]
+    image: '/images/menu/augustijn.jpg'
+    tags: [lokaal, bier-van-de-maand, suggestie]
   - id: barbar
     name: Barbar
     category: bier
@@ -306,14 +304,14 @@ items:
     style: blond
     abv: 8.5
     brewery: Duvel Moortgat
-    tags: [favo]
+    tags: [favo, suggestie]
   - id: duvel-666
     name: Duvel 666
     category: bier
     price: 4.90
     style: blond
     brewery: Duvel Moortgat
-    tags: [favo]
+    tags: [favo, suggestie]
   - id: duvel-tripel-hop
     name: Duvel Tripel Hop
     category: bier
@@ -451,7 +449,8 @@ items:
     style: blond
     abv: 8.0
     brewery: Van Steenberge
-    tags: [lokaal, gents, favo]
+    image: '/images/menu/ouwen-duiker.jpg'
+    tags: [lokaal, gents, favo, suggestie]
   - id: piraat
     name: Piraat
     category: bier
@@ -558,6 +557,27 @@ items:
     category: bier
     price: 4.90
     style: blond
+  - id: waar-is-loca-ipa
+    name: 'Waar is Loca IPA'
+    category: bier
+    price: 5.00
+    tags: [lokaal]
+  - id: stella-appel-kaneel
+    name: 'Stella Appel Kaneel'
+    category: bier
+    price: 4.00
+    tags: [op-tap, favo]
+  - id: fourchette
+    name: 'Fourchette'
+    category: bier
+    price: 6.50
+  - id: westmalle-dubbel
+    name: 'Westmalle Dubbel'
+    category: bier
+    price: 5.00
+    style: trappist
+    orderbilly: 'Westmalle Dubbel (bruine trappist)'
+    tags: [trappist]
 
   # ------------------------------------------------------------------
   # ALCOHOLVRIJ — alles zonder alcohol, ook de 0,0-bierkes
@@ -905,7 +925,7 @@ items:
     name: Lillet Rosé Spritz
     category: spritz
     price: 9.00
-    tags: [favo]
+    tags: [favo, suggestie]
 
   # ------------------------------------------------------------------
   # APERO & WIJN — glazen, flessen en aperitiefkes
@@ -1114,7 +1134,8 @@ items:
     category: cocktails
     price: 10.00
     orderbilly: 'Cocktail VD Maand : Peartini'
-    tags: [favo]
+    image: '/images/menu/cocktail-vd-maand-peartini.jpg'
+    tags: [favo, suggestie]
 
   # ------------------------------------------------------------------
   # RUM — per glas

@@ -10,6 +10,7 @@
 import Base from '../layouts/Base.astro';
 import Icon from '../components/Icon.astro';
 import MenuList from '../components/MenuList.astro';
+import MenuSuggesties from '../components/MenuSuggesties.astro';
 
 import { site } from '../data/site';
 import {
@@ -60,6 +61,8 @@ const beerStyles = BEER_STYLES.filter((style) =>
 
 /* ---- Bier van de maand ---- */
 const botm = highlights.beerOfTheMonth;
+/** De foto van OrderBilly, als het bier van de maand er een heeft. */
+const botmFoto = menu.items.find((i) => i.tags?.includes('bier-van-de-maand') && i.image)?.image;
 const botmMeta = [
   botm?.brewery,
   botm?.style,
@@ -196,6 +199,9 @@ const priceLine = [
           {
             botm?.name && (
               <aside class="botm" aria-labelledby="botm-kop">
+                {botmFoto && (
+                  <img class="botm__foto" src={botmFoto} alt="" width="480" height="480" decoding="async" />
+                )}
                 <p class="eyebrow" id="botm-kop">
                   {T.beerOfTheMonth}
                 </p>
@@ -209,6 +215,8 @@ const priceLine = [
             )
           }
         </div>
+
+        <MenuSuggesties items={menu.items} lang={lang} />
       </div>
     </section>
 
@@ -556,6 +564,15 @@ const priceLine = [
     background: color-mix(in srgb, var(--amber) 8%, var(--bg-raised));
     border: var(--border-hairline) solid color-mix(in srgb, var(--amber) 35%, var(--line));
     border-radius: var(--radius-m);
+  }
+
+  .botm__foto {
+    display: block;
+    width: 100%;
+    max-width: 11rem;
+    aspect-ratio: 1;
+    object-fit: cover;
+    border-radius: var(--radius-s);
   }
 
   .botm > * + * {

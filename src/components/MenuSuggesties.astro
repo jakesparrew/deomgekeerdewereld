@@ -1,0 +1,120 @@
+---
+/**
+ * "Onze suggesties" bovenaan de kaart: wat op OrderBilly bij "Bierkes naar onze
+ * smaak" staat. scripts/sync-orderbilly.mjs zet daarvoor de tag "suggestie" en
+ * de foto. Geen suggesties, dan staat hier niks.
+ */
+import type { MenuItem } from '../data/types';
+import { highlights } from '../lib/content';
+import { euro } from '../lib/format';
+import type { Lang } from '../lib/i18n';
+
+interface Props {
+  items: MenuItem[];
+  lang: Lang;
+}
+
+const { items, lang } = Astro.props;
+const en = lang === 'en';
+const picks = items.filter((i) => i.tags?.includes('suggestie') && i.available !== false);
+
+/** Het bier van de maand staat hier aan zijn maandprijs, niet aan de gewone prijs. */
+const botmPrice = highlights.beerOfTheMonth?.price;
+const priceOf = (item: MenuItem) =>
+  item.tags?.includes('bier-van-de-maand') && typeof botmPrice === 'number' ? botmPrice : item.price;
+const isBotm = (item: MenuItem) => Boolean(item.tags?.includes('bier-van-de-maand'));
+---
+
+{
+  picks.length > 0 && (
+    <section class="suggesties" aria-labelledby="suggesties-kop">
+      <h2 class="suggesties__kop" id="suggesties-kop">
+        {en ? 'Our picks' : 'Onze suggesties'}
+      </h2>
+      <ul class="suggesties__lijst" role="list">
+        {picks.map((item) => (
+          <li class="suggestie">
+            {item.image ? (
+              <img
+                class="suggestie__foto"
+                src={item.image}
+                alt=""
+                width="480"
+                height="480"
+                loading="lazy"
+                decoding="async"
+              />
+            ) : (
+              <span class="suggestie__foto suggestie__foto--leeg" aria-hidden="true" />
+            )}
+            <span class="suggestie__naam">{item.name}</span>
+            {typeof priceOf(item) === 'number' && (
+              <span class="suggestie__prijs">
+                {isBotm(item) && (en ? 'Beer of the month · ' : 'Bier van de maand · ')}
+                {euro(priceOf(item) as number)}
+              </span>
+            )}
+          </li>
+        ))}
+      </ul>
+    </section>
+  )
+}
+
+<style>
+  .suggesties {
+    margin-block-start: var(--space-l);
+  }
+
+  .suggesties__kop {
+    font-size: var(--step-2);
+    margin-block-end: var(--space-s);
+  }
+
+  /* Op een gsm schuift de rij opzij, op een groot scherm staat alles naast elkaar. */
+  .suggesties__lijst {
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: minmax(9rem, 1fr);
+    gap: var(--space-s);
+    margin: 0;
+    padding: 0 0 var(--space-2xs);
+    list-style: none;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+  }
+
+  .suggestie {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3xs);
+    scroll-snap-align: start;
+  }
+
+  .suggestie__foto {
+    display: block;
+    width: 100%;
+    aspect-ratio: 1;
+    object-fit: cover;
+    border-radius: var(--radius-m);
+    background: var(--bg-inset);
+  }
+
+  .suggestie__foto--leeg {
+    background:
+      radial-gradient(circle at 50% 45%, color-mix(in srgb, var(--accent) 22%, transparent) 0 30%, transparent 31%),
+      var(--bg-inset);
+  }
+
+  .suggestie__naam {
+    font-weight: 700;
+    line-height: var(--leading-snug);
+    color: var(--ink);
+  }
+
+  .suggestie__prijs {
+    font-size: var(--step--1);
+    color: var(--accent-text);
+    font-weight: 600;
+  }
+</style>
