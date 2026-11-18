@@ -1,0 +1,120 @@
+---
+/**
+ * Een rij foto's van Instagram die traag voorbijschuift.
+ *
+ * - Enkel CSS: de rij staat er een paar keer na elkaar en schuift één ronde
+ *   op, zodat het naadloos rondloopt. De herhalingen zijn verborgen voor
+ *   schermlezers en de tab-toets.
+ * - Muis erover of tab erin: de rij staat stil.
+ * - "Minder beweging" aan op het toestel: niets beweegt, ge schuift zelf.
+ */
+import { INSTA_FOTOS, type InstaFoto } from '../data/instagram';
+import type { Lang } from '../lib/i18n';
+
+interface Props {
+  lang: Lang;
+  /** Enkel deze reeks tonen; leeg = alles. */
+  reeks?: InstaFoto['reeks'];
+  /** Seconden voor één volle ronde. */
+  duur?: number;
+}
+
+const { lang, reeks, duur = 45 } = Astro.props;
+const en = lang === 'en';
+const fotos = INSTA_FOTOS.filter((f) => !reeks || f.reeks === reeks);
+/** Genoeg keer na elkaar dat de rij ook op een breed scherm nooit leeg loopt. */
+const rondes = Math.max(3, Math.ceil(12 / Math.max(fotos.length, 1)));
+---
+
+{
+  fotos.length > 0 && (
+    <div class="carrousel" style={`--duur: ${duur}s; --rondes: ${rondes}`}>
+      <ul class="carrousel__rij" role="list" aria-label={en ? 'Photos from our Instagram' : 'Foto\'s van onze Instagram'}>
+        {Array.from({ length: rondes }, (_, ronde) => ronde).map((ronde) =>
+          fotos.map((f) => (
+            <li class="carrousel__item" aria-hidden={ronde > 0 ? 'true' : undefined}>
+              <a href={f.post} rel="noopener" tabindex={ronde > 0 ? -1 : undefined}>
+                {ronde > 0 ? (
+                  <img src={f.src} alt="" width={f.width} height={f.height} loading="lazy" decoding="async" />
+                ) : (
+                  <img
+                    src={f.src}
+                    alt={en ? f.en : f.nl}
+                    width={f.width}
+                    height={f.height}
+                    loading="lazy"
+                    decoding="async"
+                  />
+                )}
+              </a>
+            </li>
+          )),
+        )}
+      </ul>
+    </div>
+  )
+}
+
+<style>
+  .carrousel {
+    overflow: hidden;
+    /* Zachte randen links en rechts, zodat de foto's er in- en uitglijden. */
+    mask-image: linear-gradient(90deg, transparent, #000 4%, #000 96%, transparent);
+  }
+
+  .carrousel__rij {
+    display: flex;
+    gap: var(--space-xs);
+    width: max-content;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    animation: schuif var(--duur) linear infinite;
+  }
+
+  .carrousel:hover .carrousel__rij,
+  .carrousel:focus-within .carrousel__rij {
+    animation-play-state: paused;
+  }
+
+  .carrousel__item a {
+    display: block;
+    border-radius: var(--radius-m);
+    overflow: hidden;
+  }
+
+  .carrousel__item img {
+    display: block;
+    width: auto;
+    height: clamp(14rem, 34vw, 22rem);
+    transition: transform var(--dur-base) var(--ease-out);
+  }
+
+  .carrousel__item a:hover img,
+  .carrousel__item a:focus-visible img {
+    transform: scale(1.03);
+  }
+
+  @keyframes schuif {
+    to {
+      /* Precies één ronde (foto's plus tussenruimtes): dan sluit het naadloos aan. */
+      transform: translateX(calc((-100% - var(--space-xs)) / var(--rondes)));
+    }
+  }
+
+  /* Minder beweging: stilstaan en zelf schuiven, en de tweede ronde weg. */
+  @media (prefers-reduced-motion: reduce) {
+    .carrousel {
+      overflow-x: auto;
+      mask-image: none;
+    }
+
+    .carrousel__rij {
+      animation: none;
+    }
+
+    .carrousel__item[aria-hidden='true'] {
+      display: none;
+    }
+  }
+</style>
