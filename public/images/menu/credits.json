@@ -7,10 +7,10 @@
     "via": "Wikimedia Commons"
   },
   "duvel": {
-    "author": "Chris Olszewski",
-    "license": "CC BY-SA 4.0",
-    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
-    "source": "https://commons.wikimedia.org/wiki/File:Duvel_beer_in_beer_glass,_2024.jpg",
+    "author": "Jmcstrav",
+    "license": "CC BY 3.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by/3.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Duvel_and_glass_sunday.jpg",
     "via": "Wikimedia Commons"
   },
   "duvel-666": {
@@ -22,5 +22,206 @@
     "author": "Pernod Ricard",
     "source": "https://pernod-ricard.com/en/brands/lillet",
     "via": "pernod-ricard.com"
+  },
+  "flying-fish": {
+    "author": "Ossewa",
+    "license": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Flying_Fish_pressed_lemon.jpg",
+    "via": "Wikimedia Commons"
+  },
+  "barbar": {
+    "author": "DirkVE",
+    "license": "CC BY-SA 3.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Barbar_bier.jpg",
+    "via": "Wikimedia Commons"
+  },
+  "delirium": {
+    "author": "Arnaud 25",
+    "license": "Public domain",
+    "source": "https://commons.wikimedia.org/wiki/File:Delirium_Tremens_(bi%C3%A8re).JPG",
+    "via": "Wikimedia Commons"
+  },
+  "duvel-tripel-hop": {
+    "author": "DirkVE",
+    "license": "CC BY-SA 3.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Duveltripelhop2012.jpg",
+    "via": "Wikimedia Commons"
+  },
+  "gentse-strop": {
+    "author": "Bertrouf",
+    "license": "CC BY-SA 3.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Gentse_strop_beer.JPG",
+    "via": "Wikimedia Commons"
+  },
+  "gouden-carolus-classic": {
+    "author": "KyraBulinckx",
+    "license": "CC0",
+    "licenseUrl": "http://creativecommons.org/publicdomain/zero/1.0/deed.en",
+    "source": "https://commons.wikimedia.org/wiki/File:Gouden_Carolus_Classic_Glass%2BBottle_Transparant.png",
+    "via": "Wikimedia Commons"
+  },
+  "gouden-carolus-tripel": {
+    "author": "KyraBulinckx",
+    "license": "CC0",
+    "licenseUrl": "http://creativecommons.org/publicdomain/zero/1.0/deed.en",
+    "source": "https://commons.wikimedia.org/wiki/File:Gouden_Carolus_Tripel_Glass%2BBottle_Transparant.png",
+    "via": "Wikimedia Commons"
+  },
+  "gouden-carolus-whisky": {
+    "author": "KyraBulinckx",
+    "license": "CC0",
+    "licenseUrl": "http://creativecommons.org/publicdomain/zero/1.0/deed.en",
+    "source": "https://commons.wikimedia.org/wiki/File:Gouden_Carolus_Whisky_Infused_Glass%2BBottle_Transparant.png",
+    "via": "Wikimedia Commons"
+  },
+  "leffe-bruin": {
+    "author": "Jove",
+    "license": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Leffe_Bruin_and_Leffe_Blonde.jpg",
+    "via": "Wikimedia Commons"
+  },
+  "omer": {
+    "author": "Gerhidt",
+    "license": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Omer_beer.jpg",
+    "via": "Wikimedia Commons"
+  },
+  "rebel-local": {
+    "author": "Vdkdaan",
+    "license": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Rebel_local.jpg",
+    "via": "Wikimedia Commons"
+  },
+  "rochefort-10": {
+    "author": "No machine-readable author provided. Riflemann~commonswiki assumed (based on copyright claims).",
+    "license": "CC BY-SA 3.0",
+    "licenseUrl": "http://creativecommons.org/licenses/by-sa/3.0/",
+    "source": "https://commons.wikimedia.org/wiki/File:Rochefort-beers.jpg",
+    "via": "Wikimedia Commons"
+  },
+  "straffe-hendrik": {
+    "author": "Le Fou",
+    "license": "CC BY-SA 3.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Straffe_Hendrik.jpg",
+    "via": "Wikimedia Commons"
+  },
+  "tongerlo": {
+    "author": "Gordito1869",
+    "license": "CC BY 3.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by/3.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Tongerlo_Blond_2014.JPG",
+    "via": "Wikimedia Commons"
+  },
+  "troubadour-magma": {
+    "author": "Andreador",
+    "license": "CC BY-SA 3.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Troubadour_Magma.jpg",
+    "via": "Wikimedia Commons"
+  },
+  "vedett": {
+    "author": "Soti",
+    "license": "CC BY-SA 3.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Vedett_Extra_blond.JPG",
+    "via": "Wikimedia Commons"
+  },
+  "brugse-zot": {
+    "author": "Gordito1869",
+    "license": "CC BY 3.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by/3.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Brugse_Zot_2012_091.JPG",
+    "via": "Wikimedia Commons"
+  },
+  "chimay-blue": {
+    "author": "Ludovic Péron",
+    "license": "CC BY-SA 3.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Chimay_bleu.jpg",
+    "via": "Wikimedia Commons"
+  },
+  "hoegaarden": {
+    "author": "Ccyyrree",
+    "license": "CC0",
+    "licenseUrl": "http://creativecommons.org/publicdomain/zero/1.0/deed.en",
+    "source": "https://commons.wikimedia.org/wiki/File:Hoegaarden_original_belgian_white_ale.JPG",
+    "via": "Wikimedia Commons"
+  },
+  "westmalle-dubbel": {
+    "author": "onbekend",
+    "license": "Public domain",
+    "source": "https://commons.wikimedia.org/wiki/File:Westmalle_Dubbel.jpg",
+    "via": "Wikimedia Commons"
+  },
+  "kriek-belle-vue": {
+    "author": "Adrian Scottow from London, England",
+    "license": "CC BY-SA 2.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/2.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Kriek_Beer_1.jpg",
+    "via": "Wikimedia Commons"
+  },
+  "kwak": {
+    "author": "onbekend",
+    "license": "CC BY-SA 3.0",
+    "licenseUrl": "http://creativecommons.org/licenses/by-sa/3.0/",
+    "source": "https://commons.wikimedia.org/wiki/File:Kwak.jpg",
+    "via": "Wikimedia Commons"
+  },
+  "la-trappe-quadrupel": {
+    "author": "LeeKeoma",
+    "license": "CC0",
+    "licenseUrl": "http://creativecommons.org/publicdomain/zero/1.0/deed.en",
+    "source": "https://commons.wikimedia.org/wiki/File:La_Trappe_Quadrupel.JPG",
+    "via": "Wikimedia Commons"
+  },
+  "oude-geuze-boon": {
+    "author": "Dirk Van Esbroeck",
+    "license": "CC BY-SA 3.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Oudegeuzeboon.jpg",
+    "via": "Wikimedia Commons"
+  },
+  "piraat": {
+    "author": "Algont at Dutch Wikipedia",
+    "license": "CC BY-SA 3.0",
+    "licenseUrl": "http://creativecommons.org/licenses/by-sa/3.0/",
+    "source": "https://commons.wikimedia.org/wiki/File:Piraat-bier1442.JPG",
+    "via": "Wikimedia Commons"
+  },
+  "rodenbach-grand-cru": {
+    "author": "Bertrouf",
+    "license": "CC BY-SA 3.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Rodenbach_grand_cru_bottle.jpg",
+    "via": "Wikimedia Commons"
+  },
+  "st-bernardus-tripel": {
+    "author": "Andreador",
+    "license": "CC BY-SA 3.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0",
+    "source": "https://commons.wikimedia.org/wiki/File:St_Bernardus_Tripel.jpg",
+    "via": "Wikimedia Commons"
+  },
+  "tripel-lefort": {
+    "author": "Gordito1869",
+    "license": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Le_Fort_Tripel.jpg",
+    "via": "Wikimedia Commons"
+  },
+  "leffe-blond": {
+    "author": "Jove",
+    "license": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Leffe_Bruin_and_Leffe_Blonde.jpg",
+    "via": "Wikimedia Commons"
   }
 }

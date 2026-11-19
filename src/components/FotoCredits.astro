@@ -31,26 +31,33 @@ const lijst = Object.entries(credits as Record<string, Credit>)
 
 {
   lijst.length > 0 && (
-    <p class="credits">
-      {en ? 'Photos: ' : "Foto's: "}
-      {lijst.map((c, i) => (
-        <>
-          {i > 0 && '; '}
-          {c.item!.name}{' '}
-          {c.license ? (
-            <>
-              {en ? 'by' : 'door'} <a href={c.source} rel="noopener">{c.author}</a> (
-              <a href={c.licenseUrl} rel="noopener license">{c.license}</a>, via {c.via})
-            </>
-          ) : (
-            <>
-              © {c.author} (<a href={c.source} rel="noopener">{c.via}</a>)
-            </>
-          )}
-        </>
-      ))}
-      .
-    </p>
+    <details class="credits">
+      <summary>{en ? 'Photo credits' : 'Fotobronnen'}</summary>
+      <p>
+        {lijst.map((c, i) => (
+          <>
+            {i > 0 && '; '}
+            {c.item!.name}{' '}
+            {c.license ? (
+              <>
+                {en ? 'by' : 'door'} <a href={c.source} rel="noopener">{c.author}</a> (
+                {c.licenseUrl ? (
+                  <a href={c.licenseUrl} rel="noopener license">{c.license}</a>
+                ) : (
+                  c.license
+                )}
+                , via {c.via})
+              </>
+            ) : (
+              <>
+                © {c.author} (<a href={c.source} rel="noopener">{c.via}</a>)
+              </>
+            )}
+          </>
+        ))}
+        .
+      </p>
+    </details>
   )
 }
 
@@ -59,6 +66,14 @@ const lijst = Object.entries(credits as Record<string, Credit>)
     margin-block-start: var(--space-l);
     font-size: var(--step--2);
     color: var(--ink-faint);
+  }
+
+  .credits summary {
+    cursor: pointer;
+  }
+
+  .credits p {
+    margin-block-start: var(--space-2xs);
   }
 
   .credits a {

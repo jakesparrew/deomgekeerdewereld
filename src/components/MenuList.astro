@@ -14,10 +14,16 @@ interface Props {
   lang?: Lang;
   /** id van de kop waar deze lijst bij hoort. */
   labelledBy?: string;
+  /** Fotovak voor elk item, ook zonder foto. Standaard: als er in deze lijst één is.
+      De kaart zet het voor alle lijsten aan, zodat de hele kaart op één lijn staat. */
+  fotoKolom?: boolean;
 }
 
-const { items, lang = 'nl', labelledBy } = Astro.props;
+const { items, lang = 'nl', labelledBy, fotoKolom } = Astro.props;
 const T = strings(lang);
+
+/** Elk item een fotovak, zodat namen en prijzen netjes op één lijn beginnen. */
+const metFotos = fotoKolom ?? items.some((item) => item.image);
 
 type Dict = { nl: string; en: string };
 const styleDict = BEER_STYLE_LABELS as Record<string, Dict | undefined>;
@@ -64,14 +70,14 @@ function searchKey(item: MenuItem): string {
 
       return (
         <li
-          class:list={['menu-item', item.image && 'menu-item--foto']}
+          class:list={['menu-item', metFotos && 'menu-item--foto']}
           data-menu-item
           data-category={item.category}
           data-style={item.style || undefined}
           data-search={searchKey(item)}
           data-sold={soldOut ? '' : undefined}
         >
-          {item.image && (
+          {item.image ? (
             <img
               class="menu-item__foto"
               src={item.image}
@@ -81,6 +87,8 @@ function searchKey(item: MenuItem): string {
               loading="lazy"
               decoding="async"
             />
+          ) : (
+            metFotos && <span class="menu-item__foto menu-item__foto--leeg" aria-hidden="true" />
           )}
           <div class="menu-item__body">
           <p class="menu-item__row">
@@ -143,6 +151,21 @@ function searchKey(item: MenuItem): string {
     object-fit: cover;
     border-radius: var(--radius-s);
     background: var(--bg-inset);
+  }
+
+  /* Geen foto: het zonnetje van het logo, zacht, op dezelfde plek. */
+  .menu-item__foto--leeg {
+    position: relative;
+  }
+
+  .menu-item__foto--leeg::after {
+    content: '';
+    position: absolute;
+    inset: 22%;
+    background: var(--ink-faint);
+    opacity: 0.35;
+    -webkit-mask: url('/images/zon.png') no-repeat center / contain;
+    mask: url('/images/zon.png') no-repeat center / contain;
   }
 
   .menu-item__body {

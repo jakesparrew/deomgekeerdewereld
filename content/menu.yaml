@@ -70,7 +70,7 @@ intro:
     Everything behind the bar is on this list — and if something looks
     off, just ask us at the bar.
 
-updated: '2026-11-18'
+updated: '2026-11-19'
 
 items:
   # ------------------------------------------------------------------
@@ -101,6 +101,7 @@ items:
     price: 4.50
     note: Met een bon van Guido Gids twee voor de prijs van één.
     noteEn: Two for the price of one with a Guido Gids voucher.
+    image: '/images/menu/augustijn-1-1.jpg'
     tags: [promo]
   - id: piraat-1-1
     name: Piraat 1+1
@@ -108,6 +109,7 @@ items:
     price: 5.00
     note: Met een bon van Guido Gids twee voor de prijs van één.
     noteEn: Two for the price of one with a Guido Gids voucher.
+    image: '/images/menu/piraat-1-1.jpg'
     tags: [promo]
   - id: saison-dupont-dry-hop-promo
     name: 'Saison Dupont Dry Hop PROMO'
@@ -143,6 +145,7 @@ items:
     name: Flying Fish
     category: bier
     price: 5.00
+    image: '/images/menu/flying-fish.jpg'
   - id: delta-ipa
     name: Delta IPA
     category: bier
@@ -219,6 +222,7 @@ items:
     style: pils
     abv: 5.2
     brewery: AB InBev
+    image: '/images/menu/stella-artois-25.jpg'
     tags: [favo]
   - id: bak-stella-artois
     name: Bak Stella Artois
@@ -228,6 +232,7 @@ items:
     brewery: AB InBev
     note: Een volle bak Stella.
     noteEn: A full crate of Stella.
+    image: '/images/menu/bak-stella-artois.jpg'
     tags: [promo, favo]
   - id: augustijn
     name: Augustijn
@@ -243,6 +248,7 @@ items:
     category: bier
     price: 5.00
     style: blond
+    image: '/images/menu/barbar.jpg'
   - id: brugse-zot
     name: Brugse Zot
     category: bier
@@ -250,6 +256,7 @@ items:
     style: blond
     abv: 6.0
     brewery: De Halve Maan
+    image: '/images/menu/brugse-zot.jpg'
   - id: bush-caractere
     name: Bush Caractère
     category: bier
@@ -270,6 +277,7 @@ items:
     style: trappist
     abv: 9.0
     brewery: Chimay
+    image: '/images/menu/chimay-blue.jpg'
     tags: [trappist]
   # Cornet staat op de bron twee keer: 4,50 in promo en 5,00 bij de
   # favo's. We houden de promoprijs van 4,50 en zetten de tag promo.
@@ -278,6 +286,7 @@ items:
     category: bier
     price: 5.00
     style: blond
+    image: '/images/menu/cornet.jpg'
     tags: [promo, favo]
   - id: corona-extra
     name: Corona Extra
@@ -298,6 +307,7 @@ items:
     style: blond
     abv: 8.5
     brewery: Huyghe
+    image: '/images/menu/delirium.jpg'
   - id: duvel
     name: Duvel
     category: bier
@@ -321,6 +331,7 @@ items:
     price: 6.00
     style: tripel
     brewery: Duvel Moortgat
+    image: '/images/menu/duvel-tripel-hop.jpg'
   - id: export-kruger
     name: Export Kruger
     category: bier
@@ -333,6 +344,7 @@ items:
     style: blond
     abv: 6.9
     brewery: Roman
+    image: '/images/menu/gentse-strop.jpg'
     tags: [lokaal, gents]
   - id: gouden-carolus-classic
     name: Gouden Carolus Classic
@@ -341,29 +353,34 @@ items:
     style: bruin
     abv: 8.5
     brewery: Het Anker
+    image: '/images/menu/gouden-carolus-classic.jpg'
   - id: gouden-carolus-tripel
     name: Gouden Carolus Tripel
     category: bier
     price: 5.00
     style: tripel
     brewery: Het Anker
+    image: '/images/menu/gouden-carolus-tripel.jpg'
   - id: gouden-carolus-whisky
     name: Gouden Carolus Whisky
     category: bier
     price: 6.00
     style: bruin
     brewery: Het Anker
+    image: '/images/menu/gouden-carolus-whisky.jpg'
   - id: hoegaarden
     name: Hoegaarden
     category: bier
     price: 2.80
     style: wit
     abv: 4.9
+    image: '/images/menu/hoegaarden.jpg'
   - id: jungle-joy
     name: Jungle Joy
     category: bier
     price: 5.50
     style: blond
+    image: '/images/menu/jungle-joy.jpg'
   - id: keizer-karel
     name: Keizer Karel
     category: bier
@@ -374,6 +391,7 @@ items:
     category: bier
     price: 3.60
     style: fruit
+    image: '/images/menu/kriek-belle-vue.jpg'
     tags: [favo]
   - id: kwak
     name: Kwak
@@ -382,12 +400,14 @@ items:
     style: amber
     abv: 8.4
     brewery: Bosteels
+    image: '/images/menu/kwak.jpg'
   - id: la-trappe-quadrupel
     name: La Trappe Quadrupel
     category: bier
     price: 6.00
     style: trappist
     abv: 10.0
+    image: '/images/menu/la-trappe-quadrupel.jpg'
     tags: [trappist]
   # Leffe staat twee keer op de bron, blond en bruin. Daarom twee items
   # met een eigen naam, anders botsen de ids.
@@ -398,12 +418,14 @@ items:
     price: 4.80
     style: blond
     abv: 6.6
+    image: '/images/menu/leffe-blond.jpg'
   - id: leffe-bruin
     name: Leffe Bruin
     orderbilly: 'Leffe (bruin)'
     category: bier
     price: 4.80
     style: bruin
+    image: '/images/menu/leffe-bruin.jpg'
   - id: omer
     name: Omer
     category: bier
@@ -411,6 +433,7 @@ items:
     style: blond
     abv: 8.0
     brewery: Omer Vander Ghinste
+    image: '/images/menu/omer.jpg'
     tags: [favo]
   - id: orval
     name: Orval
@@ -419,6 +442,7 @@ items:
     style: trappist
     abv: 6.2
     brewery: Brasserie d'Orval
+    image: '/images/menu/orval.jpg'
     tags: [trappist]
   - id: orval-gerijpt
     name: Orval gerijpt
@@ -429,6 +453,7 @@ items:
     brewery: Brasserie d'Orval
     note: Fles die een tijd in de kelder heeft gelegen.
     noteEn: Bottle-aged Orval.
+    image: '/images/menu/orval-gerijpt.jpg'
     tags: [trappist]
   # De bron zet er "(blond)" bij, maar dit is natuurlijk een geuze.
   - id: oude-geuze-boon
@@ -438,11 +463,13 @@ items:
     style: geuze
     abv: 7.0
     brewery: Boon
+    image: '/images/menu/oude-geuze-boon.jpg'
   - id: rebel-local
     name: Rebel Local
     category: bier
     price: 5.00
     style: blond
+    image: '/images/menu/rebel-local.jpg'
     tags: [lokaal, gents]
   # Bier van de maand: deze prijs moet gelijklopen met content/highlights.yaml.
   - id: ouwen-duiker
@@ -461,6 +488,7 @@ items:
     style: blond
     abv: 10.5
     brewery: Van Steenberge
+    image: '/images/menu/piraat.jpg'
   - id: rochefort-10
     name: Rochefort 10
     category: bier
@@ -468,6 +496,7 @@ items:
     style: trappist
     abv: 11.3
     brewery: Rochefort
+    image: '/images/menu/rochefort-10.jpg'
     tags: [trappist]
   - id: rodenbach-grand-cru
     name: Rodenbach Grand Cru
@@ -475,6 +504,7 @@ items:
     price: 5.00
     style: bruin
     abv: 6.0
+    image: '/images/menu/rodenbach-grand-cru.jpg'
   - id: scotch-cts
     name: Scotch cts
     category: bier
@@ -494,12 +524,14 @@ items:
     price: 5.00
     style: tripel
     brewery: St. Bernardus
+    image: '/images/menu/st-bernardus-tripel.jpg'
   - id: straffe-hendrik
     name: Straffe Hendrik
     category: bier
     price: 5.00
     style: blond
     abv: 9.0
+    image: '/images/menu/straffe-hendrik.jpg'
   - id: tietje
     name: Tietje
     category: bier
@@ -510,6 +542,7 @@ items:
     category: bier
     price: 5.00
     style: blond
+    image: '/images/menu/tongerlo.jpg'
   - id: tripel-lefort
     name: Tripel LeFort
     category: bier
@@ -517,17 +550,20 @@ items:
     style: tripel
     abv: 8.8
     brewery: Omer Vander Ghinste
+    image: '/images/menu/tripel-lefort.jpg'
     tags: [favo]
   - id: triple-danvers
     name: Triple D'Anvers
     category: bier
     price: 5.00
     style: tripel
+    image: '/images/menu/triple-danvers.jpg'
   - id: troubadour-magma
     name: Troubadour Magma
     category: bier
     price: 5.00
     style: amber
+    image: '/images/menu/troubadour-magma.jpg'
   - id: unwanted-tattoo
     name: Unwanted Tattoo
     category: bier
@@ -535,6 +571,7 @@ items:
     style: ipa
     note: IPA met gember.
     noteEn: Ginger IPA.
+    image: '/images/menu/unwanted-tattoo.jpg'
   - id: vedett
     name: Vedett
     category: bier
@@ -542,6 +579,7 @@ items:
     style: pils
     abv: 5.2
     brewery: Duvel Moortgat
+    image: '/images/menu/vedett.jpg'
   - id: victoria
     name: Victoria
     category: bier
@@ -554,6 +592,7 @@ items:
     style: trappist
     abv: 9.5
     brewery: Westmalle
+    image: '/images/menu/westmalle-tripel.jpg'
     tags: [trappist]
   - id: witkap-pater-stimulo
     name: Witkap Pater Stimulo
@@ -564,6 +603,7 @@ items:
     name: 'Waar is Loca IPA'
     category: bier
     price: 5.00
+    image: '/images/menu/waar-is-loca-ipa.jpg'
     tags: [lokaal]
   - id: stella-appel-kaneel
     name: 'Stella Appel Kaneel'
@@ -580,6 +620,7 @@ items:
     price: 5.00
     style: trappist
     orderbilly: 'Westmalle Dubbel (bruine trappist)'
+    image: '/images/menu/westmalle-dubbel.jpg'
     tags: [trappist]
 
   # ------------------------------------------------------------------
@@ -697,6 +738,7 @@ items:
     name: Chaudfontaine Plat
     category: frisdrank
     price: 2.20
+    image: '/images/menu/chaudfontaine-plat.jpg'
   # "Bruis water" bij de favo's is ditzelfde flesje.
   - id: chaudfontaine-bruis
     name: Chaudfontaine Bruis
@@ -828,6 +870,7 @@ items:
     price: 3.00
     note: Zoveel tassen als ge wilt.
     noteEn: As many cups as you like.
+    image: '/images/menu/koffie-a-volonte.jpg'
     tags: [favo]
   - id: dubbel-shot-espresso
     name: Dubbel shot espresso
@@ -907,6 +950,7 @@ items:
     name: Aperol Spritz
     category: spritz
     price: 9.00
+    image: '/images/menu/aperol-spritz.jpg'
     tags: [favo]
   - id: '43-spritz'
     name: '43 Spritz'
@@ -1080,6 +1124,7 @@ items:
     name: Mojito
     category: cocktails
     price: 11.00
+    image: '/images/menu/mojito.jpg'
   - id: mojito-tropicana
     name: Mojito Tropicana
     category: cocktails
@@ -1488,6 +1533,7 @@ items:
     name: Chips
     category: eten
     price: 2.50
+    image: '/images/menu/chips.jpg'
   - id: droge-worst
     name: Droge worst
     category: eten

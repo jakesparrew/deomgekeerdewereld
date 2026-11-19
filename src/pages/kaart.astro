@@ -318,7 +318,7 @@ const priceLine = [
                 </div>
               )}
 
-              <MenuList items={group.items} lang={lang} labelledBy={'kop-' + group.key} />
+              <MenuList items={group.items} lang={lang} labelledBy={'kop-' + group.key} fotoKolom={menu.items.some((i) => i.image)} />
             </section>
           ))
         }

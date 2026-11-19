@@ -182,16 +182,32 @@ const IMAGE_SOURCES = `${IMAGE_DIR}bron.json`;
 /** Foto's van elders (bv. Wikimedia Commons), met de fotograaf en de licentie. */
 const IMAGE_CREDITS = `${IMAGE_DIR}credits.json`;
 
-/** Haalt een foto van OrderBilly en bewaart ze vierkant en klein, zonder metadata. */
+/**
+ * Zet een foto in een vierkant van 480 px zonder iets weg te snijden: fles en glas
+ * staan er helemaal en gecentreerd op, met wat ruimte errond. De rest van het
+ * vak is een wazige, iets donkerdere versie van dezelfde foto. Geen metadata.
+ * Foto's van elders (credits.json) krijgen hetzelfde kader.
+ */
+async function kader(buffer, file) {
+  const { default: sharp } = await import('sharp');
+  const bron = await sharp(buffer).rotate().flatten({ background: '#ffffff' }).toBuffer();
+  const achtergrond = await sharp(bron)
+    .resize(480, 480, { fit: 'cover' })
+    .blur(18)
+    .modulate({ brightness: 0.55, saturation: 0.8 })
+    .toBuffer();
+  const voorgrond = await sharp(bron).resize(440, 440, { fit: 'inside' }).toBuffer();
+  await sharp(achtergrond)
+    .composite([{ input: voorgrond, gravity: 'centre' }])
+    .jpeg({ quality: 78, mozjpeg: true, progressive: true })
+    .toFile(file);
+}
+
+/** Haalt een foto van OrderBilly en bewaart ze in het vaste kader. */
 async function saveImage(url, file) {
   const response = await fetch(url, { signal: AbortSignal.timeout(30_000) });
   if (!response.ok) throw new Error(`${url} gaf HTTP ${response.status}`);
-  const { default: sharp } = await import('sharp');
-  await sharp(Buffer.from(await response.arrayBuffer()))
-    .rotate()
-    .resize(480, 480, { fit: 'cover', position: sharp.strategy.attention })
-    .jpeg({ quality: 78, mozjpeg: true, progressive: true })
-    .toFile(file);
+  await kader(Buffer.from(await response.arrayBuffer()), file);
 }
 
 /* ------------------------------------------------------ menu.yaml lezen */
@@ -384,9 +400,9 @@ async function main() {
   }
 
   /* ---- Suggesties en foto's ----
-     De suggesties van OrderBilly krijgen het labeltje "suggestie". Alles van het
-     vat, het bier van de maand en de suggesties krijgen de foto van OrderBilly,
-     als die er een heeft. Die foto's staan in public/images/menu/. */
+     De suggesties van OrderBilly krijgen het labeltje "suggestie". Elk product
+     waar OrderBilly een foto voor heeft, krijgt die foto. Die foto's staan in
+     public/images/menu/. Foto's van elders (credits.json) blijven staan. */
   let sources = {};
   try {
     sources = JSON.parse(readFileSync(IMAGE_SOURCES, 'utf8'));
@@ -409,8 +425,9 @@ async function main() {
       changes.push(`${inSpotlight ? 'nu suggestie' : 'geen suggestie meer'}: ${item.name}`);
     }
 
-    const wanted = tags.includes('op-tap') || isBotm || inSpotlight;
+    // Heeft OrderBilly een foto, dan nemen we die, voor elk product.
     const url = (key && images.get(key)) || (isBotm && bvdmKey ? images.get(bvdmKey) : undefined);
+    const wanted = Boolean(url);
     const path = `/images/menu/${item.id}.jpg`;
     if (wanted && url) {
       if (sources[item.id] !== url || !existsSync(`${IMAGE_DIR}${item.id}.jpg`)) {
