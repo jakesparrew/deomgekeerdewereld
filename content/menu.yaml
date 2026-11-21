@@ -94,6 +94,7 @@ items:
     price: 3.50
     note: Elke eerste vrijdag van de maand een Omer aan 3,50.
     noteEn: First Friday of every month, an Omer for 3.50.
+    image: '/images/menu/aperomer.jpg'
     tags: [promo, favo]
   - id: augustijn-1-1
     name: Augustijn 1+1
@@ -185,6 +186,7 @@ items:
     category: bier
     price: 4.50
     style: blond
+    image: '/images/menu/saison-dupont-dry-hop.jpg'
   # Van het vat. De vier hieronder staan op de tap: verandert er een vat,
   # haal dan de tag "op-tap" weg of zet ze bij een ander bier.
   - id: stella-artois-33

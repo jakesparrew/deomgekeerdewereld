@@ -86,10 +86,10 @@
     "via": "Wikimedia Commons"
   },
   "omer": {
-    "author": "Gerhidt",
-    "license": "CC BY-SA 4.0",
-    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
-    "source": "https://commons.wikimedia.org/wiki/File:Omer_beer.jpg",
+    "author": "Gordito1869",
+    "license": "CC BY 3.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by/3.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Spanien2013_Bier_Omer_1.JPG",
     "via": "Wikimedia Commons"
   },
   "rebel-local": {
@@ -222,6 +222,18 @@
     "license": "CC BY-SA 4.0",
     "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
     "source": "https://commons.wikimedia.org/wiki/File:Leffe_Bruin_and_Leffe_Blonde.jpg",
+    "via": "Wikimedia Commons"
+  },
+  "saison-dupont-dry-hop": {
+    "author": "Brasserie Dupont",
+    "source": "https://www.brasserie-dupont.com/nl/saison-dry-hop/",
+    "via": "brasserie-dupont.com"
+  },
+  "aperomer": {
+    "author": "Gordito1869",
+    "license": "CC BY 3.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by/3.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Spanien2013_Bier_Omer_1.JPG",
     "via": "Wikimedia Commons"
   }
 }
