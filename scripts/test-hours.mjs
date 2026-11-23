@@ -108,14 +108,14 @@ check(
   false,
 );
 check(
-  '24 december om 19:00 is nog open (tot 20:00)',
+  '24 december om 19:00 is toe (Kerstavond gesloten)',
   getStatus(hours, brussels(2026, 12, 24, 19, 0)).isOpen,
-  true,
+  false,
 );
 check(
-  '24 december om 21:00 is toe',
-  getStatus(hours, brussels(2026, 12, 24, 21, 0)).isOpen,
-  false,
+  '24 december 02:00 is nog open (nacht van woensdag 23)',
+  getStatus(hours, brussels(2026, 12, 24, 2, 0)).isOpen,
+  true,
 );
 check(
   '25 december wijst naar de volgende open dag',
@@ -123,22 +123,22 @@ check(
   'Opent zaterdag om 13:30',
 );
 
-/* ---- 5. Oudejaar sluit om 05:00, dus nieuwjaar 04:00 is nog open ---- */
+/* ---- 5. Oudejaar en nieuwjaar: allebei gesloten ---- */
 console.log('\nOudejaar');
 check(
-  '1 januari 04:00 is nog open (oudejaarsnacht)',
-  getStatus(hours, brussels(2027, 1, 1, 4, 0)).isOpen,
-  true,
-);
-check(
-  '1 januari 06:00 is toe',
-  getStatus(hours, brussels(2027, 1, 1, 6, 0)).isOpen,
+  '31 december om 22:00 is toe',
+  getStatus(hours, brussels(2026, 12, 31, 22, 0)).isOpen,
   false,
 );
 check(
-  '1 januari 19:00 is open (uitzondering 18:00 - 03:00)',
-  getStatus(hours, brussels(2027, 1, 1, 19, 0)).isOpen,
-  true,
+  '1 januari 01:00 is toe (geen oudejaarsnacht)',
+  getStatus(hours, brussels(2027, 1, 1, 1, 0)).isOpen,
+  false,
+);
+check(
+  '1 januari wijst naar zaterdag 2 januari',
+  getStatus(hours, brussels(2027, 1, 1, 19, 0)).label,
+  'Opent zaterdag om 13:30',
 );
 
 /* ---- 6. Zomer- en wintertijd ---- */

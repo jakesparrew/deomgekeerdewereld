@@ -28,19 +28,16 @@ exceptions:
     closed: true
   - date: '2026-12-24'
     label: 'Kerstavond'
-    open: '13:30'
-    close: '20:00'
+    closed: true
   - date: '2026-12-25'
     label: 'Kerstmis'
     closed: true
   - date: '2026-12-31'
     label: 'Oudejaarsavond'
-    open: '13:30'
-    close: '05:00'
+    closed: true
   - date: '2027-01-01'
     label: 'Nieuwjaar'
-    open: '18:00'
-    close: '03:00'
+    closed: true
 
 # Kort zinnetje onder de uren op /contact.
 note: 'Openingstijden kunnen afwijken op feestdagen en tijdens events. Volg Instagram voor de laatste stand van zaken.'
