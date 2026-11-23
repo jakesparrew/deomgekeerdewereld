@@ -70,7 +70,7 @@ intro:
     Everything behind the bar is on this list — and if something looks
     off, just ask us at the bar.
 
-updated: '2026-11-19'
+updated: '2026-11-23'
 
 items:
   # ------------------------------------------------------------------
@@ -116,6 +116,11 @@ items:
     name: 'Saison Dupont Dry Hop PROMO'
     category: promo
     price: 4.50
+    tags: [promo]
+  - id: special-aperoplankje-21-11
+    name: 'Special Aperoplankje 21/11'
+    category: promo
+    price: 17.50
     tags: [promo]
 
   # ------------------------------------------------------------------
