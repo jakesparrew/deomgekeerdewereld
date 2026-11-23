@@ -1,0 +1,123 @@
+---
+/**
+ * Knoppen boven de agenda: alles, enkel feestjes en events, of enkel matchen.
+ * Zonder JavaScript zijn de knoppen er niet en staat gewoon alles er.
+ * Werkt op [data-agenda-item] met data-soort="sport" of "event", binnen [data-agenda].
+ */
+import type { Lang } from '../lib/i18n';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const en = lang === 'en';
+
+const knoppen = [
+  { soort: 'alles', label: en ? 'Everything' : 'Alles' },
+  { soort: 'event', label: en ? 'Parties & events' : 'Feestjes & events' },
+  { soort: 'sport', label: en ? 'Matches' : 'Matchen' },
+];
+---
+
+<div class="agenda-filter" hidden data-agenda-filter>
+  <p class="agenda-filter__label" id="agenda-filter-label">{en ? 'Show' : 'Toon'}</p>
+  <div class="agenda-filter__knoppen" role="group" aria-labelledby="agenda-filter-label">
+    {
+      knoppen.map((k, i) => (
+        <button
+          type="button"
+          class="agenda-filter__knop"
+          aria-pressed={i === 0 ? 'true' : 'false'}
+          data-soort={k.soort}
+        >
+          {k.label}
+        </button>
+      ))
+    }
+  </div>
+  <p class="visually-hidden" role="status" aria-live="polite" data-agenda-status
+    data-tekst={en ? '{n} shown' : '{n} getoond'}></p>
+</div>
+
+<script>
+  const filter = document.querySelector<HTMLElement>('[data-agenda-filter]');
+  const lijst = document.querySelector<HTMLElement>('[data-agenda]');
+
+  if (filter && lijst) {
+    const knoppen = Array.from(filter.querySelectorAll<HTMLButtonElement>('[data-soort]'));
+    const items = Array.from(lijst.querySelectorAll<HTMLElement>('[data-agenda-item]'));
+    const status = filter.querySelector<HTMLElement>('[data-agenda-status]');
+
+    // Enkel tonen als er echt iets te filteren valt: matchen én iets anders.
+    const soorten = new Set(items.map((el) => el.dataset.soort));
+    if (soorten.has('sport') && soorten.has('event')) filter.hidden = false;
+
+    const toon = (soort: string) => {
+      let n = 0;
+      for (const el of items) {
+        const zichtbaar = soort === 'alles' || el.dataset.soort === soort;
+        el.hidden = !zichtbaar;
+        if (zichtbaar) n += 1;
+      }
+      for (const k of knoppen) k.setAttribute('aria-pressed', String(k.dataset.soort === soort));
+      if (status) status.textContent = (status.dataset.tekst ?? '{n}').replace('{n}', String(n));
+    };
+
+    for (const k of knoppen) k.addEventListener('click', () => toon(k.dataset.soort ?? 'alles'));
+  }
+</script>
+
+<style>
+  .agenda-filter {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-2xs) var(--space-s);
+    margin-block: var(--space-s) var(--space-m);
+  }
+
+  .agenda-filter[hidden] {
+    display: none;
+  }
+
+  .agenda-filter__label {
+    font-size: var(--step--1);
+    font-weight: 700;
+    letter-spacing: var(--tracking-wide);
+    text-transform: uppercase;
+    color: var(--ink-faint);
+  }
+
+  .agenda-filter__knoppen {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2xs);
+  }
+
+  .agenda-filter__knop {
+    min-height: var(--tap-min);
+    padding-inline: var(--space-s);
+    border: var(--border-hairline) solid var(--line-strong);
+    border-radius: var(--radius-pill);
+    background: transparent;
+    color: var(--ink);
+    font-weight: 700;
+    cursor: pointer;
+  }
+
+  .agenda-filter__knop:hover {
+    border-color: var(--accent);
+  }
+
+  .agenda-filter__knop[aria-pressed='true'] {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: var(--accent-ink);
+  }
+
+  /* Weggefilterd: echt weg, ook de lege plek in de lijst. */
+  :global([data-agenda-item][hidden]) {
+    display: none !important;
+  }
+</style>

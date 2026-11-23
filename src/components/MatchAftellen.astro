@@ -1,0 +1,156 @@
+---
+/**
+ * Aftellen naar de volgende KAA Gent-match.
+ * Zonder JavaScript staat er gewoon de eerstvolgende match met datum en uur.
+ * Met JavaScript kiest de browser zelf de volgende match (de site wordt maar
+ * af en toe opnieuw gebouwd) en telt hij af per minuut.
+ * Matchen onder voorbehoud tellen niet mee: daar is het uur nog niet zeker.
+ */
+import type { ResolvedEvent } from '../lib/events';
+import { formatDate, formatTime } from '../lib/format';
+import type { Lang } from '../lib/i18n';
+
+interface Props {
+  lang: Lang;
+  matches: ResolvedEvent[];
+}
+
+const { lang, matches } = Astro.props;
+const en = lang === 'en';
+
+/** "2026-11-29T18:15" in Gentse tijd naar een echte ISO-tijd met offset. */
+function brusselsIso(local: string): string {
+  const [d, t = '00:00'] = local.split('T');
+  const [y, m, dag] = d.split('-').map(Number);
+  const [hh, mm] = t.split(':').map(Number);
+  for (const offset of [1, 2]) {
+    const guess = new Date(Date.UTC(y, m - 1, dag, hh - offset, mm));
+    const parts = new Intl.DateTimeFormat('en-GB', {
+      timeZone: 'Europe/Brussels',
+      hour: '2-digit',
+      minute: '2-digit',
+      hourCycle: 'h23',
+    }).format(guess);
+    if (parts === `${String(hh).padStart(2, '0')}:${String(mm).padStart(2, '0')}`) {
+      return guess.toISOString();
+    }
+  }
+  return new Date(Date.UTC(y, m - 1, dag, hh - 1, mm)).toISOString();
+}
+
+const zeker = matches
+  .filter((m) => !m.provisional && m.start.includes('T'))
+  .map((m) => ({
+    titel: m.title,
+    wanneer: brusselsIso(m.start),
+    tekst: `${formatDate(m.start, lang)} · ${formatTime(m.start)}`,
+  }));
+
+const eerste = zeker[0];
+---
+
+{
+  eerste && (
+    <div class="aftellen" data-aftellen data-matchen={JSON.stringify(zeker)} data-lang={lang}>
+      <p class="aftellen__label">{en ? 'Next match' : 'Volgende match'}</p>
+      <p class="aftellen__titel" data-titel>{eerste.titel}</p>
+      <p class="aftellen__wanneer" data-wanneer>{eerste.tekst}</p>
+      <p class="aftellen__klok" data-klok hidden aria-live="off" />
+    </div>
+  )
+}
+
+<script>
+  const blok = document.querySelector<HTMLElement>('[data-aftellen]');
+
+  if (blok) {
+    type Match = { titel: string; wanneer: string; tekst: string };
+    const matchen: Match[] = JSON.parse(blok.dataset.matchen ?? '[]');
+    const en = blok.dataset.lang === 'en';
+    const titel = blok.querySelector<HTMLElement>('[data-titel]')!;
+    const wanneer = blok.querySelector<HTMLElement>('[data-wanneer]')!;
+    const klok = blok.querySelector<HTMLElement>('[data-klok]')!;
+
+    // Een match duurt met rust en extra tijd zo'n twee uur.
+    const DUUR = 2 * 3600 * 1000;
+
+    const woord = (n: number, een: string, meer: string) => `${n} ${n === 1 ? een : meer}`;
+
+    const teken = () => {
+      const nu = Date.now();
+      const m = matchen.find((x) => new Date(x.wanneer).getTime() + DUUR > nu);
+      if (!m) {
+        blok.hidden = true;
+        return;
+      }
+      titel.textContent = m.titel;
+      wanneer.textContent = m.tekst;
+
+      const rest = new Date(m.wanneer).getTime() - nu;
+      klok.hidden = false;
+      if (rest <= 0) {
+        klok.textContent = en ? 'Live now, come and watch!' : 'Nu bezig, kom kijken!';
+        blok.classList.add('aftellen--live');
+        return;
+      }
+      blok.classList.remove('aftellen--live');
+      const min = Math.floor(rest / 60000);
+      const dagen = Math.floor(min / 1440);
+      const uren = Math.floor((min % 1440) / 60);
+      const minuten = min % 60;
+      const stukken = en
+        ? [dagen && woord(dagen, 'day', 'days'), uren && woord(uren, 'hour', 'hours'), woord(minuten, 'minute', 'minutes')]
+        : [dagen && woord(dagen, 'dag', 'dagen'), uren && woord(uren, 'uur', 'uur'), woord(minuten, 'minuut', 'minuten')];
+      const lijst = stukken.filter(Boolean).join(', ');
+      klok.textContent = en ? `Kick-off in ${lijst}` : `Aftrap binnen ${lijst}`;
+    };
+
+    teken();
+    setInterval(teken, 30000);
+  }
+</script>
+
+<style>
+  .aftellen {
+    margin-block: var(--space-m) 0;
+    padding: var(--space-s) var(--space-m);
+    border-inline-start: 4px solid var(--accent);
+    background: var(--bg-raised);
+  }
+
+  .aftellen[hidden] {
+    display: none;
+  }
+
+  .aftellen__label {
+    font-size: var(--step--1);
+    font-weight: 700;
+    letter-spacing: var(--tracking-wide);
+    text-transform: uppercase;
+    color: var(--ink-faint);
+  }
+
+  .aftellen__titel {
+    font-size: var(--step-1);
+    font-weight: 800;
+    color: var(--ink);
+  }
+
+  .aftellen__wanneer {
+    color: var(--ink-soft);
+  }
+
+  .aftellen__klok {
+    margin-block-start: var(--space-2xs);
+    font-weight: 700;
+    color: var(--accent-text);
+  }
+
+  .aftellen__klok[hidden] {
+    display: none;
+  }
+
+  .aftellen--live .aftellen__klok {
+    color: var(--ink);
+  }
+</style>

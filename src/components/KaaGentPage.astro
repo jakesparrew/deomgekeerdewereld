@@ -8,6 +8,7 @@
  */
 import Base from '../layouts/Base.astro';
 import InstaCarrousel from './InstaCarrousel.astro';
+import MatchAftellen from './MatchAftellen.astro';
 
 import { events } from '../lib/content';
 import { buildAgenda } from '../lib/events';
@@ -119,6 +120,8 @@ const punten = [
   <section class="section section--tight" id="matchen">
     <div class="wrap wrap--wide">
       <h2>{en ? 'The matches' : 'De matchen'}</h2>
+
+      <MatchAftellen lang={lang} matches={matches} />
 
       {
         matches.length > 0 ? (

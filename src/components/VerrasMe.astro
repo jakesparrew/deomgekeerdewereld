@@ -1,0 +1,110 @@
+---
+/**
+ * "Verras me": kiest een willekeurig bier dat nu op de kaart zichtbaar is
+ * (en niet uitverkocht), scrollt ernaar en laat het even oplichten.
+ * Zonder JavaScript is de knop er niet.
+ */
+import type { Lang } from '../lib/i18n';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const en = lang === 'en';
+---
+
+<div class="verras" hidden data-verras>
+  <button type="button" class="verras__knop" data-verras-knop>
+    <span aria-hidden="true">🎲</span>
+    {en ? 'Surprise me' : 'Verras me'}
+  </button>
+  <p class="visually-hidden" role="status" aria-live="polite" data-verras-status
+    data-tekst={en ? 'Try this: {naam}' : 'Probeer eens: {naam}'}></p>
+</div>
+
+<script>
+  const blok = document.querySelector<HTMLElement>('[data-verras]');
+  const knop = blok?.querySelector<HTMLButtonElement>('[data-verras-knop]');
+  const status = blok?.querySelector<HTMLElement>('[data-verras-status]');
+
+  if (blok && knop) {
+    blok.hidden = false;
+    const rustig = window.matchMedia('(prefers-reduced-motion: reduce)');
+    let vorige: HTMLElement | null = null;
+
+    knop.addEventListener('click', () => {
+      // Enkel wat je nu ziet: zoeken of filteren telt mee.
+      const kandidaten = Array.from(
+        document.querySelectorAll<HTMLElement>('[data-menu-item][data-category="bier"]'),
+      ).filter(
+        (el) =>
+          !el.hidden &&
+          !el.hasAttribute('data-sold') &&
+          !el.closest('[hidden]') &&
+          el !== vorige,
+      );
+      if (kandidaten.length === 0) return;
+
+      const keuze = kandidaten[Math.floor(Math.random() * kandidaten.length)];
+      vorige?.classList.remove('is-verrassing');
+      vorige = keuze;
+
+      keuze.scrollIntoView({ behavior: rustig.matches ? 'auto' : 'smooth', block: 'center' });
+      // Opnieuw starten van de animatie, ook als hetzelfde item twee keer na elkaar zou komen.
+      void keuze.offsetWidth;
+      keuze.classList.add('is-verrassing');
+      window.setTimeout(() => keuze.classList.remove('is-verrassing'), 2600);
+
+      const naam = keuze.querySelector('.menu-item__name')?.textContent?.trim() ?? '';
+      if (status) status.textContent = (status.dataset.tekst ?? '{naam}').replace('{naam}', naam);
+    });
+  }
+</script>
+
+<style>
+  .verras[hidden] {
+    display: none;
+  }
+
+  .verras__knop {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2xs);
+    min-height: var(--tap-min);
+    padding-inline: var(--space-s);
+    border: var(--border-hairline) solid var(--accent);
+    border-radius: var(--radius-pill);
+    background: transparent;
+    color: var(--ink);
+    font-weight: 700;
+    cursor: pointer;
+  }
+
+  .verras__knop:hover {
+    background: var(--accent);
+    color: var(--accent-ink);
+  }
+
+  :global(.menu-item.is-verrassing) {
+    border-radius: var(--radius-s, 6px);
+    outline: 3px solid var(--accent);
+    outline-offset: 6px;
+    animation: verras-oplichten 2.6s ease-out both;
+  }
+
+  @keyframes verras-oplichten {
+    0% {
+      background: color-mix(in srgb, var(--accent) 35%, transparent);
+    }
+    100% {
+      background: transparent;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    :global(.menu-item.is-verrassing) {
+      animation: none;
+    }
+  }
+</style>

@@ -8,6 +8,7 @@
 import Base from '../../layouts/Base.astro';
 import ReserveButton from '../../components/ReserveButton.astro';
 import EventCard from '../../components/EventCard.astro';
+import AgendaFilter from '../../components/AgendaFilter.astro';
 import Icon from '../../components/Icon.astro';
 import Photo from '../../components/Photo.astro';
 
@@ -104,18 +105,25 @@ const reasons = [
 
       {
         next ? (
-          <div class="agenda">
-            <EventCard
-              event={next}
-              lang={lang}
-              variant="featured"
-              isToday={todayIds.has(next.id)}
-            />
+          <div class="agenda" data-agenda>
+            <AgendaFilter lang={lang} />
+            <div data-agenda-item data-soort={next.type === 'sport' ? 'sport' : 'event'}>
+              <EventCard
+                event={next}
+                lang={lang}
+                variant="featured"
+                isToday={todayIds.has(next.id)}
+              />
+            </div>
 
             {rest.length > 0 && (
               <ul class="agenda__list" role="list">
                 {rest.map((event) => (
-                  <li class="agenda__item">
+                  <li
+                    class="agenda__item"
+                    data-agenda-item
+                    data-soort={event.type === 'sport' ? 'sport' : 'event'}
+                  >
                     <EventCard event={event} lang={lang} isToday={todayIds.has(event.id)} />
                   </li>
                 ))}
