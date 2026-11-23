@@ -23,6 +23,9 @@ week:
 # Uitzonderingen: feestdagen, verlof, latere/vroegere sluiting.
 # Datum in YYYY-MM-DD. Verwijder gerust wat voorbij is.
 exceptions:
+  - date: '2026-12-13'
+    label: 'Teambuilding'
+    closed: true
   - date: '2026-12-24'
     label: 'Kerstavond'
     open: '13:30'

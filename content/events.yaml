@@ -164,13 +164,8 @@ events:
     description: 'Live op groot scherm.'
     descriptionEn: 'Live on the big screen.'
 
-  - id: kaa-gent-stvv-2026-12-13
-    title: 'KAA Gent - STVV'
-    start: '2026-12-13T19:15'
-    type: sport
-    price: null
-    description: 'Live op groot scherm.'
-    descriptionEn: 'Live on the big screen.'
+  # KAA Gent - STVV (zondag 13 december, 19:15) staat hier niet: het café is
+  # die dag gesloten voor de teambuilding.
 
   - id: kaa-gent-brann-2026-12-17
     title: 'KAA Gent - SK Brann'
