@@ -37,9 +37,6 @@ recurring:
 # Staat er in SuperHoreca iets dat niet (meer) op de site mag? Zet het hier,
 # met de datum en exact dezelfde titel.
 verbergen:
-  # Staat hieronder al bij "KAA Gent - SK Brann", met de affiche erbij.
-  - date: '2026-12-17'
-    title: "Met 't Café naar den AG"
   # Staat hieronder als "Museumnacht: Club Daydream", met de affiche erbij.
   - date: '2026-12-03'
     title: 'MUSEUMNACHT - F2B.WAV'
@@ -205,18 +202,32 @@ events:
     title: 'KAA Gent - SK Brann'
     start: '2026-12-17T21:00'
     type: sport
+    price: null
+    description: 'Live op groot scherm. Mee naar het stadion? Zie "Met ''t café naar den AG".'
+    descriptionEn: 'Live on the big screen. Coming to the stadium? See "Off to the AG with the café".'
+
+  # Groot event: de uitstap naar het stadion. Dezelfde titel als in SuperHoreca,
+  # zodat dit de versie van SuperHoreca vervangt (met affiche en Engelse tekst).
+  - id: met-t-cafe-naar-den-ag-2026-12-17
+    title: "Met 't café naar den AG"
+    titleEn: 'Off to the AG with the café'
+    start: '2026-12-17T19:00'
+    end: '2026-12-17T23:00'
+    type: uitstap
     price: 5
     # Online ticketlink volgt nog: zet hem hier bij "link:" zodra hij er is.
     description: >-
       Met 't café naar den AG! Samen met Copain trekken we naar de Planet
       Group Arena, iedereen samen in vak 227. We spreken om 19:00 af in het
-      café en vertrekken van daar. Tickets kosten €5 en koopt ge
-      bij ons in het café. First come, first serve: wacht niet te lang. Liever
-      hier blijven? De match speelt ook live op groot scherm.
+      café en vertrekken van daar. Aftrap van KAA Gent - SK Brann om 21:00.
+      Tickets kosten €5 en koopt ge bij ons in het café. First come, first
+      serve: wacht niet te lang. Liever hier blijven? De match speelt ook live
+      op groot scherm.
     descriptionEn: >-
       Off to the AG with the café! Together with Copain we head to the Planet
       Group Arena, all together in block 227. We meet at the café at 7pm and
-      leave from there. Tickets are €5, get yours from
+      leave from there. KAA Gent - SK Brann kicks off at 9pm. Tickets are
+      €5, get yours from
       us at the café. First come, first served: don't wait too long. Rather
       stay here? The match is also live on the big screen.
     image: '/images/events/ow-naar-den-ag-brann-2026.jpg'

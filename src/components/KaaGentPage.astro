@@ -29,12 +29,13 @@ const breadcrumbs = [
   { name: 'KAA Gent', url: route('kaaGent', lang) },
 ];
 
-const matches = buildAgenda(events, new Date()).upcoming.filter(
+const komend = buildAgenda(events, new Date()).upcoming;
+const matches = komend.filter(
   (e) => e.type === 'sport' && e.title.includes('KAA Gent'),
 );
 
-// Een match met een eigen affiche: dat is een uitstap met het café.
-const uitstap = matches.find((m) => m.image);
+// Een uitstap met het café naar het stadion (type: uitstap in events.yaml).
+const uitstap = komend.find((e) => e.type === 'uitstap');
 
 const punten = [
   {
@@ -115,7 +116,7 @@ const punten = [
       {
         uitstap && (
           <aside class="uitstap" aria-labelledby="uitstap-titel">
-            <img
+            {uitstap.image && <img
               class="uitstap__affiche"
               src={uitstap.image}
               alt={uitstap.imageAlt ?? ''}
@@ -123,14 +124,14 @@ const punten = [
               height="1080"
               loading="lazy"
               decoding="async"
-            />
+            />}
             <div class="uitstap__tekst">
               <p class="voucher__label">OW × Copain</p>
               <h2 class="uitstap__titel" id="uitstap-titel">
-                {en ? 'Off to the AG with the café' : "Met 't café naar den AG"}
+                {en && uitstap.titleEn ? uitstap.titleEn : uitstap.title}
               </h2>
               <p class="uitstap__wanneer">
-                {uitstap.title} · {formatDate(uitstap.start, lang)} · {formatTime(uitstap.start)}
+                {formatDate(uitstap.start, lang)} · {formatTime(uitstap.start)}
               </p>
               <p>{en ? (uitstap.descriptionEn ?? uitstap.description) : uitstap.description}</p>
               {uitstap.link && (

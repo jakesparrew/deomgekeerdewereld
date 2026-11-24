@@ -146,6 +146,7 @@ export const EVENT_TYPES = [
   'feest',
   'open-air',
   'sport',
+  'uitstap',
   'andere',
 ] as const;
 
@@ -159,6 +160,7 @@ export const EVENT_TYPE_LABELS: Record<EventType, { nl: string; en: string }> = 
   feest: { nl: 'Fiestje', en: 'Party' },
   'open-air': { nl: 'Open air', en: 'Open air' },
   sport: { nl: 'Sport', en: 'Sport' },
+  uitstap: { nl: 'Uitstap', en: 'Outing' },
   andere: { nl: 'Andere', en: 'Other' },
 };
 
