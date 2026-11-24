@@ -33,6 +33,9 @@ const matches = buildAgenda(events, new Date()).upcoming.filter(
   (e) => e.type === 'sport' && e.title.includes('KAA Gent'),
 );
 
+// Een match met een eigen affiche: dat is een uitstap met het café.
+const uitstap = matches.find((m) => m.image);
+
 const punten = [
   {
     title: en ? 'Big screen' : 'Groot scherm',
@@ -108,6 +111,39 @@ const punten = [
           </a>
         </p>
       </aside>
+
+      {
+        uitstap && (
+          <aside class="uitstap" aria-labelledby="uitstap-titel">
+            <img
+              class="uitstap__affiche"
+              src={uitstap.image}
+              alt={uitstap.imageAlt ?? ''}
+              width="864"
+              height="1080"
+              loading="lazy"
+              decoding="async"
+            />
+            <div class="uitstap__tekst">
+              <p class="voucher__label">OW × Copain</p>
+              <h2 class="uitstap__titel" id="uitstap-titel">
+                {en ? 'Off to the AG with the café' : "Met 't café naar den AG"}
+              </h2>
+              <p class="uitstap__wanneer">
+                {uitstap.title} · {formatDate(uitstap.start, lang)} · {formatTime(uitstap.start)}
+              </p>
+              <p>{en ? (uitstap.descriptionEn ?? uitstap.description) : uitstap.description}</p>
+              {uitstap.link && (
+                <p class="voucher__link">
+                  <a class="btn btn--primary" href={uitstap.link} rel="noopener">
+                    {en ? 'Get your ticket' : 'Koop uw ticket'}
+                  </a>
+                </p>
+              )}
+            </div>
+          </aside>
+        )
+      }
 
       <InstaCarrousel lang={lang} reeks="kaa-gent" duur={30} />
 
@@ -238,6 +274,41 @@ const punten = [
   .post {
     margin-block-start: var(--space-s);
     font-weight: 600;
+  }
+
+  /* ---- Uitstap naar het stadion ---- */
+  .uitstap {
+    display: grid;
+    gap: var(--space-m);
+    margin-block: var(--space-l);
+    padding: var(--space-m);
+    border: var(--border-hairline) solid var(--line-strong);
+    background: var(--bg-raised);
+  }
+
+  .uitstap__affiche {
+    width: 100%;
+    max-width: 22rem;
+    height: auto;
+    aspect-ratio: 4 / 5;
+    object-fit: cover;
+  }
+
+  .uitstap__titel {
+    margin-block: var(--space-3xs) var(--space-2xs);
+  }
+
+  .uitstap__wanneer {
+    font-weight: 700;
+    color: var(--accent-text);
+    margin-block-end: var(--space-xs);
+  }
+
+  @media (min-width: 48em) {
+    .uitstap {
+      grid-template-columns: minmax(0, 20rem) minmax(0, 1fr);
+      align-items: center;
+    }
   }
 
   /* ---- De matchen ---- */

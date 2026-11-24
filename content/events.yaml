@@ -171,9 +171,25 @@ events:
     title: 'KAA Gent - SK Brann'
     start: '2026-12-17T21:00'
     type: sport
-    price: null
-    description: 'Live op groot scherm.'
-    descriptionEn: 'Live on the big screen.'
+    price: 5
+    # Ticketlink volgt nog: zet hem hier bij "link:" zodra hij er is,
+    # en pas dan ook de zin "De ticketlink volgt binnenkort" aan.
+    description: >-
+      Met 't café naar den AG! Samen met Copain trekken we naar de Planet
+      Group Arena, iedereen samen in vak 227. Tickets kosten €5, de ticketlink
+      volgt binnenkort. First come, first serve: wacht niet te lang. Liever
+      hier blijven? De match speelt ook live op groot scherm.
+    descriptionEn: >-
+      Off to the AG with the café! Together with Copain we head to the Planet
+      Group Arena, all together in block 227. Tickets are €5, the ticket link
+      follows soon. First come, first served: don't wait too long. Rather stay
+      here? The match is also live on the big screen.
+    image: '/images/events/ow-naar-den-ag-brann-2026.jpg'
+    imageRatio: '4 / 5'
+    imageAlt: >-
+      Affiche "Met 't café naar den AG!", OW × Copain: twee supporters in
+      blauw-witte shirts van achteren voor het scherm. KAA Gent tegen Brann,
+      17 december, kick off 21u00, tickets €5, samen in vak 227.
 
   - id: westerlo-kaa-gent-2026-12-20
     title: 'Westerlo - KAA Gent'
