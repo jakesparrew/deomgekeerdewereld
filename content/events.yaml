@@ -40,6 +40,9 @@ verbergen:
   # Staat hieronder al bij "KAA Gent - SK Brann", met de affiche erbij.
   - date: '2026-12-17'
     title: "Met 't Café naar den AG"
+  # Staat hieronder als "Museumnacht: Club Daydream", met de affiche erbij.
+  - date: '2026-12-03'
+    title: 'MUSEUMNACHT - F2B.WAV'
 
 # ---- Losse events ----
 # Events uit SuperHoreca komen er vanzelf bij; die moet ge hier niet zetten.
@@ -60,6 +63,30 @@ verbergen:
 #    descriptionEn: >-
 #      Northern soul, funk and a stack of vinyl from the good old days.
 events:
+  # Grote events krijgen een affiche (image). Kleine dingen, zoals matchen, niet.
+  - id: museumnacht-club-daydream-2026
+    title: 'Museumnacht: Club Daydream'
+    titleEn: 'Museum Night: Club Daydream'
+    start: '2026-12-03T23:00'
+    end: '2026-12-04T03:00'
+    type: dj
+    price: 0
+    description: >-
+      Tijdens Museumnacht neemt Club Daydream den Omgekeerde over voor hun
+      tweede editie. Nazz, F2B en Barbiecue achter de draaitafels, van 23:00
+      tot 03:00. Gratis inkom.
+    descriptionEn: >-
+      During Museum Night, Club Daydream takes over den Omgekeerde for their
+      second edition. Nazz, F2B and Barbiecue on the decks, from 11pm to 3am.
+      Free entry.
+    link: 'https://www.instagram.com/p/DgE_xF4tWRc/'
+    image: '/images/events/museumnacht-club-daydream-2026.jpg'
+    imageRatio: '4 / 5'
+    imageAlt: >-
+      Affiche "Club Daydream" in wit op golvende zwarte en rode vormen. Nazz,
+      F2B, Barbiecue. 3 december 2026, 23:00 tot 03:00, Museumnacht, De
+      Omgekeerde Wereld, gratis inkom.
+
   - id: feestweek-oktober-2026
     title: 'Feestweek 26 oktober tot 1 november'
     titleEn: 'Party week 26 October to 1 November'
