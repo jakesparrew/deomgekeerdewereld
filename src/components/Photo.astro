@@ -34,8 +34,11 @@ const {
 } = Astro.props;
 
 const hasImage = Boolean(src && src.trim());
+// Op de echte site nooit een leeg vak: enkel de stijlgids toont de placeholder.
+const toonPlaceholder = Astro.url.pathname.startsWith('/stijlgids');
 ---
 
+{(hasImage || toonPlaceholder) && (
 <figure class:list={['photo', className]} style={`--ratio: ${ratio}`}>
   {
     hasImage ? (
@@ -78,6 +81,7 @@ const hasImage = Boolean(src && src.trim());
 
   {caption && <figcaption class="photo__caption">{caption}</figcaption>}
 </figure>
+)}
 
 <style>
   .photo {

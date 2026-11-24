@@ -97,7 +97,8 @@ const isPoster = Boolean(event.imageRatio) && (() => {
   const [w, h] = (event.imageRatio ?? '').split('/').map(Number);
   return h > w;
 })();
-const showPhoto = variant === 'featured' || (variant === 'default' && hasImage);
+// Enkel een foto als er echt een is: nooit een leeg vak.
+const showPhoto = hasImage && variant !== 'past';
 
 const photoAlt =
   event.imageAlt?.trim() ||

@@ -44,9 +44,7 @@ const isBotm = (item: MenuItem) => Boolean(item.tags?.includes('bier-van-de-maan
                 loading="lazy"
                 decoding="async"
               />
-            ) : (
-              <span class="suggestie__foto suggestie__foto--leeg" aria-hidden="true" />
-            )}
+            ) : null}
             <span class="suggestie__naam">{item.name}</span>
             {typeof priceOf(item) === 'number' && (
               <span class="suggestie__prijs">

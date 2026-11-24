@@ -153,19 +153,9 @@ function searchKey(item: MenuItem): string {
     background: var(--bg-inset);
   }
 
-  /* Geen foto: het zonnetje van het logo, zacht, op dezelfde plek. */
+  /* Geen foto: een onzichtbaar vak, zodat de namen mooi op één lijn blijven. */
   .menu-item__foto--leeg {
-    position: relative;
-  }
-
-  .menu-item__foto--leeg::after {
-    content: '';
-    position: absolute;
-    inset: 22%;
-    background: var(--ink-faint);
-    opacity: 0.35;
-    -webkit-mask: url('/images/zon.png') no-repeat center / contain;
-    mask: url('/images/zon.png') no-repeat center / contain;
+    background: none;
   }
 
   .menu-item__body {
