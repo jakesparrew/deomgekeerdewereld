@@ -228,6 +228,8 @@ export interface RecurringEvent {
 export interface EventsData {
   recurring?: RecurringEvent[];
   events: EventEntry[];
+  /** SuperHoreca-events die niet op de site mogen: datum (YYYY-MM-DD) en titel. */
+  verbergen?: { date: string; title: string }[];
 }
 
 /* ------------------------------------------------------------------ */

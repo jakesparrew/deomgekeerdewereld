@@ -87,6 +87,8 @@ for (const entry of eventsYaml.events) {
 const sameEvent = (start: string, title: string) =>
   `${start.slice(0, 10)}|${title.trim().toLowerCase()}`;
 const yamlKeys = new Set(eventsYaml.events.map((e) => sameEvent(e.start, e.title)));
+// Wat in events.yaml onder "verbergen" staat, komt niet op de site.
+for (const v of eventsYaml.verbergen ?? []) yamlKeys.add(sameEvent(String(v.date), v.title));
 
 export const events: EventsData = {
   ...eventsYaml,
