@@ -37,9 +37,9 @@ recurring:
 # Staat er in SuperHoreca iets dat niet (meer) op de site mag? Zet het hier,
 # met de datum en exact dezelfde titel.
 verbergen:
-  # Verplaatst naar 17 december: "Met 't café naar den AG" (zie KAA Gent - SK Brann).
-  - date: '2026-11-26'
-    title: 'Met den OW naar den AG'
+  # Staat hieronder al bij "KAA Gent - SK Brann", met de affiche erbij.
+  - date: '2026-12-17'
+    title: "Met 't Café naar den AG"
 
 # ---- Losse events ----
 # Events uit SuperHoreca komen er vanzelf bij; die moet ge hier niet zetten.
